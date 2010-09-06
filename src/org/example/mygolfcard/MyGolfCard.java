@@ -4,8 +4,11 @@ import org.example.mygolfcard.RestClient.RequestMethod;
 import org.json.*;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.AsyncTask;
 import android.view.View;
 import android.util.Log;
 import android.view.View;
@@ -15,9 +18,11 @@ import android.widget.Toast;
 
 public class MyGolfCard extends Activity  implements OnClickListener {
 
-	String LOGIN_URL = "http://dev.mygolfcard.es/api/authentication";
+	static String LOGIN_URL = "http://dev.mygolfcard.es/api/authentication";
 	String auth_token;
 	String auth_error_code;
+	
+	static public String resWebService;
 	
     /** Called when the activity is first created. */
     @Override
@@ -47,9 +52,12 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	    		user_login = user.getText().toString();
 	    		user_password = password.getText().toString();
 	    		
-	    		String res = callAuthentication(user_login, user_password);
-	    		parseJSONResponse(res);
-	    		manageAuthentication();
+	    		InitTask task = new InitTask(user_login, user_password);
+	    		task.execute();
+	    			
+	    		//String res = callAuthentication(user_login, user_password);
+	    		//parseJSONResponse(resWebService);
+	    		//manageAuthentication();
 	    		
 /*	    		Toast.makeText(MyGolfCard.this, user_login.concat(" // ").concat(user_password).concat(" // ").concat(auth_token),
 	                    Toast.LENGTH_SHORT).show();
@@ -63,7 +71,7 @@ public class MyGolfCard extends Activity  implements OnClickListener {
     	}
     }
 
-    private String callAuthentication(String pLogin, String pPass) {
+    private static String callAuthentication(String pLogin, String pPass) {
     	String response;
     	
 	    RestClient client = new RestClient(LOGIN_URL);
@@ -77,7 +85,8 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
-	    	    
+	    	 
+	    resWebService = response;
 	    return response;
     }
 
@@ -113,4 +122,60 @@ public class MyGolfCard extends Activity  implements OnClickListener {
     		finish();
 		}
 	}
+	
+	/**
+	 * sub-class of AsyncTask
+	 */
+	protected class InitTask extends AsyncTask<Context, Integer, String>
+	{
+		private String user;
+		private String pass;
+		private ProgressDialog dialog;
+		
+		public InitTask (String pUser, String pPass) {
+			this.user = pUser;
+			this.pass = pPass;
+		}
+		
+		// -- run intensive processes here
+		// -- notice that the datatype of the first param in the class definition matches the param passed to this method 
+		// -- and that the datatype of the last param in the class definition matches the return type of this mehtod
+		@Override
+		protected String doInBackground( Context... params ) 
+		{
+			return callAuthentication(this.user, this.pass);
+		}
+
+		// -- gets called just before thread begins
+		@Override
+		protected void onPreExecute() 
+		{
+			Log.i( "makemachine", "onPreExecute()" );
+			super.onPreExecute();
+			this.dialog = ProgressDialog.show(MyGolfCard.this, "Autenticación", "Realizando llamada al servidor para comprobar sus datos de acceso.", true);
+		}
+
+		// -- called from the publish progress 
+		// -- notice that the datatype of the second param gets passed to this method
+		@Override
+		protected void onProgressUpdate(Integer... values) 
+		{
+			super.onProgressUpdate(values);
+			Log.i( "makemachine", "onProgressUpdate(): " +  String.valueOf( values[0] ) );
+			//_percentField.setText( ( values[0] * 2 ) + "%");
+			//_percentField.setTextSize( values[0] );
+		}
+
+		// -- called as soon as doInBackground method completes
+		// -- notice that the third param gets passed to this method
+		@Override
+		protected void onPostExecute( String result ) 
+		{
+			super.onPostExecute(result);
+			Log.i( "makemachine", "onPostExecute(): " + result );
+			parseJSONResponse(result);
+			this.dialog.cancel();
+    		manageAuthentication();
+		}
+	}   
 }
