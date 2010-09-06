@@ -15,10 +15,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.Toast;
+import java.io.*;
 
 public class MyGolfCard extends Activity  implements OnClickListener {
 
-	static String LOGIN_URL = "http://dev.mygolfcard.es/api/authentication";
+	static String LOGIN_URL = "http://www.mygolfcard.es/api/authentication";
 	String auth_token;
 	String auth_error_code;
 	
@@ -29,6 +30,8 @@ public class MyGolfCard extends Activity  implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
+        deleteFile("token.txt");
         
         // Set up click listeners for all the buttons
 		View continueButton = findViewById(R.id.continue_button);
@@ -54,7 +57,7 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	    		
 	    		InitTask task = new InitTask(user_login, user_password);
 	    		task.execute();
-	    			
+	    		
 	    		//String res = callAuthentication(user_login, user_password);
 	    		//parseJSONResponse(resWebService);
 	    		//manageAuthentication();
@@ -123,6 +126,29 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 		}
 	}
 	
+	private void saveToken() {
+		if (!Authentication.saveToken(MyGolfCard.this,auth_token))
+			finish();
+		/*try {
+			OutputStreamWriter out=new OutputStreamWriter(openFileOutput("token.txt",MODE_PRIVATE));
+			
+			out.write(auth_token);
+			out.close();
+		}
+		catch (java.io.FileNotFoundException e) {
+			// that's OK, we probably haven't created it yet
+		}
+		catch (Throwable t) {
+			new AlertDialog.Builder(this)
+				.setIcon(R.drawable.alert_dialog_icon)
+				.setTitle("Error guardando sesión")
+				.setMessage("La aplicación no ha podido guardar los datos correspondientes a su sesión. Por favor, vuelva a introducirlos.\n")
+				.setPositiveButton("Aceptar", null)
+				.show();
+			finish();
+		}*/
+	}
+	
 	/**
 	 * sub-class of AsyncTask
 	 */
@@ -176,6 +202,7 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 			parseJSONResponse(result);
 			this.dialog.cancel();
     		manageAuthentication();
+    		saveToken();
 		}
 	}   
 }
