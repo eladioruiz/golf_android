@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, MyGolfCard!</string>
+    <string name="app_name">Android My Golf Card</string>
+    <string name="presentation">\
+    ¿Conoce ya <b>My Golf Card</b>? ¿Le han hablado sus compañeros de esta nueva web de golf?\n\n
+    Darse da alta en My Golf Card es totalmente gratuito en http://www.mygolfcard.es\n\n
+    Con esta aplicación para su móvil podrá apuntar después de cada hoyo su puntuación y si lo desea la de sus compañeros.\n\n
+    Al final del partido sólo tendrá que subir los datos del partido a My Golf Card con un simple click y ya tendrá publicada su tarjeta.\n\n
+    </string>
+    
+    <string name="continue_label">Continue</string>
+    <string name="exit_label">Salir</string>
+    <string name="about_label">About</string>
+    
+    <string name="new_match_label">Nuevo Partido</string>
+    <string name="matches_label">Partidos</string>
+    <string name="courses_label">Campos</string>
+    
+    <string name="menuapp_title">Android My Golf Card - Menú</string>
+    <string name="newmatch_title">Android My Golf Card - Nuevo Partido</string>
+    <string name="card_title">Android My Golf Card - Tarjeta</string>
+    <string name="strokes_title">Android My Golf Card - Golpes</string>
+    <string name="matches_title">Android My Golf Card - Partidos</string>
+    <string name="courses_title">Android My Golf Card - Courses</string>
+    <string name="keypad_title">Android My Golf Card - Golpes</string>
+    
+	<string name="about_title">About Android My Golf Card</string>
+   	<string name="about_text">\
+    ¿Conoce ya <b>My Golf Card</b>? ¿Le han hablado sus compañeros de esta nueva web de golf?\n\n
+    Darse da alta en My Golf Card es totalmente gratuito en http://www.mygolfcard.es\n\n
+    Con esta aplicación para su móvil podrá apuntar después de cada hoyo su puntuación y si lo desea la de sus compañeros.\n\n
+    Al final del partido sólo tendrá que subir los datos del partido a My Golf Card con un simple click y ya tendrá publicada su tarjeta.\n\n
+	</string>
+	<string name="about_shortcut">a</string>
+   
+	<string name="settings_label">Settings...</string>
+	<string name="settings_title">My Golf Card settings</string>
+	<string name="settings_shortcut">s</string>
+	
+	<string name="synchro_label">Sincronización</string>
+	<string name="synchro_title">My Golf Card - Sincronización</string>
+	<string name="synchro_shortcut">y</string>
+	
+	<string name="menuapp_label">Menú</string>
+	<string name="menuapp_shortcut">m</string>
+	
+	<string name="resume_label">Resumen</string>
+	<string name="resume_title">My Golf Card - Resumen</string>
+	<string name="resume_shortcut">r</string>
+    
+</resources>
+

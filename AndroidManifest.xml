@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="org.example.mygolfcard"
+      android:versionCode="1"
+      android:versionName="1.0">
+      
+    <uses-permission android:name="android.permission.INTERNET" />
+     
+    <application android:icon="@drawable/icon" android:label="@string/app_name">
+        <activity android:name=".MyGolfCard"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity android:name=".MenuApp"
+	        android:label="@string/menuapp_title">
+        </activity>
+        
+        <activity android:name=".NewMatch"
+	        android:label="@string/newmatch_title">
+        </activity>
+        
+        <activity android:name=".Card"
+	        android:label="@string/card_title">
+        </activity>
+        
+        <activity android:name=".Strokes"
+	        android:label="@string/strokes_title">
+        </activity>
+        
+		<activity android:name=".About"
+	        android:label="@string/about_title"
+	        android:theme="@android:style/Theme.Dialog">
+        </activity>
+        
+        <activity android:name=".Matches"
+	        android:label="@string/matches_title">
+        </activity>
+        
+        <activity android:name=".Courses"
+	        android:label="@string/courses_title">
+        </activity>
+        
+        <activity android:name=".Prefs"
+			android:label="@string/settings_title" >
+		</activity>
+		
+		<activity android:name=".Resume"
+			android:label="@string/resume_title"
+			android:theme="@android:style/Theme.Dialog">
+		</activity>
+		
+		<activity android:name=".Synchro"
+			android:label="@string/synchro_title" >
+		</activity>
+		
+    </application>
+
+
+</manifest> 
