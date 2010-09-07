@@ -29,7 +29,7 @@ public class Courses extends ListActivity {
 		super.onCreate(icicle);
 		setContentView(R.layout.courses);
 		
-		Authentication.readToken(Courses.this);
+		Authentication.readDataUser(Courses.this);
 		auth_token = Authentication.getToken();
 		
 		InitTask task = new InitTask();

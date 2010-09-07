@@ -38,7 +38,7 @@ public class MenuApp extends Activity  implements OnClickListener {
 		View coursesButton = findViewById(R.id.courses_button);
 		coursesButton.setOnClickListener(this);
 		
-		Authentication.readToken(MenuApp.this);
+		Authentication.readDataUser(MenuApp.this);
 		auth_token = Authentication.getToken();
 		
 	}
@@ -47,7 +47,7 @@ public class MenuApp extends Activity  implements OnClickListener {
 	public void onDestroy() {
 		try
 		{
-			deleteFile("token.txt");
+			Authentication.deleteAuth(MenuApp.this);
 		}
 		catch (Throwable t) {
 			new AlertDialog.Builder(this)

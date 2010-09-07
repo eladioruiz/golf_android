@@ -19,8 +19,9 @@ import java.io.*;
 
 public class MyGolfCard extends Activity  implements OnClickListener {
 
-	static String LOGIN_URL = "http://www.mygolfcard.es/api/authentication";
+	static String LOGIN_URL = "http://dev.mygolfcard.es/api/authentication";
 	String auth_token;
+	String auth_user_id;
 	String auth_error_code;
 	
 	static public String resWebService;
@@ -31,7 +32,7 @@ public class MyGolfCard extends Activity  implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        deleteFile("token.txt");
+        Authentication.deleteAuth(MyGolfCard.this);
         
         // Set up click listeners for all the buttons
 		View continueButton = findViewById(R.id.continue_button);
@@ -97,10 +98,12 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 		JSONObject json;
 		
 		auth_token = "";
+		auth_user_id = "";
 		auth_error_code = "";
 		try {
 			json = new JSONObject(jsonResponse);
 			auth_token = json.get("token").toString();
+			auth_user_id = json.get("user_id").toString();
 			auth_error_code = json.get("error_code").toString();
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -126,8 +129,8 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 		}
 	}
 	
-	private void saveToken() {
-		if (!Authentication.saveToken(MyGolfCard.this,auth_token))
+	private void saveDataUser() {
+		if (!Authentication.saveDataUser(MyGolfCard.this,auth_token,auth_user_id))
 			finish();
 		/*try {
 			OutputStreamWriter out=new OutputStreamWriter(openFileOutput("token.txt",MODE_PRIVATE));
@@ -202,7 +205,7 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 			parseJSONResponse(result);
 			this.dialog.cancel();
     		manageAuthentication();
-    		saveToken();
+    		saveDataUser();
 		}
 	}   
 }

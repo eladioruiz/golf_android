@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.*;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -11,14 +12,17 @@ import android.content.Context;
 public class Authentication {
 	
 	private static String auth_token; 
+	private static String auth_user_id;
 	
-	public static boolean saveToken(Context ctx, String token) {
+	public static boolean saveDataUser(Context ctx, String token, String user_id) {
 		
 		try {
-			OutputStreamWriter out=new OutputStreamWriter(ctx.openFileOutput("token.txt",0));
-			auth_token = token;
+			OutputStreamWriter out=new OutputStreamWriter(ctx.openFileOutput("user.txt",0));
+			auth_token 	 = token;
+			auth_user_id = user_id;
 			
-			out.write(token);
+			out.write(auth_token  + '\n');
+			out.write(auth_user_id  + '\n');
 			out.close();
 			
 			return true;
@@ -38,20 +42,29 @@ public class Authentication {
 		}
 	}
 	
-	public static void readToken(Context ctx)
+	public static void readDataUser(Context ctx)
 	{
-		auth_token = "";
+		int i = 0;
+		
+		auth_token 		= "";
+		auth_user_id 	= "";
 		try {
-			InputStream in = ctx.openFileInput("token.txt");
+			InputStream in = ctx.openFileInput("user.txt");
 			if (in!=null) {
 				BufferedReader reader=new BufferedReader(new InputStreamReader(in));
 				String str;
 				StringBuffer buf=new StringBuffer();
 				while ((str = reader.readLine()) != null) {
 					buf.append(str+"\n");
+					
+					if (i==0)
+						auth_token = str;
+					else if (i==1)
+						auth_user_id = str;
+					
+					++i;
 				}
 				in.close();
-				auth_token = buf.toString();
 			}
 		}
 		catch (java.io.FileNotFoundException e) {
@@ -65,4 +78,13 @@ public class Authentication {
 	public static String getToken() {
 		return auth_token;
 	}
+	
+	public static String getUserId() {
+		return auth_user_id;
+	}
+	
+	public static void deleteAuth(Context ctx) {
+		ctx.deleteFile("user.txt");
+	}
 }
+
