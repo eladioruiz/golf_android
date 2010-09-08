@@ -31,8 +31,8 @@
 				android:layout_height="wrap_content"
 				android:layout_width="fill_parent"
 				android:layout_gravity="left"
-				android:width="120sp"
-				android:hint="guest"
+				android:width="130sp"
+				android:text="eladioruiz"
 				android:singleLine="true"/>
 		</TableRow>
 		<TableRow>
@@ -45,10 +45,10 @@
 				android:id="@+id/login_password"
 				android:layout_height="wrap_content"
 				android:layout_width="fill_parent"
-				android:width="120sp"
+				android:width="130sp"
 				android:layout_gravity="left"
 				android:password="true"
-				android:hint="guest"
+				android:text="eladioruiz"
 				android:singleLine="true"/>
 		</TableRow>      
 		<TableRow>

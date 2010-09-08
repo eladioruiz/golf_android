@@ -1,5 +1,9 @@
 package org.example.mygolfcard;
 
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import org.example.mygolfcard.MyGolfCard.InitTask;
 import org.example.mygolfcard.RestClient.RequestMethod;
 import org.json.JSONException;
@@ -15,11 +19,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.ArrayAdapter;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 public class Courses extends ListActivity {
-	String[] courses;
+	String[] courses_field1;
+	String[] courses_field2;
+	String[] courses_field3;
 	private String auth_token;
 	static String LOGIN_URL = "http://dev.mygolfcard.es/api/getcourses";
 	
@@ -40,6 +46,10 @@ public class Courses extends ListActivity {
 
 	public void onListItemClick(ListView parent, View v, int position,long id) {
 		//
+		Map map = (Map) parent.getItemAtPosition(position);
+
+        Intent intent = (Intent) map.get("intent");
+        startActivity(intent);
 	}
 	
 	public String callCourses() {
@@ -63,26 +73,38 @@ public class Courses extends ListActivity {
 		JSONObject jsonObj;
 		JSONArray  jsonArr;
 		
+		List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
 		try {
 			jsonArr = new JSONArray(result);
 			
-			courses = new String[jsonArr.length()];
+			courses_field1 = new String[jsonArr.length()];
+			courses_field2 = new String[jsonArr.length()];
+			courses_field3 = new String[jsonArr.length()];
 			
 			for (int i=0; i<jsonArr.length(); i++) {
 				jsonObj = new JSONObject(jsonArr.get(i).toString());
 				
-				courses[i] = jsonObj.getString("name");
+				courses_field1[i] = jsonObj.getString("name");
+				courses_field2[i] = jsonObj.getString("address");
+				courses_field3[i] = jsonObj.getString("id");
 				Log.i("JSON", "" + i);
-			}
-			
-			
+				
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("name", courses_field1[i]);
+				map.put("address", courses_field2[i]);
+				fillMaps.add(map);
+			}			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		
+		// fill in the grid_item layout
+		SimpleAdapter adapter = new SimpleAdapter(this, fillMaps, R.layout.main_item_two_line_row, new String[] { "name", "address" }, new int[] { R.id.course_name,  R.id.course_address});
+		
 		//TextView tx = (TextView) findViewById(R.id.selection);
 		//tx.setText(result);
-		setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, courses));
+		setListAdapter(adapter);
+		getListView().setTextFilterEnabled(true);
 	}
 
 	/**
