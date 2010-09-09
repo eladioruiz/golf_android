@@ -44,6 +44,10 @@
 	        android:label="@string/courses_title">
         </activity>
         
+        <activity android:name=".Course"
+	        android:label="@string/courses_title">
+        </activity>
+        
         <activity android:name=".Prefs"
 			android:label="@string/settings_title" >
 		</activity>

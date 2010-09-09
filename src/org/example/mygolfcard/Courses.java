@@ -46,9 +46,8 @@ public class Courses extends ListActivity {
 
 	public void onListItemClick(ListView parent, View v, int position,long id) {
 		//
-		Map map = (Map) parent.getItemAtPosition(position);
-
-        Intent intent = (Intent) map.get("intent");
+		Intent intent = new Intent(this, Course.class);
+        intent.putExtra("course_id",courses_field3[position]);
         startActivity(intent);
 	}
 	

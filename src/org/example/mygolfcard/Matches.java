@@ -42,7 +42,7 @@ public class Matches extends ListActivity {
 		//
 	}
 
-	public String callMatches() {
+	public String getMatches() {
 		String response;
     	
 	    RestClient client = new RestClient(LOGIN_URL);
@@ -107,7 +107,7 @@ public class Matches extends ListActivity {
 		@Override
 		protected String doInBackground( Context... params ) 
 		{
-			return callMatches();
+			return getMatches();
 		}
 
 		// -- gets called just before thread begins

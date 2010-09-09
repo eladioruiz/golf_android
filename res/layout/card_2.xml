@@ -12,13 +12,17 @@
 		android:paddingLeft="5dip"
 		android:paddingRight="5dip">
 		<TextView
-			android:padding="15dip"
+			android:padding="7dip"
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
-			android:textColor="#000000"
-			android:background="#FFFFFF"
-			android:radius="3dp"
+			android:textColor="@color/colortext_title"
+			android:textSize="14.5sp"
+			android:background="@color/background_title"
 			android:text="Campo : RACE\nFecha/Hora : 12/08/2010 14:00" />
+		<TextView
+			android:layout_height="5dip"
+			android:layout_width="fill_parent"
+			android:text=" " />
 		<TableLayout
 			xmlns:android="http://schemas.android.com/apk/res/android"
 			android:paddingTop="25dip"

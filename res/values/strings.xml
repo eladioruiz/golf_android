@@ -9,7 +9,7 @@
     Al final del partido sólo tendrá que subir los datos del partido a My Golf Card con un simple click y ya tendrá publicada su tarjeta.\n\n
     </string>
     
-    <string name="continue_label">Continue</string>
+    <string name="continue_label">Entrar</string>
     <string name="exit_label">Salir</string>
     <string name="about_label">About</string>
     
@@ -48,6 +48,10 @@
 	<string name="resume_label">Resumen</string>
 	<string name="resume_title">My Golf Card - Resumen</string>
 	<string name="resume_shortcut">r</string>
+	
+	<string name="course_details_label">Detalles del Campo</string>
+	<string name="course_detail_title">My Golf Card - Detalles del Campo</string>
+	<string name="course_details_shortcut">d</string>
     
 </resources>
 

@@ -1,9 +1,11 @@
 package org.example.mygolfcard;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -86,7 +88,13 @@ public class Strokes extends Activity implements OnClickListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.resume:
-				startActivity(new Intent(this, Resume.class));
+				//startActivity(new Intent(this, Resume.class));
+				new AlertDialog.Builder(this)
+					.setIcon(R.drawable.info_dialog_icon_tra)
+					.setTitle("RESUMEN PARTIDO")
+					.setMessage(Html.fromHtml("<b>Bea (HCP : 36)</b> : 45<br><b>Eladio (HCP : 36)</b> : 46<br><b>Juan (HCP : 36)</b> : 48<br><b>Merche (HCP : 36)</b> : 50"))
+					.setPositiveButton("Aceptar", null)
+					.show();
 				return true;
 				
 			case R.id.synchro:
@@ -95,6 +103,7 @@ public class Strokes extends Activity implements OnClickListener {
 				
 			case R.id.menuapp:
 				startActivity(new Intent(this, MenuApp.class));
+				finish();
 				return true;
 		}
 		return false;

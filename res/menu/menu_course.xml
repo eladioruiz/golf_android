@@ -7,13 +7,11 @@
  ! We make no guarantees that this code is fit for any purpose. 
  ! Visit http://www.pragmaticprogrammer.com/titles/eband2 for more book information.
 -->
-<ScrollView
-   xmlns:android="http://schemas.android.com/apk/res/android"
-   android:layout_width="fill_parent"
-   android:layout_height="fill_parent"
-   android:padding="10dip">
-   <TextView
-      android:id="@+id/resume_content"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
-</ScrollView>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:id="@+id/course_details"
+      android:title="@string/course_details_label"
+      android:alphabeticShortcut="@string/course_details_shortcut" />
+    <item android:id="@+id/menuapp"
+      android:title="@string/menuapp_label"
+      android:alphabeticShortcut="@string/menuapp_shortcut" />
+</menu>
