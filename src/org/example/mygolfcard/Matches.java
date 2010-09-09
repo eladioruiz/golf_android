@@ -1,5 +1,9 @@
 package org.example.mygolfcard;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.example.mygolfcard.RestClient.RequestMethod;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,9 +19,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
+import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 public class Matches extends ListActivity {
 	String[] matches;
+	String[] matches_field1;
+	String[] matches_field2;
+	String[] matches_field3;
 	private String auth_token;
 	private String auth_user_id;
 	static String LOGIN_URL = "http://dev.mygolfcard.es/api/getmatches";
@@ -35,11 +44,12 @@ public class Matches extends ListActivity {
 		InitTask task = new InitTask();
 		task.execute();
 		
-		//setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, matches));
 	}
 
 	public void onListItemClick(ListView parent, View v, int position,long id) {
 		//
+		Toast.makeText(Matches.this, "Opción no operativa en estos momentos. Disculpe las molestias.",
+                Toast.LENGTH_SHORT).show();
 	}
 
 	public String getMatches() {
@@ -66,17 +76,32 @@ public class Matches extends ListActivity {
 	public void setInfo(String result) {
 		JSONObject jsonObj;
 		JSONArray  jsonArr;
-		
+
+		List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
 		try {
 			jsonArr = new JSONArray(result);
 			
 			matches = new String[jsonArr.length()];
 			
+			matches_field1 = new String[jsonArr.length()];
+			matches_field2 = new String[jsonArr.length()];
+			matches_field3 = new String[jsonArr.length()];
+			
 			for (int i=0; i<jsonArr.length(); i++) {
 				jsonObj = new JSONObject(jsonArr.get(i).toString());
 				
 				matches[i] = jsonObj.getString("course_name") + "\n" + jsonObj.getString("date_hour");
+				
+				matches_field1[i] = jsonObj.getString("course_name");
+				matches_field2[i] = jsonObj.getString("date_hour");
+				matches_field3[i] = jsonObj.getString("match_id");
+				
 				Log.i("JSON", "" + matches[i]);
+				
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("course_name", matches_field1[i]);
+				map.put("date_hour", matches_field2[i]);
+				fillMaps.add(map);
 			}
 			
 			
@@ -84,9 +109,12 @@ public class Matches extends ListActivity {
 			e.printStackTrace();
 		}
 		
-		//TextView tx = (TextView) findViewById(R.id.selection);
-		//tx.setText(result);
-		setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, matches));
+		//setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, matches));
+		
+		SimpleAdapter adapter = new SimpleAdapter(this, fillMaps, R.layout.main_item_two_line_row, new String[] { "course_name", "date_hour" }, new int[] { R.id.field1,  R.id.field2});
+		
+		setListAdapter(adapter);
+		getListView().setTextFilterEnabled(true);
 	}
 
 	/**

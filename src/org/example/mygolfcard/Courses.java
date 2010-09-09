@@ -41,7 +41,6 @@ public class Courses extends ListActivity {
 		InitTask task = new InitTask();
 		task.execute();
 				
-		//setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, courses));
 	}
 
 	public void onListItemClick(ListView parent, View v, int position,long id) {
@@ -51,7 +50,7 @@ public class Courses extends ListActivity {
         startActivity(intent);
 	}
 	
-	public String callCourses() {
+	public String getCourses() {
 		String response;
     	
 	    RestClient client = new RestClient(LOGIN_URL);
@@ -98,10 +97,8 @@ public class Courses extends ListActivity {
 		}
 		
 		// fill in the grid_item layout
-		SimpleAdapter adapter = new SimpleAdapter(this, fillMaps, R.layout.main_item_two_line_row, new String[] { "name", "address" }, new int[] { R.id.course_name,  R.id.course_address});
+		SimpleAdapter adapter = new SimpleAdapter(this, fillMaps, R.layout.main_item_two_line_row, new String[] { "name", "address" }, new int[] { R.id.field1,  R.id.field2});
 		
-		//TextView tx = (TextView) findViewById(R.id.selection);
-		//tx.setText(result);
 		setListAdapter(adapter);
 		getListView().setTextFilterEnabled(true);
 	}
@@ -124,7 +121,7 @@ public class Courses extends ListActivity {
 		@Override
 		protected String doInBackground( Context... params ) 
 		{
-			return callCourses();
+			return getCourses();
 		}
 
 		// -- gets called just before thread begins
