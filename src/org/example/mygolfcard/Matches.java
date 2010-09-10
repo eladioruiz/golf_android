@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -29,6 +30,7 @@ public class Matches extends ListActivity {
 	String[] matches_field3;
 	private String auth_token;
 	private String auth_user_id;
+	private boolean connectionOK;
 	static String LOGIN_URL = "http://dev.mygolfcard.es/api/getmatches";
 	
 	/** Called with the activity is first created. */
@@ -37,19 +39,39 @@ public class Matches extends ListActivity {
 		super.onCreate(icicle);
 		setContentView(R.layout.matches);
 		
-		Authentication.readDataUser(Matches.this);
-		auth_token = Authentication.getToken();
-		auth_user_id = Authentication.getUserId();
+		connectionOK = Authentication.checkConnection(Matches.this);
+		if (connectionOK) {
+			Authentication.readDataUser(Matches.this);
+			auth_token = Authentication.getToken();
+			auth_user_id = Authentication.getUserId();
 		
-		InitTask task = new InitTask();
-		task.execute();
+			InitTask task = new InitTask();
+			task.execute();
+		}
+		else {
+			Toast.makeText(Matches.this, "No tiene acceso a Internet, usaremos los últimos datos de acceso.",
+                    Toast.LENGTH_SHORT).show();
+			
+			String result = Authentication.readMatches(Matches.this);
+			setInfo(result);
+		}
 		
 	}
 
 	public void onListItemClick(ListView parent, View v, int position,long id) {
 		//
-		Toast.makeText(Matches.this, "Opción no operativa en estos momentos. Disculpe las molestias.",
-                Toast.LENGTH_SHORT).show();
+		if (connectionOK) {
+			Toast.makeText(Matches.this, "Opción no operativa en estos momentos. Disculpe las molestias.",
+					Toast.LENGTH_SHORT).show();
+		}
+		else {
+			new AlertDialog.Builder(Matches.this)
+				.setIcon(R.drawable.alert_dialog_icon)
+				.setTitle("Error conexión a Internet")
+				.setMessage("Esta opción sólo está disponible con una conexión a Internet. Conecte su Wi-Fi o 3G y reinicie la aplicación.\nDisculpe las molestias.\n")
+				.setPositiveButton("Aceptar", null)
+				.show();
+		}
 	}
 
 	public String getMatches() {
@@ -70,6 +92,8 @@ public class Matches extends ListActivity {
 	    }
 	    
 	    Log.i("RESPONSE", "" + response);
+	    
+	    Authentication.saveMatches(Matches.this, response);
 	    return response;
 	}
 	

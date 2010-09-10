@@ -47,7 +47,8 @@ public class MenuApp extends Activity  implements OnClickListener {
 	public void onDestroy() {
 		try
 		{
-			Authentication.deleteAuth(MenuApp.this);
+			// NO borramos el fichero para que esté disponible si no hay conexión a Internet
+			//Authentication.deleteAuth(MenuApp.this);
 		}
 		catch (Throwable t) {
 			new AlertDialog.Builder(this)

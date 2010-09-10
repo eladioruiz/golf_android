@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -21,12 +22,14 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Courses extends ListActivity {
 	String[] courses_field1;
 	String[] courses_field2;
 	String[] courses_field3;
 	private String auth_token;
+	private boolean connectionOK;
 	static String LOGIN_URL = "http://dev.mygolfcard.es/api/getcourses";
 	
 	/** Called with the activity is first created. */
@@ -35,19 +38,38 @@ public class Courses extends ListActivity {
 		super.onCreate(icicle);
 		setContentView(R.layout.courses);
 		
-		Authentication.readDataUser(Courses.this);
-		auth_token = Authentication.getToken();
-		
-		InitTask task = new InitTask();
-		task.execute();
-				
+		connectionOK = Authentication.checkConnection(Courses.this);
+		if (connectionOK) {
+			Authentication.readDataUser(Courses.this);
+			auth_token = Authentication.getToken();
+			
+			InitTask task = new InitTask();
+			task.execute();
+		}
+		else {
+			Toast.makeText(Courses.this, "No tiene acceso a Internet, usaremos los últimos datos de acceso.",
+                    Toast.LENGTH_SHORT).show();
+			
+			String result = Authentication.readCourses(Courses.this);
+			setInfo(result);
+		}
 	}
 
 	public void onListItemClick(ListView parent, View v, int position,long id) {
 		//
-		Intent intent = new Intent(this, Course.class);
-        intent.putExtra("course_id",courses_field3[position]);
-        startActivity(intent);
+		if (connectionOK) {
+			Intent intent = new Intent(this, Course.class);
+	        intent.putExtra("course_id",courses_field3[position]);
+	        startActivity(intent);
+		}
+		else {
+			new AlertDialog.Builder(Courses.this)
+				.setIcon(R.drawable.alert_dialog_icon)
+				.setTitle("Error conexión a Internet")
+				.setMessage("Esta opción sólo está disponible con una conexión a Internet. Conecte su Wi-Fi o 3G y reinicie la aplicación.\nDisculpe las molestias.\n")
+				.setPositiveButton("Aceptar", null)
+				.show();
+		}
 	}
 	
 	public String getCourses() {
@@ -63,7 +85,8 @@ public class Courses extends ListActivity {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
-	    	 
+	    
+	    Authentication.saveCourses(Courses.this, response);
 	    return response;
 	}
 	

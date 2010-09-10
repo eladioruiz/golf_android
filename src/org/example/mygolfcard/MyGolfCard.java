@@ -23,6 +23,7 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	String auth_token;
 	String auth_user_id;
 	String auth_error_code;
+	boolean connectionOK = true;
 	
 	static public String resWebService;
 	
@@ -32,7 +33,10 @@ public class MyGolfCard extends Activity  implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        Authentication.deleteAuth(MyGolfCard.this);
+        connectionOK = Authentication.checkConnection(MyGolfCard.this);
+        if (connectionOK) {
+        	Authentication.deleteAuth(MyGolfCard.this);
+        }
         
         // Set up click listeners for all the buttons
 		View continueButton = findViewById(R.id.continue_button);
@@ -56,8 +60,22 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	    		user_login = user.getText().toString();
 	    		user_password = password.getText().toString();
 	    		
-	    		InitTask task = new InitTask(user_login, user_password);
-	    		task.execute();
+	    		if (connectionOK) {
+	    			// Si tenemos conexion a Internet, validamos contra el servidor...
+	    			InitTask task = new InitTask(user_login, user_password);
+	    			task.execute();
+	    		}
+	    		else {
+	    			// ... en caso contrario, pasamos a la sigueinte Activity (que ya se encargará ...
+	    			// ... de mirar si el fichero con el usuario existe y puede continuar
+	    			
+	    			Toast.makeText(MyGolfCard.this, "No tiene acceso a Internet, usaremos los últimos datos de acceso.",
+		                    Toast.LENGTH_SHORT).show();
+	    			
+	    			Intent i = new Intent(this, MenuApp.class);
+	        		startActivity(i);
+	        		finish();
+	    		}
 	    		
 	    		//String res = callAuthentication(user_login, user_password);
 	    		//parseJSONResponse(resWebService);
