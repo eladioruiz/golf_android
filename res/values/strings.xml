@@ -73,6 +73,8 @@
     
     <string name="resume_match">Resumen Partido</string> 
     <string name="main_no_items">No hay elementos para mostrar</string>
+    <string name="title_form_validation">Validación Formulario</string>
+    <string name="form_validation">Los datos del formulario no son correctos:\n</string>
 </resources>
 
 

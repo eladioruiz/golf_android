@@ -155,6 +155,7 @@ public final class R {
         public static final int courses_title=0x7f07000e;
         public static final int exit_label=0x7f070004;
         public static final int file_connection=0x7f07002a;
+        public static final int form_validation=0x7f070034;
         public static final int hello=0x7f070000;
         public static final int keypad_title=0x7f07000f;
         public static final int main_no_items=0x7f070032;
@@ -183,6 +184,7 @@ public final class R {
         public static final int synchro_shortcut=0x7f070018;
         public static final int synchro_title=0x7f070017;
         public static final int title_file_connection=0x7f070028;
+        public static final int title_form_validation=0x7f070033;
         public static final int title_remote_connection=0x7f070027;
     }
     public static final class style {

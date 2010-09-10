@@ -46,7 +46,7 @@ public class Courses extends ListActivity {
 			task.execute();
 		}
 		else {
-			Toast.makeText(Courses.this, "No tiene acceso a Internet, usaremos los últimos datos de acceso.",
+			Toast.makeText(Courses.this, R.string.no_internet,
                     Toast.LENGTH_SHORT).show();
 			
 			String result = Authentication.readCourses(Courses.this);
@@ -64,9 +64,9 @@ public class Courses extends ListActivity {
 		else {
 			new AlertDialog.Builder(Courses.this)
 				.setIcon(R.drawable.alert_dialog_icon)
-				.setTitle("Error conexión a Internet")
-				.setMessage("Esta opción sólo está disponible con una conexión a Internet. Conecte su Wi-Fi o 3G y reinicie la aplicación.\nDisculpe las molestias.\n")
-				.setPositiveButton("Aceptar", null)
+				.setTitle(R.string.title_remote_connection)
+				.setMessage(R.string.no_internet_connect)
+				.setPositiveButton(R.string.alert_button_default, null)
 				.show();
 		}
 	}
