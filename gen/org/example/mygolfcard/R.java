@@ -17,6 +17,7 @@ public final class R {
     public static final class color {
         public static final int background=0x7f060000;
         public static final int background_title=0x7f060001;
+        public static final int c_background=0x7f060004;
         public static final int colortext_title=0x7f060002;
         public static final int colortext_title2=0x7f060003;
     }
@@ -156,6 +157,7 @@ public final class R {
         public static final int file_connection=0x7f07002a;
         public static final int hello=0x7f070000;
         public static final int keypad_title=0x7f07000f;
+        public static final int main_no_items=0x7f070032;
         public static final int matches_label=0x7f070007;
         public static final int matches_title=0x7f07000d;
         public static final int menuapp_label=0x7f070019;

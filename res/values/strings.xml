@@ -72,6 +72,7 @@
     <string name="ACTION_COURSE">getcourse</string>
     
     <string name="resume_match">Resumen Partido</string> 
+    <string name="main_no_items">No hay elementos para mostrar</string>
 </resources>
 
 
