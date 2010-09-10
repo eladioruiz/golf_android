@@ -12,20 +12,17 @@ package org.example.mygolfcard;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 
 public class Keypad extends Dialog {
 
 	private final View keys[] = new View[12];
 	private View keypad;
-	private final View strokesView;
 	private final Strokes strokes;
 	private final int playerPush;
 
 	public Keypad(Context context, int playerPush) {
 		super(context);
-		this.strokesView = null;
 		this.playerPush = playerPush;
 		this.strokes = (Strokes) context;
 	}

@@ -52,6 +52,27 @@
 	<string name="course_details_label">Detalles del Campo</string>
 	<string name="course_detail_title">My Golf Card - Detalles del Campo</string>
 	<string name="course_details_shortcut">d</string>
+	
+	<string name="alert_button_default">Aceptar</string>
+	<string name="alert_title_no_save">Error guardando datos</string>
+	<string name="no_internet">No tiene conexión a Internet.\nSe usarán los últimos datos de acceso disponibles.</string>
+	<string name="no_internet_connect">Esta opción sólo está disponible con una conexión a Internet. Conecte su Wi-Fi o 3G y reinicie la aplicación.\nDisculpe las molestias.\n</string>
+	<string name="no_save">La aplicación no ha podido guardar los datos correspondientes a su sesión. Por favor, vuelva a introducirlos.\n</string>
+	<string name="no_implemented">Opción no operativa en estos momentos.\nDisculpe las molestias.</string>
+	<string name="title_remote_connection">Conexión Remota.</string>
+	<string name="title_file_connection">Conexión Local.</string>
+	<string name="remote_connection">Recuperando datos de servidor remoto de My Golf Card.</string>
+	<string name="file_connection">La aplicación no ha encontrado datos de acceso previos a esta sesión. Deberá conectar su Wi-Fi o 3G para validar su acceso.\nDisculpe las molestias.\n</string>
     
+    <string name="URL_APIS">http://dev.mygolfcard.es/api/</string>
+    <string name="ACTION_AUTH">authentication</string>
+    <string name="ACTION_MATCHES">getmatches</string>
+    <string name="ACTION_COURSES">getcourses</string>
+    <string name="ACTION_MATCH">getmatche</string>
+    <string name="ACTION_COURSE">getcourse</string>
+    
+    <string name="resume_match">Resumen Partido</string> 
 </resources>
+
+
 

@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Button;
 
 public class Strokes extends Activity implements OnClickListener {
-	private View strokesView;
 	private final View playerButton[] = new View[4];
 	private View previousButton;
 	private View nextButton;
@@ -27,7 +26,6 @@ public class Strokes extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.strokes);
-		strokesView = findViewById(R.layout.strokes);
 		
 		holeNumber = Integer.parseInt(getIntent().getCharSequenceExtra("hole_number").toString());
 		TextView tx = (TextView) findViewById(R.id.hole_info);
@@ -91,9 +89,9 @@ public class Strokes extends Activity implements OnClickListener {
 				//startActivity(new Intent(this, Resume.class));
 				new AlertDialog.Builder(this)
 					.setIcon(R.drawable.info_dialog_icon_tra)
-					.setTitle("RESUMEN PARTIDO")
+					.setTitle(R.string.resume_match)
 					.setMessage(Html.fromHtml("<b>Bea (HCP : 36)</b> : 45<br><b>Eladio (HCP : 36)</b> : 46<br><b>Juan (HCP : 36)</b> : 48<br><b>Merche (HCP : 36)</b> : 50"))
-					.setPositiveButton("Aceptar", null)
+					.setPositiveButton(R.string.alert_button_default, null)
 					.show();
 				return true;
 				

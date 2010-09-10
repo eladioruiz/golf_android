@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.util.Log;
-import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -16,19 +15,18 @@ import android.text.TextWatcher;
 import android.text.Editable;
 
 public class NewMatch extends Activity implements TextWatcher, AdapterView.OnItemSelectedListener, OnClickListener {
-	TextView selection;
-	AutoCompleteTextView newmatch_course;
-	AutoCompleteTextView newmatch_player_1;
-	AutoCompleteTextView newmatch_player_2;
-	AutoCompleteTextView newmatch_player_3;
-	AutoCompleteTextView newmatch_player_4;
-	Spinner newmatch_tee_1;
-	Spinner newmatch_tee_2;
-	Spinner newmatch_tee_3;
-	Spinner newmatch_tee_4;
-	String[] courses={"RACE", "Oliva Nova", "La Duquesa"};
-	String[] players={"Eladio", "Bea", "Juan", "Merche"};
-	String[] tees={"Amarillas", "Rojas", "Blancas"};
+	private AutoCompleteTextView newmatch_course;
+	private AutoCompleteTextView newmatch_player_1;
+	private AutoCompleteTextView newmatch_player_2;
+	private AutoCompleteTextView newmatch_player_3;
+	private AutoCompleteTextView newmatch_player_4;
+	private Spinner newmatch_tee_1;
+	private Spinner newmatch_tee_2;
+	private Spinner newmatch_tee_3;
+	private Spinner newmatch_tee_4;
+	private String[] courses={"RACE", "Oliva Nova", "La Duquesa"};
+	private String[] players={"Eladio", "Bea", "Juan", "Merche"};
+	private String[] tees={"Amarillas", "Rojas", "Blancas"};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -1,10 +1,8 @@
 package org.example.mygolfcard;
 
-import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
-import org.example.mygolfcard.MyGolfCard.InitTask;
 import org.example.mygolfcard.RestClient.RequestMethod;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,22 +19,23 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class Courses extends ListActivity {
-	String[] courses_field1;
-	String[] courses_field2;
-	String[] courses_field3;
+	private String[] courses_field1;
+	private String[] courses_field2;
+	private String[] courses_field3;
 	private String auth_token;
 	private boolean connectionOK;
-	static String LOGIN_URL = "http://dev.mygolfcard.es/api/getcourses";
+	private String URL;
 	
 	/** Called with the activity is first created. */
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		setContentView(R.layout.courses);
+		
+		URL = getString(R.string.URL_APIS) + getString(R.string.ACTION_COURSES);
 		
 		connectionOK = Authentication.checkConnection(Courses.this);
 		if (connectionOK) {
@@ -75,7 +74,7 @@ public class Courses extends ListActivity {
 	public String getCourses() {
 		String response;
     	
-	    RestClient client = new RestClient(LOGIN_URL);
+	    RestClient client = new RestClient(URL);
 	    client.AddParam("token", auth_token);
 	    
 	    response = "";
@@ -131,7 +130,6 @@ public class Courses extends ListActivity {
 	 */
 	protected class InitTask extends AsyncTask<Context, Integer, String>
 	{
-		private String token;
 		private ProgressDialog dialog;
 		
 		public InitTask () {

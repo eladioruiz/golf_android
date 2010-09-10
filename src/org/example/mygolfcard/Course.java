@@ -1,8 +1,6 @@
 package org.example.mygolfcard;
 
-import org.example.mygolfcard.Matches.InitTask;
 import org.example.mygolfcard.RestClient.RequestMethod;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,26 +11,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class Course extends Activity {
-	String auth_token;
+	private String auth_token;
 	
-	String course_id;
-	String course_name;
-	String course_address;
-	String course_description;
-	String course_config;
-	String course_details;
+	private String course_id;
+	private String course_name;
+	private String course_address;
+	private String course_description;
+	private String course_config;
+	private String course_details;
 	
-	static String LOGIN_URL = "http://dev.mygolfcard.es/api/getcourse";
+	private String URL;
 	
 	private TextView txtCourseName;
 	private TextView txtCourseAddress;
@@ -43,6 +38,8 @@ public class Course extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.course);
+		
+		URL = getString(R.string.URL_APIS) + getString(R.string.ACTION_COURSE);
 		
 		course_id = getIntent().getCharSequenceExtra("course_id").toString();
 
@@ -74,7 +71,7 @@ public class Course extends Activity {
 					.setIcon(R.drawable.info_dialog_icon_tra)
 					.setTitle(R.string.course_details_label)
 					.setMessage(course_details)
-					.setPositiveButton("Aceptar", null)
+					.setPositiveButton(R.string.alert_button_default, null)
 					.show();
 				return true;
 				
@@ -83,8 +80,8 @@ public class Course extends Activity {
 				return true;
 				
 			case R.id.menuapp:
-				startActivity(new Intent(this, MenuApp.class));
 				finish();
+				startActivity(new Intent(this, MenuApp.class));
 				return true;
 		}
 		return false;
@@ -107,7 +104,7 @@ public class Course extends Activity {
 	public String getCourse() {
 		String response;
     	
-	    RestClient client = new RestClient(LOGIN_URL);
+	    RestClient client = new RestClient(URL);
 	    client.AddParam("token", auth_token);
 	    client.AddParam("course_id", course_id);
 	    
@@ -173,7 +170,6 @@ public class Course extends Activity {
 	 */
 	protected class InitTask extends AsyncTask<Context, Integer, String>
 	{
-		private String token;
 		private ProgressDialog dialog;
 		
 		public InitTask () {
@@ -195,7 +191,9 @@ public class Course extends Activity {
 		{
 			Log.i( "makemachine", "onPreExecute()" );
 			super.onPreExecute();
-			this.dialog = ProgressDialog.show(Course.this, "Conexión Remota", "Recuperando datos de servidor remoto de My Golf Card.", true);
+			CharSequence title_remote = getString(R.string.title_remote_connection);
+			CharSequence remote = getString(R.string.remote_connection);
+			this.dialog = ProgressDialog.show(Course.this, title_remote, remote, true);
 		}
 
 		// -- called from the publish progress 

@@ -1,7 +1,6 @@
 package org.example.mygolfcard;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,81 +8,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Gravity;
-import android.widget.Toast;
 
 public class Card extends Activity implements OnClickListener {
 	private final View holeButton[] = new View[18];
-	private Intent holeIntent;
-	private Context cont;
-	private int holeNumber;
 	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.card_2);
-		cont = this;
 
 		findViews();
 		initButtons();
 		setListeners();
-		/*
-		// Set up click listeners for all the buttons
-		View hole1_Button = findViewById(R.id.card_hole1);
-		hole1_Button.setOnClickListener(this);
-		
-		View hole2_Button = findViewById(R.id.card_hole2);
-		hole2_Button.setOnClickListener(this);
-		
-		View hole3_Button = findViewById(R.id.card_hole3);
-		hole3_Button.setOnClickListener(this);
-		
-		View hole4_Button = findViewById(R.id.card_hole4);
-		hole4_Button.setOnClickListener(this);
-		
-		View hole5_Button = findViewById(R.id.card_hole5);
-		hole5_Button.setOnClickListener(this);
-		
-		View hole6_Button = findViewById(R.id.card_hole6);
-		hole6_Button.setOnClickListener(this);
-		
-		View hole7_Button = findViewById(R.id.card_hole7);
-		hole7_Button.setOnClickListener(this);
-		
-		View hole8_Button = findViewById(R.id.card_hole8);
-		hole8_Button.setOnClickListener(this);
-		
-		View hole9_Button = findViewById(R.id.card_hole9);
-		hole9_Button.setOnClickListener(this);
-		
-		View hole10_Button = findViewById(R.id.card_hole10);
-		hole10_Button.setOnClickListener(this);
-		
-		View hole11_Button = findViewById(R.id.card_hole11);
-		hole11_Button.setOnClickListener(this);
-		
-		View hole12_Button = findViewById(R.id.card_hole12);
-		hole12_Button.setOnClickListener(this);
-		
-		View hole13_Button = findViewById(R.id.card_hole13);
-		hole13_Button.setOnClickListener(this);
-		
-		View hole14_Button = findViewById(R.id.card_hole14);
-		hole14_Button.setOnClickListener(this);
-		
-		View hole15_Button = findViewById(R.id.card_hole15);
-		hole15_Button.setOnClickListener(this);
-		
-		View hole16_Button = findViewById(R.id.card_hole16);
-		hole16_Button.setOnClickListener(this);
-		
-		View hole17_Button = findViewById(R.id.card_hole17);
-		hole17_Button.setOnClickListener(this);
-		
-		View hole18_Button = findViewById(R.id.card_hole18);
-		hole18_Button.setOnClickListener(this);
-		*/
 	}
 	
 	public void onClick(View v) {

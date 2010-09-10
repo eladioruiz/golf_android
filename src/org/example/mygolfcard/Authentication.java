@@ -6,8 +6,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.NetworkInfo.State; 
-import android.widget.Toast;
 
 public class Authentication {
 	
@@ -28,13 +26,15 @@ public class Authentication {
 			}
 		}
 
-		//Si el boolean sigue a false significa que no hay red disponible
+/*		//Si el boolean sigue a false significa que no hay red disponible
 		if(!bTieneConexion){
 			//Mostramos un error indicando al usuario que no tiene conexión a Internet
-			Toast.makeText(ctx, "No tiene conexión a Internet.",
+			Toast.makeText(ctx, R.string.no_internet,
 	                Toast.LENGTH_SHORT).show();
 		}
-//bTieneConexion = false;
+*/
+		//bTieneConexion = false;
+		
 		return bTieneConexion;
 	}
 
@@ -58,9 +58,9 @@ public class Authentication {
 		catch (Throwable t) {
 			new AlertDialog.Builder(ctx)
 				.setIcon(R.drawable.alert_dialog_icon)
-				.setTitle("Error guardando sesión")
-				.setMessage("La aplicación no ha podido guardar los datos correspondientes a su sesión. Por favor, vuelva a introducirlos.\n")
-				.setPositiveButton("Aceptar", null)
+				.setTitle(R.string.alert_title_no_save)
+				.setMessage(R.string.no_save)
+				.setPositiveButton(R.string.alert_button_default, null)
 				.show();
 			return false;
 		}
@@ -180,9 +180,9 @@ public class Authentication {
 		catch (Throwable t) {
 			new AlertDialog.Builder(ctx)
 				.setIcon(R.drawable.alert_dialog_icon)
-				.setTitle("Error guardando datos")
-				.setMessage("La aplicación no ha podido guardar los datos correspondientes a su sesión. \n")
-				.setPositiveButton("Aceptar", null)
+				.setTitle(R.string.alert_title_no_save)
+				.setMessage(R.string.no_save)
+				.setPositiveButton(R.string.alert_button_default, null)
 				.show();
 			return false;
 		}

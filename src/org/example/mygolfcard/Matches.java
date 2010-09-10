@@ -19,25 +19,26 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.ArrayAdapter;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 public class Matches extends ListActivity {
-	String[] matches;
-	String[] matches_field1;
-	String[] matches_field2;
-	String[] matches_field3;
+	private String[] matches;
+	private String[] matches_field1;
+	private String[] matches_field2;
+	private String[] matches_field3;
 	private String auth_token;
 	private String auth_user_id;
 	private boolean connectionOK;
-	static String LOGIN_URL = "http://dev.mygolfcard.es/api/getmatches";
+	private String URL;
 	
 	/** Called with the activity is first created. */
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		setContentView(R.layout.matches);
+		
+		URL = getString(R.string.URL_APIS) + getString(R.string.ACTION_MATCHES);
 		
 		connectionOK = Authentication.checkConnection(Matches.this);
 		if (connectionOK) {
@@ -49,7 +50,7 @@ public class Matches extends ListActivity {
 			task.execute();
 		}
 		else {
-			Toast.makeText(Matches.this, "No tiene acceso a Internet, usaremos los últimos datos de acceso.",
+			Toast.makeText(Matches.this, R.string.no_internet,
                     Toast.LENGTH_SHORT).show();
 			
 			String result = Authentication.readMatches(Matches.this);
@@ -61,15 +62,15 @@ public class Matches extends ListActivity {
 	public void onListItemClick(ListView parent, View v, int position,long id) {
 		//
 		if (connectionOK) {
-			Toast.makeText(Matches.this, "Opción no operativa en estos momentos. Disculpe las molestias.",
+			Toast.makeText(Matches.this, R.string.no_implemented,
 					Toast.LENGTH_SHORT).show();
 		}
 		else {
 			new AlertDialog.Builder(Matches.this)
 				.setIcon(R.drawable.alert_dialog_icon)
-				.setTitle("Error conexión a Internet")
-				.setMessage("Esta opción sólo está disponible con una conexión a Internet. Conecte su Wi-Fi o 3G y reinicie la aplicación.\nDisculpe las molestias.\n")
-				.setPositiveButton("Aceptar", null)
+				.setTitle(R.string.remote_connection)
+				.setMessage(R.string.no_internet_connect)
+				.setPositiveButton(R.string.alert_button_default, null)
 				.show();
 		}
 	}
@@ -77,7 +78,7 @@ public class Matches extends ListActivity {
 	public String getMatches() {
 		String response;
     	
-	    RestClient client = new RestClient(LOGIN_URL);
+	    RestClient client = new RestClient(URL);
 	    client.AddParam("token", auth_token);
 	    client.AddParam("user_id", auth_user_id);
 	    
@@ -146,7 +147,6 @@ public class Matches extends ListActivity {
 	 */
 	protected class InitTask extends AsyncTask<Context, Integer, String>
 	{
-		private String token;
 		private ProgressDialog dialog;
 		
 		public InitTask () {
@@ -168,7 +168,9 @@ public class Matches extends ListActivity {
 		{
 			Log.i( "makemachine", "onPreExecute()" );
 			super.onPreExecute();
-			this.dialog = ProgressDialog.show(Matches.this, "Conexión Remota", "Recuperando datos de servidor remoto de My Golf Card.", true);
+			CharSequence title_remote = getString(R.string.title_remote_connection);
+			CharSequence remote = getString(R.string.remote_connection);
+			this.dialog = ProgressDialog.show(Matches.this, title_remote, remote, true);
 		}
 
 		// -- called from the publish progress 

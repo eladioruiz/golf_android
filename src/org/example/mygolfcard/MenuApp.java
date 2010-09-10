@@ -1,19 +1,19 @@
 package org.example.mygolfcard;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+//import android.widget.TextView;
 import android.view.View.OnClickListener;
-import android.util.Log;
-import java.io.*;
+//import android.util.Log;
+//import java.io.*;
 
 public class MenuApp extends Activity  implements OnClickListener {
+	@SuppressWarnings("unused")
 	private String auth_token;
 	
 	/** Called when the activity is first created. */
@@ -40,28 +40,8 @@ public class MenuApp extends Activity  implements OnClickListener {
 		
 		Authentication.readDataUser(MenuApp.this);
 		auth_token = Authentication.getToken();
-		
 	}
 	
-	@Override
-	public void onDestroy() {
-		try
-		{
-			// NO borramos el fichero para que esté disponible si no hay conexión a Internet
-			//Authentication.deleteAuth(MenuApp.this);
-		}
-		catch (Throwable t) {
-			new AlertDialog.Builder(this)
-				.setIcon(R.drawable.alert_dialog_icon)
-				.setTitle("Error borrando sesión")
-				.setMessage("La aplicación no ha podido borrar los datos correspondientes a su sesión. \n")
-				.setPositiveButton("Aceptar", null)
-				.show();
-			finish();
-		}
-		super.onDestroy();		
-	}
-
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.exit_button:

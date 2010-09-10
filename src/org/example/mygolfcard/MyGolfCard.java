@@ -11,19 +11,17 @@ import android.os.Bundle;
 import android.os.AsyncTask;
 import android.view.View;
 import android.util.Log;
-import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.Toast;
-import java.io.*;
 
 public class MyGolfCard extends Activity  implements OnClickListener {
 
-	static String LOGIN_URL = "http://dev.mygolfcard.es/api/authentication";
-	String auth_token;
-	String auth_user_id;
-	String auth_error_code;
-	boolean connectionOK = true;
+	private static String URL;
+	private String auth_token;
+	private String auth_user_id;
+	private String auth_error_code;
+	private boolean connectionOK = true;
 	
 	static public String resWebService;
 	
@@ -32,6 +30,8 @@ public class MyGolfCard extends Activity  implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
+        URL = getString(R.string.URL_APIS) + getString(R.string.ACTION_AUTH);
         
         connectionOK = Authentication.checkConnection(MyGolfCard.this);
         if (connectionOK) {
@@ -69,12 +69,25 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	    			// ... en caso contrario, pasamos a la sigueinte Activity (que ya se encargará ...
 	    			// ... de mirar si el fichero con el usuario existe y puede continuar
 	    			
-	    			Toast.makeText(MyGolfCard.this, "No tiene acceso a Internet, usaremos los últimos datos de acceso.",
+	    			Toast.makeText(MyGolfCard.this, R.string.no_internet,
 		                    Toast.LENGTH_SHORT).show();
 	    			
-	    			Intent i = new Intent(this, MenuApp.class);
-	        		startActivity(i);
-	        		finish();
+	    			Authentication.readDataUser(MyGolfCard.this);
+	    			String auth_token = Authentication.getToken();
+	    			
+	    			if (auth_token.length() > 0) {
+		    			Intent i = new Intent(this, MenuApp.class);
+		        		startActivity(i);
+		        		finish();
+	    			}
+	    			else {
+	    				new AlertDialog.Builder(this)
+		    				.setIcon(R.drawable.alert_dialog_icon)
+		    				.setTitle(R.string.title_file_connection)
+		    				.setMessage(R.string.file_connection)
+		    				.setPositiveButton(R.string.alert_button_default, null)
+		    				.show();
+	    			}
 	    		}
 	    		
 	    		//String res = callAuthentication(user_login, user_password);
@@ -96,7 +109,7 @@ public class MyGolfCard extends Activity  implements OnClickListener {
     private static String callAuthentication(String pLogin, String pPass) {
     	String response;
     	
-	    RestClient client = new RestClient(LOGIN_URL);
+	    RestClient client = new RestClient(URL);
 	    client.AddParam("login", pLogin);
 	    client.AddParam("password", pPass);
 	    
