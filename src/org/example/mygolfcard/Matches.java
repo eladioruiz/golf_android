@@ -136,6 +136,7 @@ public class Matches extends ListActivity {
 		
 		//setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, matches));
 		
+		// Muestra la lista
 		SimpleAdapter adapter = new SimpleAdapter(this, fillMaps, R.layout.main_item_two_line_row, new String[] { "course_name", "date_hour" }, new int[] { R.id.field1,  R.id.field2});
 		
 		setListAdapter(adapter);

@@ -54,7 +54,7 @@ public final class R {
         public static final int course_address=0x7f0a0015;
         public static final int course_config=0x7f0a0017;
         public static final int course_description=0x7f0a0016;
-        public static final int course_details=0x7f0a004e;
+        public static final int course_details=0x7f0a004f;
         public static final int course_name=0x7f0a0014;
         public static final int courses_button=0x7f0a002e;
         public static final int exit_button=0x7f0a0029;
@@ -81,7 +81,7 @@ public final class R {
         public static final int login_password=0x7f0a0027;
         public static final int login_user=0x7f0a0026;
         public static final int matches_button=0x7f0a002d;
-        public static final int menuapp=0x7f0a004f;
+        public static final int menuapp=0x7f0a0050;
         public static final int new_button=0x7f0a002c;
         public static final int newmatch_button_date=0x7f0a0033;
         public static final int newmatch_button_hour=0x7f0a0035;
@@ -110,7 +110,7 @@ public final class R {
         public static final int strokesButton_4=0x7f0a0049;
         public static final int strokes_next=0x7f0a004b;
         public static final int strokes_previous=0x7f0a004a;
-        public static final int synchro=0x7f0a0050;
+        public static final int synchro=0x7f0a004e;
     }
     public static final class layout {
         public static final int about=0x7f030000;
@@ -122,13 +122,14 @@ public final class R {
         public static final int main=0x7f030006;
         public static final int main_item_two_line_row=0x7f030007;
         public static final int matches=0x7f030008;
-        public static final int menu=0x7f030009;
-        public static final int newmatch=0x7f03000a;
-        public static final int resume=0x7f03000b;
-        public static final int spinnerview=0x7f03000c;
-        public static final int spinnerviewdropdown=0x7f03000d;
-        public static final int strokes=0x7f03000e;
-        public static final int synchro=0x7f03000f;
+        public static final int matches_pdte=0x7f030009;
+        public static final int menu=0x7f03000a;
+        public static final int newmatch=0x7f03000b;
+        public static final int resume=0x7f03000c;
+        public static final int spinnerview=0x7f03000d;
+        public static final int spinnerviewdropdown=0x7f03000e;
+        public static final int strokes=0x7f03000f;
+        public static final int synchro=0x7f030010;
     }
     public static final class menu {
         public static final int menu_app=0x7f090000;
