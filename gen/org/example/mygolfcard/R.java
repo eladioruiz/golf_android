@@ -29,7 +29,7 @@ public final class R {
         public static final int info_dialog_icon_tra=0x7f020004;
     }
     public static final class id {
-        public static final int about=0x7f0a0048;
+        public static final int about=0x7f0a004b;
         public static final int about_content=0x7f0a0000;
         public static final int card_hole1=0x7f0a0001;
         public static final int card_hole10=0x7f0a000a;
@@ -53,13 +53,13 @@ public final class R {
         public static final int course_address=0x7f0a0014;
         public static final int course_config=0x7f0a0016;
         public static final int course_description=0x7f0a0015;
-        public static final int course_details=0x7f0a004a;
+        public static final int course_details=0x7f0a004d;
         public static final int course_name=0x7f0a0013;
         public static final int courses_button=0x7f0a002d;
         public static final int exit_button=0x7f0a0028;
         public static final int field1=0x7f0a0029;
         public static final int field2=0x7f0a002a;
-        public static final int hole_info=0x7f0a0041;
+        public static final int hole_info=0x7f0a0044;
         public static final int keypad=0x7f0a0018;
         public static final int keypad_1=0x7f0a0019;
         public static final int keypad_10=0x7f0a0022;
@@ -75,38 +75,41 @@ public final class R {
         public static final int keypad_9=0x7f0a0021;
         public static final int label_course=0x7f0a002e;
         public static final int label_datehour=0x7f0a0030;
-        public static final int label_holes=0x7f0a0032;
-        public static final int label_players=0x7f0a0034;
+        public static final int label_holes=0x7f0a0035;
+        public static final int label_players=0x7f0a0037;
         public static final int login_password=0x7f0a0026;
         public static final int login_user=0x7f0a0025;
         public static final int matches_button=0x7f0a002c;
-        public static final int menuapp=0x7f0a004b;
+        public static final int menuapp=0x7f0a004e;
         public static final int new_button=0x7f0a002b;
-        public static final int newmatch_cancel=0x7f0a003e;
+        public static final int newmatch_button_date=0x7f0a0032;
+        public static final int newmatch_button_hour=0x7f0a0034;
+        public static final int newmatch_cancel=0x7f0a0041;
         public static final int newmatch_course=0x7f0a002f;
-        public static final int newmatch_datehour=0x7f0a0031;
-        public static final int newmatch_holes=0x7f0a0033;
-        public static final int newmatch_ok=0x7f0a003d;
-        public static final int newmatch_player_1=0x7f0a0035;
-        public static final int newmatch_player_2=0x7f0a0037;
-        public static final int newmatch_player_3=0x7f0a0039;
-        public static final int newmatch_player_4=0x7f0a003b;
-        public static final int newmatch_tee_1=0x7f0a0036;
-        public static final int newmatch_tee_2=0x7f0a0038;
-        public static final int newmatch_tee_3=0x7f0a003a;
-        public static final int newmatch_tee_4=0x7f0a003c;
-        public static final int resume=0x7f0a004d;
-        public static final int resume_content=0x7f0a003f;
+        public static final int newmatch_holes=0x7f0a0036;
+        public static final int newmatch_ok=0x7f0a0040;
+        public static final int newmatch_player_1=0x7f0a0038;
+        public static final int newmatch_player_2=0x7f0a003a;
+        public static final int newmatch_player_3=0x7f0a003c;
+        public static final int newmatch_player_4=0x7f0a003e;
+        public static final int newmatch_tee_1=0x7f0a0039;
+        public static final int newmatch_tee_2=0x7f0a003b;
+        public static final int newmatch_tee_3=0x7f0a003d;
+        public static final int newmatch_tee_4=0x7f0a003f;
+        public static final int newmatch_text_date=0x7f0a0031;
+        public static final int newmatch_text_hour=0x7f0a0033;
+        public static final int resume=0x7f0a0050;
+        public static final int resume_content=0x7f0a0042;
         public static final int selection=0x7f0a0017;
-        public static final int settings=0x7f0a0049;
-        public static final int spinner_item=0x7f0a0040;
-        public static final int strokesButton_1=0x7f0a0042;
-        public static final int strokesButton_2=0x7f0a0043;
-        public static final int strokesButton_3=0x7f0a0044;
-        public static final int strokesButton_4=0x7f0a0045;
-        public static final int strokes_next=0x7f0a0047;
-        public static final int strokes_previous=0x7f0a0046;
-        public static final int synchro=0x7f0a004c;
+        public static final int settings=0x7f0a004c;
+        public static final int spinner_item=0x7f0a0043;
+        public static final int strokesButton_1=0x7f0a0045;
+        public static final int strokesButton_2=0x7f0a0046;
+        public static final int strokesButton_3=0x7f0a0047;
+        public static final int strokesButton_4=0x7f0a0048;
+        public static final int strokes_next=0x7f0a004a;
+        public static final int strokes_previous=0x7f0a0049;
+        public static final int synchro=0x7f0a004f;
     }
     public static final class layout {
         public static final int about=0x7f030000;
@@ -134,9 +137,10 @@ public final class R {
     }
     public static final class string {
         public static final int ACTION_AUTH=0x7f07002c;
-        public static final int ACTION_COURSE=0x7f070030;
+        public static final int ACTION_COURSE=0x7f070031;
         public static final int ACTION_COURSES=0x7f07002e;
-        public static final int ACTION_MATCH=0x7f07002f;
+        public static final int ACTION_FRIENDS=0x7f07002f;
+        public static final int ACTION_MATCH=0x7f070030;
         public static final int ACTION_MATCHES=0x7f07002d;
         public static final int URL_APIS=0x7f07002b;
         public static final int about_label=0x7f070005;
@@ -155,10 +159,10 @@ public final class R {
         public static final int courses_title=0x7f07000e;
         public static final int exit_label=0x7f070004;
         public static final int file_connection=0x7f07002a;
-        public static final int form_validation=0x7f070034;
+        public static final int form_validation=0x7f070035;
         public static final int hello=0x7f070000;
         public static final int keypad_title=0x7f07000f;
-        public static final int main_no_items=0x7f070032;
+        public static final int main_no_items=0x7f070033;
         public static final int matches_label=0x7f070007;
         public static final int matches_title=0x7f07000d;
         public static final int menuapp_label=0x7f070019;
@@ -173,7 +177,7 @@ public final class R {
         public static final int presentation=0x7f070002;
         public static final int remote_connection=0x7f070029;
         public static final int resume_label=0x7f07001b;
-        public static final int resume_match=0x7f070031;
+        public static final int resume_match=0x7f070032;
         public static final int resume_shortcut=0x7f07001d;
         public static final int resume_title=0x7f07001c;
         public static final int settings_label=0x7f070013;
@@ -184,7 +188,7 @@ public final class R {
         public static final int synchro_shortcut=0x7f070018;
         public static final int synchro_title=0x7f070017;
         public static final int title_file_connection=0x7f070028;
-        public static final int title_form_validation=0x7f070033;
+        public static final int title_form_validation=0x7f070034;
         public static final int title_remote_connection=0x7f070027;
     }
     public static final class style {

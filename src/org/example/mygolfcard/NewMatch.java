@@ -1,5 +1,7 @@
 package org.example.mygolfcard;
 
+import java.util.Calendar;
+
 import org.example.mygolfcard.RestClient.RequestMethod;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -7,9 +9,13 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -20,49 +26,64 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class NewMatch extends Activity implements TextWatcher, AdapterView.OnItemSelectedListener, OnClickListener {
 	private AutoCompleteTextView newmatch_course;
+	private TextView newmatch_date;
+	private TextView newmatch_hour;
+	private TextView newmatch_n_holes;
 	private AutoCompleteTextView newmatch_player[] = new AutoCompleteTextView[4];
-/*	private AutoCompleteTextView newmatch_player_1;
-	private AutoCompleteTextView newmatch_player_2;
-	private AutoCompleteTextView newmatch_player_3;
-	private AutoCompleteTextView newmatch_player_4;
-*/	private Spinner newmatch_tee[] = new Spinner[4];
-/*	private Spinner newmatch_tee_1;
-	private Spinner newmatch_tee_2;
-	private Spinner newmatch_tee_3;
-	private Spinner newmatch_tee_4;
-*/	private String[] courses; //={"RACE", "Oliva Nova", "La Duquesa"};
-	private String[] players={"Eladio", "Bea", "Juan", "Merche"};
+	private Spinner newmatch_tee[] = new Spinner[4];
+	private String[] courses; 
+	private String[] players; 
 	private String[] tees={"Amarillas", "Rojas", "Blancas"};
+	private Button pickDate;
+	private Button pickTime;
+	private View okButton;
+	private View cancelButton;
 	
 	private boolean connectionOK;
 	private String auth_token;
+	private String auth_user_id;
 	
 	private String aux_courses;
-	private String URL_COURSES;
+	private String aux_friends;
 	
+	private String URL_COURSES;
+	private String URL_FRIENDS;
+	
+    // date and time
+    private int mYear;
+    private int mMonth;
+    private int mDay;
+    private int mHour;
+    private int mMinute;
+
+    static final int TIME_DIALOG_ID = 0;
+    static final int DATE_DIALOG_ID = 1;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.newmatch);
 		
-/*		ArrayAdapter<CharSequence> aa = new ArrayAdapter<CharSequence>(this, R.layout.spinnerview, tees);
-		aa.setDropDownViewResource(R.layout.spinnerviewdropdown);
-*/
 		findViews();
 		setListeners();
 		
 		URL_COURSES = getString(R.string.URL_APIS) + getString(R.string.ACTION_COURSES);
+		URL_FRIENDS = getString(R.string.URL_APIS) + getString(R.string.ACTION_FRIENDS);
 		
 		connectionOK = Authentication.checkConnection(NewMatch.this);
 		if (connectionOK) {
 			Authentication.readDataUser(NewMatch.this);
-			auth_token = Authentication.getToken();
+			auth_token    = Authentication.getToken();
+			auth_user_id  = Authentication.getUserId();
 			InitTask task = new InitTask();
 			task.execute();
 		}
@@ -72,54 +93,104 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 			
 			String result = Authentication.readCourses(NewMatch.this);
 			setInfoCourses(result);
+			
+			result = Authentication.readFriends(NewMatch.this);
+			setInfoPlayers(result);
 		}
 		
-/*		newmatch_tee_1 = (Spinner)findViewById(R.id.newmatch_tee_1);
-		newmatch_tee_1.setOnItemSelectedListener(this);
-		newmatch_tee_1.setAdapter(aa);
 		
-		newmatch_tee_2 = (Spinner)findViewById(R.id.newmatch_tee_2);
-		newmatch_tee_2.setOnItemSelectedListener(this);
-		newmatch_tee_2.setAdapter(aa);
-		
-		newmatch_tee_3 = (Spinner)findViewById(R.id.newmatch_tee_3);
-		newmatch_tee_3.setOnItemSelectedListener(this);
-		newmatch_tee_3.setAdapter(aa);
-		
-		newmatch_tee_4 = (Spinner)findViewById(R.id.newmatch_tee_4);
-		newmatch_tee_4.setOnItemSelectedListener(this);
-		newmatch_tee_4.setAdapter(aa);
-*/		
-/*        newmatch_course=(AutoCompleteTextView)findViewById(R.id.newmatch_course);
-        newmatch_course.addTextChangedListener(this);
-        newmatch_course.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, courses));
+        final Calendar c = Calendar.getInstance();
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+        mHour = c.get(Calendar.HOUR_OF_DAY);
+        mMinute = c.get(Calendar.MINUTE);
+
+        updateDisplay();
         
-        newmatch_player_1=(AutoCompleteTextView)findViewById(R.id.newmatch_player_1);
-        newmatch_player_1.addTextChangedListener(this);
-        newmatch_player_1.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, players));
-        
-        newmatch_player_2=(AutoCompleteTextView)findViewById(R.id.newmatch_player_2);
-        newmatch_player_2.addTextChangedListener(this);
-        newmatch_player_2.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, players));
-        
-        newmatch_player_3=(AutoCompleteTextView)findViewById(R.id.newmatch_player_3);
-        newmatch_player_3.addTextChangedListener(this);
-        newmatch_player_3.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, players));
-        
-        newmatch_player_4=(AutoCompleteTextView)findViewById(R.id.newmatch_player_4);
-        newmatch_player_4.addTextChangedListener(this);
-        newmatch_player_4.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, players));
-*/        
-/*		// Set up click listeners for all the buttons
-		View okButton = findViewById(R.id.newmatch_ok);
-		okButton.setOnClickListener(this);
-		
-		// Set up click listeners for all the buttons
-		View cancelButton = findViewById(R.id.newmatch_cancel);
-		cancelButton.setOnClickListener(this);
-*/
 	}
 
+	@Override
+    protected void onPause() {
+        super.onPause();
+
+        saveScreenData();
+    }
+	
+	@Override
+    protected void onResume() {
+        super.onPause();
+
+        getScreenData();
+    }
+	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
+		case TIME_DIALOG_ID:
+			return new TimePickerDialog(this, mTimeSetListener, mHour, mMinute, false);
+		case DATE_DIALOG_ID:
+			return new DatePickerDialog(this, mDateSetListener, mYear, mMonth, mDay);
+		}
+		return null;
+	}
+
+	@Override
+	protected void onPrepareDialog(int id, Dialog dialog) {
+		switch (id) {
+		case TIME_DIALOG_ID:
+			((TimePickerDialog) dialog).updateTime(mHour, mMinute);
+			break;
+		case DATE_DIALOG_ID:
+			((DatePickerDialog) dialog).updateDate(mYear, mMonth, mDay);
+			break;
+		}
+	}    
+
+	private void updateDisplay() {
+		newmatch_date.setText(
+				new StringBuilder()
+				// Month is 0 based so add 1
+				.append(mDay).append("-")
+				.append(mMonth + 1).append("-")
+				.append(mYear).append(" "));
+		
+		newmatch_hour.setText(
+				new StringBuilder()
+				// Month is 0 based so add 1
+				.append(pad(mHour)).append(":")
+				.append(pad(mMinute)));
+	}
+
+	private DatePickerDialog.OnDateSetListener mDateSetListener =
+		new DatePickerDialog.OnDateSetListener() {
+
+		public void onDateSet(DatePicker view, int year, int monthOfYear,
+				int dayOfMonth) {
+			mYear = year;
+			mMonth = monthOfYear;
+			mDay = dayOfMonth;
+			updateDisplay();
+		}
+	};
+
+	private TimePickerDialog.OnTimeSetListener mTimeSetListener =
+		new TimePickerDialog.OnTimeSetListener() {
+
+		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+			mHour = hourOfDay;
+			mMinute = minute;
+			updateDisplay();
+		}
+	};
+
+	private static String pad(int c) {
+		if (c >= 10)
+			return String.valueOf(c);
+		else
+			return "0" + String.valueOf(c);
+	}
+	
 	private void findViews() {
 		newmatch_player[0] 	= (AutoCompleteTextView)findViewById(R.id.newmatch_player_1);
 		newmatch_player[1] 	= (AutoCompleteTextView)findViewById(R.id.newmatch_player_2);
@@ -132,6 +203,20 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 		newmatch_tee[3] 	= (Spinner)findViewById(R.id.newmatch_tee_4);
 		
 		newmatch_course		= (AutoCompleteTextView)findViewById(R.id.newmatch_course);
+		
+		newmatch_date		= (TextView)findViewById(R.id.newmatch_text_date);
+		newmatch_date.setEnabled(false);
+		
+		newmatch_hour		= (TextView)findViewById(R.id.newmatch_text_hour);
+		newmatch_hour.setEnabled(false);
+		
+		newmatch_n_holes 	= (TextView)findViewById(R.id.newmatch_holes);
+		
+		pickDate = (Button) findViewById(R.id.newmatch_button_date);
+		pickTime = (Button) findViewById(R.id.newmatch_button_hour);
+		
+		okButton = findViewById(R.id.newmatch_ok);
+		cancelButton = findViewById(R.id.newmatch_cancel);
 	}
 	
 	private void setListeners() {
@@ -139,7 +224,8 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 		newmatch_course.addTextChangedListener(this);        
 
 		ArrayAdapter<CharSequence> aa = new ArrayAdapter<CharSequence>(this, R.layout.spinnerview, tees);
-		aa.setDropDownViewResource(R.layout.spinnerviewdropdown);
+		//aa.setDropDownViewResource(R.layout.spinnerviewdropdown);
+		aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		
 		for (int i=0; i < newmatch_tee.length; i++) {
 			newmatch_tee[i].setOnItemSelectedListener(this);
@@ -152,13 +238,28 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 		}
 
 		// Set up click listeners for all the buttons
-		View okButton = findViewById(R.id.newmatch_ok);
+		
 		okButton.setOnClickListener(this);
 		
 		// Set up click listeners for all the buttons
-		View cancelButton = findViewById(R.id.newmatch_cancel);
+		
 		cancelButton.setOnClickListener(this);
 
+        pickDate.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                showDialog(DATE_DIALOG_ID);
+            }
+        });
+
+        pickTime.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                showDialog(TIME_DIALOG_ID);
+            }
+        });
+
+		
 	}
 	
     public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -173,12 +274,13 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
     	// needed for interface, but not used
     }
 
-    
+    @SuppressWarnings("rawtypes")
     public void onItemSelected(AdapterView parent, View v, int position, long id) {
     
     }
     
-    public void onNothingSelected(AdapterView parent) {
+    @SuppressWarnings("rawtypes")
+	public void onNothingSelected(AdapterView parent) {
     		
     }
     
@@ -200,10 +302,12 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	
 	private boolean validateForm() {
 		// Recupera campos introducidos en formulario
-		String course 		= newmatch_course.getText().toString();
-		String date_hour 	= ((TextView)findViewById(R.id.newmatch_datehour)).getText().toString();
-		String n_holes 		= ((TextView)findViewById(R.id.newmatch_holes)).getText().toString();
+		String course 	= newmatch_course.getText().toString();
+		String date 	= newmatch_date.getText().toString();
+		String hour		= newmatch_hour.getText().toString();
+		String n_holes 	= newmatch_n_holes.getText().toString();
 		String res;
+		boolean bPlayers = false;
 		boolean bOK = true;
 		
 		// Validación de campos obligatorios
@@ -215,8 +319,13 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 			bOK = false;
 		}
 		
-		if (date_hour.length()<=0) {
-			res += "- Es obligatorio rellenar 'FECHA/HORA'\n";
+		if (date.length()<=0) {
+			res += "- Es obligatorio rellenar 'FECHA'\n";
+			bOK = false;
+		}
+		
+		if (hour.length()<=0) {
+			res += "- Es obligatorio rellenar 'HORA'\n";
 			bOK = false;
 		}
 		
@@ -225,6 +334,23 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 			bOK = false;
 		}
 		
+		if (Integer.parseInt(n_holes)<=0 || Integer.parseInt(n_holes)>18) {
+			res += "- El 'Nº HOYOS' debe estar entre 1 y 18\n";
+			bOK = false;
+		}
+		
+		bPlayers = false;
+		for (int i=0; i<4; i++) {
+			String player 	= newmatch_player[i].getText().toString();
+			if (player.length()>0) {
+				bPlayers = true;
+			}
+		}
+		
+		if (!bPlayers) {
+			res += "- Obligatorio al menos 1 jugador\n";
+			bOK = false;
+		}
 		
 		if (!bOK) {
 			new AlertDialog.Builder(NewMatch.this)
@@ -238,8 +364,9 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 		return bOK;
 	}
 
-	private void getData() {
+	private void getRemoteData() {
 		aux_courses = getCourses();
+		aux_friends = getFriends();
 	}
 	
 	private void setInfoCourses(String result) {
@@ -275,6 +402,33 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	}
 
 	private void setInfoPlayers(String result) {
+		JSONObject jsonObj;
+		JSONArray  jsonArr;
+
+		try {
+			jsonArr = new JSONArray(result);
+			
+/*			courses_field1 = new String[jsonArr.length()];
+			courses_field2 = new String[jsonArr.length()];
+			courses_field3 = new String[jsonArr.length()];
+*/			
+			players = new String[jsonArr.length()];
+			
+			for (int i=0; i<jsonArr.length(); i++) {
+				jsonObj = new JSONObject(jsonArr.get(i).toString());
+				
+/*				courses_field1[i] = jsonObj.getString("name");
+				courses_field2[i] = jsonObj.getString("address");
+				courses_field3[i] = jsonObj.getString("id");
+*/				Log.i("JSON", "" + i);
+				
+				players[i] = jsonObj.getString("name");
+				
+			}			
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
 		for (int i=0; i<newmatch_player.length; i++) {
 			newmatch_player[i].setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, players));
 		}
@@ -283,6 +437,8 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	private String getCourses() {
 		String response;
     	
+		Log.i( "newmatch", "getting courses ");
+		
 	    RestClient client = new RestClient(URL_COURSES);
 	    client.AddParam("token", auth_token);
 	    
@@ -296,20 +452,81 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	    
 	    Authentication.saveCourses(NewMatch.this, response);
 	    aux_courses = response;
+	    
+	    Log.i( "newmatch", "getting courses " + response.toString());
+	    
 	    return response;
 	}
 
+	private String getFriends() {
+		String response;
+    	
+		Log.i( "newmatch", "getting friends " + auth_user_id);
+		
+	    RestClient client = new RestClient(URL_FRIENDS);
+	    client.AddParam("token", auth_token);
+	    client.AddParam("user_id", auth_user_id);
+	    
+	    response = "";
+	    try {
+	        client.Execute(RequestMethod.POST);
+	        response = client.getResponse();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    
+	    Authentication.saveFriends(NewMatch.this, response);
+	    aux_friends = response;
+	    
+	    Log.i( "newmatch", "getting friends " + response.toString());
+	    
+	    return response;
+	}
+	
+	private void getScreenData() {
+		SharedPreferences prefs = getPreferences(0); 
+        String restoredText;
+        
+        restoredText = prefs.getString("course", null);
+        if (restoredText != null) {
+            newmatch_course.setText(restoredText, TextView.BufferType.EDITABLE);
+        }
+        
+        restoredText = prefs.getString("date", null);
+        if (restoredText != null) {
+            newmatch_date.setText(restoredText, TextView.BufferType.EDITABLE);
+        }
+        
+        restoredText = prefs.getString("hour", null);
+        if (restoredText != null) {
+            newmatch_hour.setText(restoredText, TextView.BufferType.EDITABLE);
+        }
+        
+        restoredText = prefs.getString("holes", null);
+        if (restoredText != null) {
+            newmatch_n_holes.setText(restoredText, TextView.BufferType.EDITABLE);
+        }
+	}
+
+	private void saveScreenData() {
+		SharedPreferences.Editor editor = getPreferences(0).edit();
+        editor.putString("course", newmatch_course.getText().toString());
+        editor.putString("date", newmatch_date.getText().toString());
+        editor.putString("hour", newmatch_hour.getText().toString());
+        editor.putString("holes", newmatch_n_holes.getText().toString());
+        editor.commit();
+	}
+	
 	/**
 	 * sub-class of AsyncTask
 	 */
 	protected class InitTask extends AsyncTask<Context, Integer, String>
 	{
 		private ProgressDialog dialog;		
-		private String aux_players;
 		
 		public InitTask () {
 			
-		}
+		};
 		
 		// -- run intensive processes here
 		// -- notice that the datatype of the first param in the class definition matches the param passed to this method 
@@ -317,7 +534,7 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 		@Override
 		protected String doInBackground( Context... params ) 
 		{
-			getData();
+			getRemoteData();
 			return "";
 		}
 
@@ -350,10 +567,11 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 			Log.i( "makemachine", "onPostExecute(): " + result );
 			this.dialog.cancel();
 			setInfoCourses(aux_courses);
-			setInfoPlayers(aux_players);
+			setInfoPlayers(aux_friends);
 			//setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, courses));
 		}
 	}   
 
     
 }
+

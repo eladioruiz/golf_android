@@ -19,6 +19,7 @@
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:singleLine="true"
+				android:textSize="14.5sp"
 				android:completionThreshold="3"
 				android:layout_span="2"/>	
 		</TableRow>
@@ -26,12 +27,35 @@
 			<TextView android:id="@+id/label_datehour"
 				android:text="Fecha/Hora :  "
 				android:paddingTop="15dip"/>
-			<EditText
-				android:id="@+id/newmatch_datehour"
-				android:singleLine="true"
-				android:textSize="12.5sp"
-				android:layout_height="42.5sp"
-				android:layout_span="2"/>
+			<LinearLayout
+				android:layout_width="fill_parent"
+	    		android:layout_height="wrap_content"
+	    		android:layout_span="2">
+				<EditText
+					android:id="@+id/newmatch_text_date"
+					android:singleLine="true"
+					android:textSize="14.5sp"
+					android:layout_height="wrap_content"
+					android:layout_width="90dip"
+					android:width="90dip"/>
+				<Button
+					android:id="@+id/newmatch_button_date"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="F" />
+				<EditText
+					android:id="@+id/newmatch_text_hour"
+					android:singleLine="true"
+					android:textSize="14.5sp"
+					android:layout_height="wrap_content"
+					android:layout_width="60dip"
+					android:width="60dip"/>	
+				<Button
+					android:id="@+id/newmatch_button_hour"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="H" />
+			</LinearLayout>
 		</TableRow>
 		<TableRow>
 			<TextView android:id="@+id/label_holes"
@@ -40,10 +64,10 @@
 			<EditText
 				android:id="@+id/newmatch_holes"
 				android:singleLine="true"
-				android:textSize="12.5sp"
+				android:textSize="14.5sp"
 				android:layout_height="42.5sp"
 				android:width="20px"
-				android:maxWidth="25sp"
+				android:maxWidth="20sp"
 				android:numeric="integer"/>
 		</TableRow>
 		<TextView android:id="@+id/label_players"
@@ -59,6 +83,7 @@
 				android:singleLine="true"
 				android:completionThreshold="3"
 				android:layout_span="2"
+				android:textSize="14.5sp"
 				android:popupBackground="#FFFFFF"
 				android:textColor="#1D5C2A"/>
 			<Spinner android:id="@+id/newmatch_tee_1"
