@@ -1,16 +1,19 @@
 package org.example.mygolfcard;
 
 import org.example.mygolfcard.RestClient.RequestMethod;
-import org.json.*;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.Context;
-import android.os.Bundle;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.view.View;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -38,6 +41,12 @@ public class MyGolfCard extends Activity  implements OnClickListener {
         	Authentication.deleteAuth(MyGolfCard.this);
         }
         
+        SharedPreferences.Editor editor = getPreferences(0).edit();
+        editor.clear();
+        editor.commit();
+        
+        Authentication.deleteMatches(MyGolfCard.this);
+        
         // Set up click listeners for all the buttons
 		View continueButton = findViewById(R.id.continue_button);
 		continueButton.setOnClickListener(this);
@@ -45,6 +54,8 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 		// Set up click listeners for all the buttons
 		View exitButton = findViewById(R.id.exit_button);
 		exitButton.setOnClickListener(this);
+		
+		
     }
     
     // ...
@@ -106,6 +117,7 @@ public class MyGolfCard extends Activity  implements OnClickListener {
     	}
     }
 
+    
     private static String callAuthentication(String pLogin, String pPass) {
     	String response;
     	

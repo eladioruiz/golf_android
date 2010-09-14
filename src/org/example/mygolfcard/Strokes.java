@@ -20,6 +20,11 @@ public class Strokes extends Activity implements OnClickListener {
 	private View previousButton;
 	private View nextButton;
 	private int holeNumber;
+	private int totalHoles;
+	private int course_id;
+	private String match_info;
+	private TextView tx1;
+	private TextView tx2;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -27,12 +32,20 @@ public class Strokes extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.strokes);
 		
-		holeNumber = Integer.parseInt(getIntent().getCharSequenceExtra("hole_number").toString());
-		TextView tx = (TextView) findViewById(R.id.hole_info);
-		tx.setText("Hoyo " + holeNumber + ":\nPar : 5     Handicap :18\nLong : (R) 5879  (A) 6378");
+		holeNumber 	= Integer.parseInt(getIntent().getCharSequenceExtra("hole_number").toString());
+		totalHoles	= Integer.parseInt(getIntent().getCharSequenceExtra("total_holes").toString());
+		course_id 	= Integer.parseInt(getIntent().getCharSequenceExtra("course_id").toString());
+		match_info 	= getIntent().getCharSequenceExtra("match_info").toString();
 		
+		//getHoleInfo(course_id, holeNumbrer);
+/*		TextView tx1 = (TextView) findViewById(R.id.card_match);
+		tx1.setText(match_info);
+		
+		TextView tx2 = (TextView) findViewById(R.id.hole_info);
+		tx2.setText("Hoyo " + holeNumber + ":\nPar : 5     Handicap :18\nLong : (R) 5879  (A) 6378");
+*/		
 		findViews();
-		initButtons();
+		initViews();
 		setListeners();
 	}
 	
@@ -41,14 +54,14 @@ public class Strokes extends Activity implements OnClickListener {
 		
 		switch (v.getId()) {
 			case R.id.strokes_previous:
-				if (holeNumber>1) {
+				if (holeNumber > 1) {
 					--holeNumber;
 					bRes = true;
 				}
 				break;
 			
 			case R.id.strokes_next:
-				if (holeNumber<18) {
+				if (holeNumber < totalHoles) {
 					++holeNumber;
 					bRes = true;
 				}
@@ -56,11 +69,14 @@ public class Strokes extends Activity implements OnClickListener {
 		}
 		
 		if (bRes) {
-			finish();
 			
 			Intent i = new Intent(this, Strokes.class);
 			i.putExtra("hole_number", "" + holeNumber);
+			i.putExtra("total_holes", "" + totalHoles);
+			i.putExtra("course_id", "" + course_id);
+			i.putExtra("match_info", match_info);
 			startActivity(i);
+			finish();
 		
 			switch (v.getId()) {
 				case R.id.strokes_previous:
@@ -129,6 +145,9 @@ public class Strokes extends Activity implements OnClickListener {
 		
 		previousButton = findViewById(R.id.strokes_previous);
 		nextButton = findViewById(R.id.strokes_next);
+		
+		tx1 = (TextView) findViewById(R.id.card_match);
+		tx2 = (TextView) findViewById(R.id.hole_info);
 	}
 	
 	private void setListeners() {
@@ -143,7 +162,10 @@ public class Strokes extends Activity implements OnClickListener {
 		nextButton.setOnClickListener(this);
 	}
 
-	private void initButtons() {
+	private void initViews() {
+		tx1.setText(match_info);
+		tx2.setText("Hoyo " + holeNumber + ":\nPar : 5     Handicap :18\nLong : (R) 5879  (A) 6378");
+		
 		for (int i = 0; i < playerButton.length; i++) {
 			setKey("0", playerButton[i].getId());
 		}

@@ -16,6 +16,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -43,6 +44,10 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	private String[] courses; 
 	private String[] players; 
 	private String[] tees={"Amarillas", "Rojas", "Blancas"};
+	private String[] courses_field1;
+	private String[] courses_field2;
+	private String[] players_field1;
+	private String[] players_field2;
 	private Button pickDate;
 	private Button pickTime;
 	private View okButton;
@@ -68,6 +73,17 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
     static final int TIME_DIALOG_ID = 0;
     static final int DATE_DIALOG_ID = 1;
 
+	private SQLiteDatabase db = null;
+	private String DATABASE_NAME = "mygolfcard";
+	
+	String course 	= "";
+	String date		= "";
+	String hour		= "";
+	String n_holes	= "";
+	int player_id[] = new int[4];
+	int tee_id[] 	= new int[4];
+	int course_id;
+    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -98,7 +114,6 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 			setInfoPlayers(result);
 		}
 		
-		
         final Calendar c = Calendar.getInstance();
         mYear = c.get(Calendar.YEAR);
         mMonth = c.get(Calendar.MONTH);
@@ -127,10 +142,10 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
-		case TIME_DIALOG_ID:
-			return new TimePickerDialog(this, mTimeSetListener, mHour, mMinute, false);
-		case DATE_DIALOG_ID:
-			return new DatePickerDialog(this, mDateSetListener, mYear, mMonth, mDay);
+			case TIME_DIALOG_ID:
+				return new TimePickerDialog(this, mTimeSetListener, mHour, mMinute, false);
+			case DATE_DIALOG_ID:
+				return new DatePickerDialog(this, mDateSetListener, mYear, mMonth, mDay);
 		}
 		return null;
 	}
@@ -138,12 +153,12 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	@Override
 	protected void onPrepareDialog(int id, Dialog dialog) {
 		switch (id) {
-		case TIME_DIALOG_ID:
-			((TimePickerDialog) dialog).updateTime(mHour, mMinute);
-			break;
-		case DATE_DIALOG_ID:
-			((DatePickerDialog) dialog).updateDate(mYear, mMonth, mDay);
-			break;
+			case TIME_DIALOG_ID:
+				((TimePickerDialog) dialog).updateTime(mHour, mMinute);
+				break;
+			case DATE_DIALOG_ID:
+				((DatePickerDialog) dialog).updateDate(mYear, mMonth, mDay);
+				break;
 		}
 	}    
 
@@ -165,8 +180,7 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	private DatePickerDialog.OnDateSetListener mDateSetListener =
 		new DatePickerDialog.OnDateSetListener() {
 
-		public void onDateSet(DatePicker view, int year, int monthOfYear,
-				int dayOfMonth) {
+		public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 			mYear = year;
 			mMonth = monthOfYear;
 			mDay = dayOfMonth;
@@ -234,32 +248,22 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 		
 		for (int i=0; i < newmatch_player.length; i++) {
 			newmatch_player[i].addTextChangedListener(this);
-	        //newmatch_player[i].setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, players));
 		}
 
 		// Set up click listeners for all the buttons
-		
 		okButton.setOnClickListener(this);
-		
-		// Set up click listeners for all the buttons
-		
 		cancelButton.setOnClickListener(this);
-
         pickDate.setOnClickListener(new View.OnClickListener() {
-
             public void onClick(View v) {
                 showDialog(DATE_DIALOG_ID);
             }
         });
-
         pickTime.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
                 showDialog(TIME_DIALOG_ID);
             }
         });
-
-		
 	}
 	
     public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -292,23 +296,100 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 			
 			case R.id.newmatch_ok:
 				if (validateForm()) {
+					saveMatchinDB();
 					Log.d("My Golf Card", "NewMatch");
 					Intent i = new Intent(this, Card.class);
 					startActivity(i);
+					finish();
 				}
 				break;
 		}
 	}
+
+	private void saveMatchinDB() {
+		createDatabase();
+		saveMatchData();
+	}
 	
+	private void createDatabase() {
+    	/* Create a Database. */
+    	try {
+    		db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
+    		
+    		/* Create a Table in the Database. */
+    		db.execSQL(	"CREATE TABLE IF NOT EXISTS "
+    				+	"matches "                     
+    				+ 	" (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+    						"course_id INT(3), date_hour_match VARCHAR, " +
+    						"course_name VARCHAR, " +
+    						"holes INT(2), status INT(1), " +
+    						"player1_id INT(5), tee1 INT(1), " +
+    						"player2_id INT(5), tee2 INT(1), " +
+    						"player3_id INT(5), tee3 INT(1), " +
+    						"player4_id INT(5), tee4 INT(1)); ");
+    	}
+    	catch(Exception e) {
+    		Log.e("Error", "Error CREATING DB", e);
+    	} 
+    	finally {
+    		if (db != null)
+    			db.close();
+    	}
+    }
+	
+	private void saveMatchData() {
+		String sql = "";
+		try {
+			sql = "insert into matches " +
+					"(course_id, course_name, date_hour_match, holes, status, player1_id, tee1, player2_id, tee2, player3_id, tee3, player4_id, tee4) values " +
+					"(" + "" + course_id + ",\"" + 
+							course + "\",\"" +
+							"" + date + " " + hour + "\"," + 
+							"" + n_holes + "," +
+							"0," + 
+							"" + player_id[0] + "," + tee_id[0] + "," + 
+							"" + player_id[1] + "," + tee_id[1] + "," + 
+							"" + player_id[2] + "," + tee_id[2] + "," + 
+							"" + player_id[3] + "," + tee_id[3] + ");";
+			
+			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_WORLD_WRITEABLE, null);
+		 	db.execSQL(sql);
+			 
+			SharedPreferences.Editor editor = getPreferences(0).edit();
+	        editor.putString("sql", sql);
+	        editor.commit();
+		        
+			Log.i("SQL", "INSERTING : " + sql);
+		}
+		catch(Exception e) {
+    		Log.e("Error", "Error INSERTING new match", e);
+    	} 
+    	finally {
+    		if (db != null)
+    			db.close();
+    	}
+	}
+
 	private boolean validateForm() {
-		// Recupera campos introducidos en formulario
-		String course 	= newmatch_course.getText().toString();
-		String date 	= newmatch_date.getText().toString();
-		String hour		= newmatch_hour.getText().toString();
-		String n_holes 	= newmatch_n_holes.getText().toString();
 		String res;
 		boolean bPlayers = false;
 		boolean bOK = true;
+		
+		// Recupera campos introducidos en formulario
+		course 			= newmatch_course.getText().toString();
+		course_id		= getCourseID(course);
+		date 			= newmatch_date.getText().toString();
+		hour			= newmatch_hour.getText().toString();
+		n_holes 		= newmatch_n_holes.getText().toString();
+		for (int i=0; i<4; i++) {
+			player_id[i]	= getPlayerID(newmatch_player[i].getText().toString());
+			if (player_id[i]>0) {
+				tee_id[i]	= getTeeID(newmatch_tee[i]);
+			}
+			else {
+				tee_id[i] 	= 0;
+			}
+		}
 		
 		// Validación de campos obligatorios
 		res = "";
@@ -376,19 +457,17 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 		try {
 			jsonArr = new JSONArray(result);
 			
-/*			courses_field1 = new String[jsonArr.length()];
+			courses_field1 = new String[jsonArr.length()];
 			courses_field2 = new String[jsonArr.length()];
-			courses_field3 = new String[jsonArr.length()];
-*/			
+			
 			courses = new String[jsonArr.length()];
 			
 			for (int i=0; i<jsonArr.length(); i++) {
 				jsonObj = new JSONObject(jsonArr.get(i).toString());
 				
-/*				courses_field1[i] = jsonObj.getString("name");
-				courses_field2[i] = jsonObj.getString("address");
-				courses_field3[i] = jsonObj.getString("id");
-*/				Log.i("JSON", "" + i);
+				courses_field1[i] = jsonObj.getString("id");
+				courses_field2[i] = jsonObj.getString("name");
+				Log.i("JSON", "" + i);
 				
 				courses[i] = jsonObj.getString("name");
 				
@@ -408,19 +487,17 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 		try {
 			jsonArr = new JSONArray(result);
 			
-/*			courses_field1 = new String[jsonArr.length()];
-			courses_field2 = new String[jsonArr.length()];
-			courses_field3 = new String[jsonArr.length()];
-*/			
+			players_field1 = new String[jsonArr.length()];
+			players_field2 = new String[jsonArr.length()];
+			
 			players = new String[jsonArr.length()];
 			
 			for (int i=0; i<jsonArr.length(); i++) {
 				jsonObj = new JSONObject(jsonArr.get(i).toString());
 				
-/*				courses_field1[i] = jsonObj.getString("name");
-				courses_field2[i] = jsonObj.getString("address");
-				courses_field3[i] = jsonObj.getString("id");
-*/				Log.i("JSON", "" + i);
+				players_field1[i] = jsonObj.getString("id");
+				players_field2[i] = jsonObj.getString("name");
+				Log.i("JSON", "" + i);
 				
 				players[i] = jsonObj.getString("name");
 				
@@ -515,6 +592,52 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
         editor.putString("hour", newmatch_hour.getText().toString());
         editor.putString("holes", newmatch_n_holes.getText().toString());
         editor.commit();
+	}
+	
+	private int getCourseID(String find) {
+		int res = 0;
+		
+		for (int i=0; i<courses_field1.length; i++)
+		{
+			if (courses_field2[i].equals(find)) {
+				res = Integer.parseInt(courses_field1[i]);
+			}
+		}
+		
+		return res;
+	}
+	
+	private int getPlayerID(String find) {
+		int res = 0;
+		
+		for (int i=0; i<players_field1.length; i++)
+		{
+			if (players_field2[i].equals(find)) {
+				res = Integer.parseInt(players_field1[i]);
+			}
+		}
+		
+		return res;
+	}
+	
+	private int getTeeID(Spinner find) {
+		int res = 0;
+		String value = "";
+		
+		value = find.getItemAtPosition(find.getSelectedItemPosition()).toString().toUpperCase();
+		if (value.equals("AMARILLAS")) {
+			res = 1;
+		}
+		
+		if (find.getItemAtPosition(find.getSelectedItemPosition()).toString().equals("ROJAS")) {
+			res = 2;
+		}
+		
+		if (find.getItemAtPosition(find.getSelectedItemPosition()).toString().equals("BLANCAS")) {
+			res = 3;
+		}
+		
+		return res;
 	}
 	
 	/**
