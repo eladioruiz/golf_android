@@ -98,7 +98,9 @@
 				android:singleLine="true"
 				android:completionThreshold="3"
 				android:layout_span="2"
-				android:popupBackground="#FF0000"/>
+				android:textSize="14.5sp"
+				android:popupBackground="#FFFFFF"
+				android:textColor="#1D5C2A"/>
 			<Spinner android:id="@+id/newmatch_tee_2"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
@@ -111,7 +113,9 @@
 				android:singleLine="true"
 				android:completionThreshold="3"
 				android:layout_span="2"
-				android:popupBackground="#FF0000"/>
+				android:textSize="14.5sp"
+				android:popupBackground="#FFFFFF"
+				android:textColor="#1D5C2A"/>
 			<Spinner android:id="@+id/newmatch_tee_3"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
@@ -124,7 +128,9 @@
 				android:singleLine="true"
 				android:completionThreshold="3"
 				android:layout_span="2"
-				android:popupBackground="#FF0000"/>
+				android:textSize="14.5sp"
+				android:popupBackground="#FFFFFF"
+				android:textColor="#1D5C2A"/>
 			<Spinner android:id="@+id/newmatch_tee_4"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"

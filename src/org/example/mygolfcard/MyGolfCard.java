@@ -42,6 +42,11 @@ public class MyGolfCard extends Activity  implements OnClickListener {
         }
         
         SharedPreferences.Editor editor = getPreferences(0).edit();
+        editor.remove("course");
+        editor.remove("date");
+        editor.remove("hour");
+        editor.remove("holes");
+        editor.commit();
         editor.clear();
         editor.commit();
         

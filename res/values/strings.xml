@@ -63,6 +63,7 @@
 	<string name="title_file_connection">Conexión Local.</string>
 	<string name="remote_connection">Recuperando datos de servidor remoto de My Golf Card.</string>
 	<string name="file_connection">La aplicación no ha encontrado datos de acceso previos a esta sesión. Deberá conectar su Wi-Fi o 3G para validar su acceso.\nDisculpe las molestias.\n</string>
+	<string name="no_holes">No hay información disponible sobre los hoyos de este campo.\nDisculpe las molestias.</string>
     
     <string name="URL_APIS">http://dev.mygolfcard.es/api/</string>
     <string name="ACTION_AUTH">authentication</string>
@@ -71,7 +72,8 @@
     <string name="ACTION_FRIENDS">getfriends</string>
     <string name="ACTION_MATCH">getmatche</string>
     <string name="ACTION_COURSE">getcourse</string>
-    
+    <string name="ACTION_INFO_HOLES">getinfoholes</string>
+        
     <string name="resume_match">Resumen Partido</string> 
     <string name="main_no_items">No hay elementos para mostrar</string>
     <string name="title_form_validation">Validación Formulario</string>

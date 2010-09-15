@@ -123,6 +123,10 @@ public class Authentication {
 		deleteFile(ctx,"friends.txt");
 	}
 	
+	public static void deleteInfoHoles(Context ctx) {
+		deleteFile(ctx,"holes.txt");
+	}
+	
 	public static boolean saveMatches(Context ctx, String result) {
 		deleteMatches(ctx);
 		return saveFile(ctx,"matches.txt",result);
@@ -138,6 +142,11 @@ public class Authentication {
 		return saveFile(ctx,"friends.txt",result);
 	}
 	
+	public static boolean saveInfoHoles(Context ctx, String result) {
+		deleteInfoHoles(ctx);
+		return saveFile(ctx,"holes.txt",result);
+	}
+	
 	public static String readMatches(Context ctx) {
 		return readFile(ctx,"matches.txt");
 	}
@@ -148,6 +157,10 @@ public class Authentication {
 	
 	public static String readFriends(Context ctx) {
 		return readFile(ctx,"friends.txt");
+	}
+	
+	public static String readInfoHoles(Context ctx) {
+		return readFile(ctx,"holes.txt");
 	}
 	
 	private static String readFile(Context ctx, String fileName) {

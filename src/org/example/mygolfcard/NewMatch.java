@@ -226,11 +226,11 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 		
 		newmatch_n_holes 	= (TextView)findViewById(R.id.newmatch_holes);
 		
-		pickDate = (Button) findViewById(R.id.newmatch_button_date);
-		pickTime = (Button) findViewById(R.id.newmatch_button_hour);
+		pickDate 			= (Button) findViewById(R.id.newmatch_button_date);
+		pickTime 			= (Button) findViewById(R.id.newmatch_button_hour);
 		
-		okButton = findViewById(R.id.newmatch_ok);
-		cancelButton = findViewById(R.id.newmatch_cancel);
+		okButton 			= findViewById(R.id.newmatch_ok);
+		cancelButton 		= findViewById(R.id.newmatch_cancel);
 	}
 	
 	private void setListeners() {
@@ -629,11 +629,11 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 			res = 1;
 		}
 		
-		if (find.getItemAtPosition(find.getSelectedItemPosition()).toString().equals("ROJAS")) {
+		if (value.equals("ROJAS")) {
 			res = 2;
 		}
 		
-		if (find.getItemAtPosition(find.getSelectedItemPosition()).toString().equals("BLANCAS")) {
+		if (value.equals("BLANCAS")) {
 			res = 3;
 		}
 		

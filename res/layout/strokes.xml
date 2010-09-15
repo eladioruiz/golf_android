@@ -51,24 +51,24 @@
 					android:id="@+id/strokesButton_1"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="Bea" />
+					android:text="---" />
 				<Button
 					android:id="@+id/strokesButton_2"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="Eladio" />
+					android:text="---" />
 			</TableRow>
 			<TableRow>
 				<Button
 					android:id="@+id/strokesButton_3"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="Juan" />
+					android:text="---" />
 				<Button
 					android:id="@+id/strokesButton_4"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="Merche" />
+					android:text="---" />
 			</TableRow>
 		</TableLayout>
 		<TableLayout

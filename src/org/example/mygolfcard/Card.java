@@ -1,9 +1,18 @@
 package org.example.mygolfcard;
 
+import org.example.mygolfcard.NewMatch.InitTask;
+import org.example.mygolfcard.RestClient.RequestMethod;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -11,7 +20,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Card extends Activity implements OnClickListener {
 	private final View holeButton[] = new View[18];
@@ -22,7 +33,16 @@ public class Card extends Activity implements OnClickListener {
 	private String date_hour;
 	private String n_holes;
 	private String match_info;
+	private String player_id[] = new String[4];
 	private TextView cardMatch;
+	
+	private boolean connectionOK;
+	private String auth_token;
+	private String auth_user_id;
+	
+	private String aux_holes;
+	
+	private String URL_HOLES;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -35,6 +55,20 @@ public class Card extends Activity implements OnClickListener {
 		initViews();
 		setListeners();
 		
+		URL_HOLES = getString(R.string.URL_APIS) + getString(R.string.ACTION_INFO_HOLES);
+		
+		connectionOK = Authentication.checkConnection(Card.this);
+		if (connectionOK) {
+			Authentication.readDataUser(Card.this);
+			auth_token    = Authentication.getToken();
+			auth_user_id  = Authentication.getUserId();
+			InitTask task = new InitTask();
+			task.execute();
+		}
+		else {
+			Toast.makeText(Card.this, R.string.no_internet,
+                    Toast.LENGTH_SHORT).show();
+		}
 	}
 	
 	public void onClick(View v) {
@@ -120,6 +154,7 @@ public class Card extends Activity implements OnClickListener {
 		i.putExtra("total_holes", n_holes);
 		i.putExtra("course_id", course_id);
 		i.putExtra("match_info", match_info);
+		i.putExtra("player_id", player_id);
 		startActivity(i); 
 	}
 
@@ -187,22 +222,30 @@ public class Card extends Activity implements OnClickListener {
 		
 		try {
 			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
-			sql = "select course_id, course_name, date_hour_match, holes from matches order by id desc limit 1;";
+			sql = "select * from matches order by id desc limit 1;";
 		 	Cursor c = db.rawQuery(sql, null);
 		 	int colCourseId		= c.getColumnIndex("course_id");
 		    int colCourseName	= c.getColumnIndex("course_name");
 		    int colDateHour		= c.getColumnIndex("date_hour_match");
 		    int colHoles		= c.getColumnIndex("holes");
+		    int colPlayer1		= c.getColumnIndex("player1_id");
+		    int colPlayer2		= c.getColumnIndex("player2_id");
+		    int colPlayer3		= c.getColumnIndex("player3_id");
+		    int colPlayer4		= c.getColumnIndex("player4_id");
 		 	
 		 	c.moveToFirst();
 		 	
 		 	if (c != null) {
-			    do {
-			 		course_name = c.getString(colCourseName);
-			 	    course_id 	= c.getString(colCourseId);
-			 	    date_hour	= c.getString(colDateHour);
-			 	    n_holes		= c.getString(colHoles);
-			 	} while (c.moveToNext());
+		 		do {
+		 			course_name 	= c.getString(colCourseName);
+		 			course_id 		= c.getString(colCourseId);
+		 			date_hour		= c.getString(colDateHour);
+		 			n_holes			= c.getString(colHoles);
+		 			player_id[0]	= c.getString(colPlayer1);
+		 			player_id[1]	= c.getString(colPlayer2);
+		 			player_id[2]	= c.getString(colPlayer3);
+		 			player_id[3]	= c.getString(colPlayer4);
+		 		} while (c.moveToNext());
 		 	}
 		}
 		catch(Exception e) {
@@ -213,4 +256,86 @@ public class Card extends Activity implements OnClickListener {
     			db.close();
     	}
 	}
+	
+	private String getInfoHoles() {
+		String response;
+    	
+		Log.i( "card", "getting info holes");
+		
+	    RestClient client = new RestClient(URL_HOLES);
+	    client.AddParam("token", auth_token);
+	    client.AddParam("course_id", course_id);
+	    
+	    response = "";
+	    try {
+	        client.Execute(RequestMethod.POST);
+	        response = client.getResponse();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    
+	    Authentication.saveInfoHoles(Card.this, response);
+	    aux_holes = response;
+	    
+	    Log.i( "card", "getting holes " + response.toString());
+	    
+	    return response;
+	}
+	
+	private void setInfoHoles(String result) {
+		//	
+	}
+	
+	/**
+	 * sub-class of AsyncTask
+	 */
+	protected class InitTask extends AsyncTask<Context, Integer, String>
+	{
+		private ProgressDialog dialog;		
+		
+		public InitTask () {
+			
+		};
+		
+		// -- run intensive processes here
+		// -- notice that the datatype of the first param in the class definition matches the param passed to this method 
+		// -- and that the datatype of the last param in the class definition matches the return type of this mehtod
+		@Override
+		protected String doInBackground( Context... params ) 
+		{
+			getInfoHoles();
+			return "";
+		}
+
+		// -- gets called just before thread begins
+		@Override
+		protected void onPreExecute() 
+		{
+			Log.i( "makemachine", "onPreExecute()" );
+			super.onPreExecute();
+			this.dialog = ProgressDialog.show(Card.this, "Conexión Remota", "Recuperando datos de servidor remoto de My Golf Card.", true);
+		}
+
+		// -- called from the publish progress 
+		// -- notice that the datatype of the second param gets passed to this method
+		@Override
+		protected void onProgressUpdate(Integer... values) 
+		{
+			super.onProgressUpdate(values);
+			Log.i( "makemachine", "onProgressUpdate(): " +  String.valueOf( values[0] ) );
+			//_percentField.setText( ( values[0] * 2 ) + "%");
+			//_percentField.setTextSize( values[0] );
+		}
+
+		// -- called as soon as doInBackground method completes
+		// -- notice that the third param gets passed to this method
+		@Override
+		protected void onPostExecute( String result ) 
+		{
+			super.onPostExecute(result);
+			Log.i( "makemachine", "onPostExecute(): " + result );
+			this.dialog.cancel();
+			setInfoHoles(aux_holes);
+		}
+	}   	
 }

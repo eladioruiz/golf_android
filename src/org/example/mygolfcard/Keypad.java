@@ -70,7 +70,7 @@ public class Keypad extends Dialog {
 
 	/** Return the chosen tile to the caller */
 	private void returnResult(String tile, int targetView) {
-		this.strokes.setKey(tile, targetView);
+		this.strokes.setKey(targetView, tile);
 		dismiss();
 	}
    
