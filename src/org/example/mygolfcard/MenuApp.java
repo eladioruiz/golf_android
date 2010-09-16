@@ -83,7 +83,7 @@ public class MenuApp extends Activity  implements OnClickListener {
 				startActivity(new Intent(this, About.class));
 				return true;
 			case R.id.synchro:
-				startActivity(new Intent(this, Prefs.class));
+				startActivity(new Intent(this, Synchro.class));
 				return true;
 		}
 		return false;

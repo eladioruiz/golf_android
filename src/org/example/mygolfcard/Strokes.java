@@ -1,6 +1,5 @@
 package org.example.mygolfcard;
 
-import org.example.mygolfcard.NewMatch.InitTask;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,9 +16,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Strokes extends Activity implements OnClickListener {
@@ -79,19 +77,7 @@ public class Strokes extends Activity implements OnClickListener {
                     Toast.LENGTH_SHORT).show();
 		}
 		
-/*		connectionOK = Authentication.checkConnection(Strokes.this);
-		if (connectionOK) {
-			Authentication.readDataUser(Strokes.this);
-			auth_token    = Authentication.getToken();
-			auth_user_id  = Authentication.getUserId();
-			InitTask task = new InitTask();
-			task.execute();
-		}
-		else {
-			Toast.makeText(Strokes.this, R.string.no_internet,
-                    Toast.LENGTH_SHORT).show();
-		}
-*/	}
+	}
 	
 	public void onClick(View v) {
 		boolean bRes = false;
@@ -158,6 +144,7 @@ public class Strokes extends Activity implements OnClickListener {
 				
 			case R.id.synchro:
 				startActivity(new Intent(this, Synchro.class));
+				finish();
 				return true;
 				
 			case R.id.menuapp:
@@ -264,11 +251,11 @@ public class Strokes extends Activity implements OnClickListener {
 				holes_field1[i] = jsonObj.getString("id");
 				int number 		= Integer.parseInt(jsonObj.getString("number"));
 				holes_field2[i] = jsonObj.getString("number");
-				holes_field3[i] = jsonObj.getString("par");
-				holes_field4[i] = jsonObj.getString("length_yellow");
-				holes_field5[i] = jsonObj.getString("length_red");
-				holes_field6[i] = jsonObj.getString("length_white");
-				holes_field7[i] = jsonObj.getString("handicap");
+				holes_field3[i] = showNull(jsonObj.getString("par"),"---");
+				holes_field4[i] = showNull(jsonObj.getString("length_yellow"),"---");
+				holes_field5[i] = showNull(jsonObj.getString("length_red"),"---");
+				holes_field6[i] = showNull(jsonObj.getString("length_white"),"---");
+				holes_field7[i] = showNull(jsonObj.getString("handicap"),"---");
 				
 				info_holes[number] = "Hoyo " + holeNumber + ":\nPar : " + holes_field3[i] + "     Handicap : " +  holes_field7[i] + "\nLong : (R) " +  holes_field5[i] + "  (A) " +  holes_field4[i] + "";
 				Log.i("JSON", "" + i);
@@ -296,6 +283,19 @@ public class Strokes extends Activity implements OnClickListener {
 			if (playerId.equals(players_field1[i])) {
 				res = players_field2[i];
 			}
+		}
+		
+		return res;
+	}
+	
+	private String showNull(String value, String def)
+	{
+		String res = "";
+		
+		res = value;
+		
+		if (value == null || value.equals("null")) {
+			res = def;
 		}
 		
 		return res;

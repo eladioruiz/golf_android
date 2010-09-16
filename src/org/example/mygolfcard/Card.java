@@ -170,7 +170,8 @@ public class Card extends Activity implements OnClickListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.synchro:
-				startActivity(new Intent(this, Prefs.class));
+				startActivity(new Intent(this, Synchro.class));
+				finish();
 				return true;
 		}
 		return false;
@@ -222,7 +223,8 @@ public class Card extends Activity implements OnClickListener {
 		
 		try {
 			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
-			sql = "select * from matches order by id desc limit 1;";
+			String match_id = getIntent().getCharSequenceExtra("match_id").toString();
+			sql = "select * from matches where ID=" + match_id + ";";
 		 	Cursor c = db.rawQuery(sql, null);
 		 	int colCourseId		= c.getColumnIndex("course_id");
 		    int colCourseName	= c.getColumnIndex("course_name");
@@ -247,6 +249,8 @@ public class Card extends Activity implements OnClickListener {
 		 			player_id[3]	= c.getString(colPlayer4);
 		 		} while (c.moveToNext());
 		 	}
+		 	
+		 	c.close();
 		}
 		catch(Exception e) {
     		Log.e("Error", "Error reading DB", e);

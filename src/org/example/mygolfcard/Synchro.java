@@ -1,12 +1,176 @@
 package org.example.mygolfcard;
 
-import android.preference.PreferenceActivity;
-import android.os.Bundle;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-public class Synchro extends PreferenceActivity {
+import android.app.ListActivity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Toast;
+
+public class Synchro extends ListActivity {
+	private String[] matches_field1;
+	private String[] matches_field2;
+	private String[] matches_field3;
+		
+	private SQLiteDatabase db = null;
+	private String DATABASE_NAME = "mygolfcard";
+	private String match_id;
+	private String course_name;
+	private String date_hour;
+	private String n_holes;
+	private String player_id[] = new String[4];
+	
+	private CheckBoxifiedTextListAdapter cbla;
+	
+	List<HashMap<String, String>> fillMaps;
+	
+	/** Called with the activity is first created. */
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		addPreferencesFromResource(R.xml.settings);
+	public void onCreate(Bundle icicle) {
+		super.onCreate(icicle);
+		setContentView(R.layout.test);
+		
+		getMatches();
+		setInfo();
 	}
+
+	public void onListItemClick(ListView parent, View v, int position,long id) {
+		//
+		Toast.makeText(Synchro.this, "click",
+                Toast.LENGTH_SHORT).show();
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu_synchro, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.synchro_delete:
+				getItemsChecked();
+				startActivity(new Intent(this, About.class));
+				return true;
+			case R.id.synchro_upload:
+				getItemsChecked();
+				startActivity(new Intent(this, About.class));
+				return true;
+			case R.id.menuapp:
+				startActivity(new Intent(this, MenuApp.class));
+				finish();
+				return true;
+		}
+		return false;
+	}    
+	
+	private void getMatches() {
+		String sql;
+		
+		course_name = "";
+		match_id	= "";
+		date_hour	= "";
+		
+		//fillMaps = new ArrayList<HashMap<String, String>>();
+		
+		try {
+			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
+			sql = "select * from matches where status=0 order by ID desc;";
+			
+		 	Cursor c = db.rawQuery(sql, null);
+		 	int colMatchId		= c.getColumnIndex("ID");
+		    int colCourseName	= c.getColumnIndex("course_name");
+		    int colDateHour		= c.getColumnIndex("date_hour_match");
+		    int colHoles		= c.getColumnIndex("holes");
+		    int colPlayer1		= c.getColumnIndex("player1_id");
+		    int colPlayer2		= c.getColumnIndex("player2_id");
+		    int colPlayer3		= c.getColumnIndex("player3_id");
+		    int colPlayer4		= c.getColumnIndex("player4_id");
+		 	
+		    c.moveToLast();
+		    matches_field1 = new String[c.getCount()];
+		    matches_field2 = new String[c.getCount()];
+		    matches_field3 = new String[c.getCount()];
+		 	c.moveToFirst();
+		 	
+		 	if (c != null) {
+		 		int i = 0;
+		 		do {
+		 			course_name 	= c.getString(colCourseName);
+		 			match_id 		= c.getString(colMatchId);
+		 			date_hour		= c.getString(colDateHour);
+		 			n_holes			= c.getString(colHoles);
+		 			player_id[0]	= c.getString(colPlayer1);
+		 			player_id[1]	= c.getString(colPlayer2);
+		 			player_id[2]	= c.getString(colPlayer3);
+		 			player_id[3]	= c.getString(colPlayer4);
+		 			
+		 			matches_field1[i]	= match_id;
+		 			matches_field2[i]	= course_name;
+		 			matches_field3[i] 	= date_hour;
+		 			
+		 			++i;
+		 			
+		 			//HashMap<String, String> map = new HashMap<String, String>();
+					//map.put("course_name", matches_field2[i]);
+					//map.put("date_hour", matches_field3[i]);
+					//fillMaps.add(map);
+					
+		 		} while (c.moveToNext());
+		 	}
+		 	
+		 	c.close();
+		}
+		catch(Exception e) {
+    		Log.e("Error", "Error reading DB", e);
+    	} 
+    	finally {
+    		if (db != null)
+    			db.close();
+    	}
+		
+	}
+	
+	private void setInfo() {
+		// Muestra la lista
+		//SimpleAdapter adapter = new SimpleAdapter(this, fillMaps, R.layout.main_item_two_line_row_multiple_choice, new String[] { "course_name", "date_hour" }, new int[] { R.id.field1,  R.id.field2});
+		
+		//setListAdapter(adapter);
+		//getListView().setTextFilterEnabled(true);
+		
+		cbla = new CheckBoxifiedTextListAdapter(this);
+        for(int k=0; k<matches_field1.length; k++)
+        {
+        	cbla.addItem(new CheckBoxifiedText(matches_field2[k], matches_field3[k], false));
+        }  
+        // Display it
+        setListAdapter(cbla);
+	}
+
+	private void getItemsChecked() {
+		String res = "";
+		for (int i=0; i< cbla.getCount(); i++) {
+			CheckBoxifiedText obj = (CheckBoxifiedText) cbla.getItem(i);
+			res += "" + i + ":" + obj.getChecked();
+		}
+		
+		Toast.makeText(Synchro.this, res,
+                Toast.LENGTH_SHORT).show();
+	}
+	
 }

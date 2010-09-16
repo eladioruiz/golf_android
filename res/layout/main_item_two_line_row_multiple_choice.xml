@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:padding="6dip">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dip"
+        android:layout_weight="1"
+        android:layout_height="fill_parent">
+        <TextView
+            android:id="@+id/field1"
+            android:layout_width="wrap_content"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:gravity="center_vertical"
+            />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:id="@+id/field2"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            />
+        <ProgressBar android:id="@+id/UpdateProgress" 
+                                 android:layout_width="fill_parent" 
+                                 android:layout_height="wrap_content"
+                     android:indeterminateOnly="false" 
+                             android:progressDrawable="@android:drawable/progress_horizontal" 
+                             android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal" 
+                             android:minHeight="10dip" 
+                             android:maxHeight="10dip"                                    
+                                 />
+    </LinearLayout>
+    <CheckBox android:text="" 
+    			android:focusable="false"
+                  android:id="@+id/UpdateCheckBox" 
+                  android:layout_width="wrap_content" 
+                  android:layout_height="wrap_content" 
+                  />
+</LinearLayout>

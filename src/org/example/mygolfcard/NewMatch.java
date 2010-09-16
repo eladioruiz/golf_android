@@ -16,6 +16,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -48,6 +49,7 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	private String[] courses_field2;
 	private String[] players_field1;
 	private String[] players_field2;
+	private String newmatch_id;
 	private Button pickDate;
 	private Button pickTime;
 	private View okButton;
@@ -299,6 +301,7 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 					saveMatchinDB();
 					Log.d("My Golf Card", "NewMatch");
 					Intent i = new Intent(this, Card.class);
+					i.putExtra("match_id", newmatch_id);
 					startActivity(i);
 					finish();
 				}
@@ -352,9 +355,24 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 							"" + player_id[2] + "," + tee_id[2] + "," + 
 							"" + player_id[3] + "," + tee_id[3] + ");";
 			
-			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_WORLD_WRITEABLE, null);
+			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
 		 	db.execSQL(sql);
-			 
+			
+		 	// Recupera el último partido introducido, para pasarlo a la siguiente página como param
+			sql = "select * from matches order by id desc limit 1;";
+			Cursor c = db.rawQuery(sql, null);
+			int colMatchId		= c.getColumnIndex("ID");
+			
+			c.moveToFirst();
+		 	
+		 	if (c != null) {
+		 		do {
+		 			newmatch_id	= c.getString(colMatchId);
+		 		} while (c.moveToNext());
+		 	}
+		 	
+		 	c.close();
+			
 			SharedPreferences.Editor editor = getPreferences(0).edit();
 	        editor.putString("sql", sql);
 	        editor.commit();
