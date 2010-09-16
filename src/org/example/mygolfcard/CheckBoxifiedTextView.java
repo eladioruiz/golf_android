@@ -46,6 +46,7 @@ public class CheckBoxifiedTextView extends LinearLayout {
 		mCheckBoxText = aCheckBoxifiedText;
 		mCheckBox = new CheckBox(context);
 		mCheckBox.setPadding(20, 0, 20, 0); // 5px to the right
+		mCheckBox.setFocusable(false);
 
 		/* Set the initial state of the checkbox. */
 		mCheckBox.setChecked(aCheckBoxifiedText.getChecked());
@@ -69,7 +70,7 @@ public class CheckBoxifiedTextView extends LinearLayout {
 		mTextSubtitle = new TextView(context);
 		mTextSubtitle.setText(aCheckBoxifiedText.getTextSubtitle());
 		mTextSubtitle.setTextSize(0,13);
-		mCheckBox.setPadding(20, 0, 20, 0); // 5px to the right
+		mTextSubtitle.setPadding(20, 0, 20, 0); // 5px to the right
 		mTextSubtitle.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
 		otro.addView(mTextSubtitle, new LinearLayout.LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
@@ -83,6 +84,7 @@ public class CheckBoxifiedTextView extends LinearLayout {
 				toggleCheckBoxState();
 			}
 		});
+		
 	}
 
     public void toggleCheckBoxState()

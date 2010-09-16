@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -23,6 +24,7 @@ public class Synchro extends ListActivity {
 	private String[] matches_field1;
 	private String[] matches_field2;
 	private String[] matches_field3;
+	private String[] selectedMatches;
 		
 	private SQLiteDatabase db = null;
 	private String DATABASE_NAME = "mygolfcard";
@@ -48,8 +50,10 @@ public class Synchro extends ListActivity {
 
 	public void onListItemClick(ListView parent, View v, int position,long id) {
 		//
-		Toast.makeText(Synchro.this, "click",
-                Toast.LENGTH_SHORT).show();
+		Intent i = new Intent(this, Card.class);
+		i.putExtra("match_id", matches_field1[position]);
+		startActivity(i);
+		finish();
 	}
 	
 	@Override
@@ -65,7 +69,8 @@ public class Synchro extends ListActivity {
 		switch (item.getItemId()) {
 			case R.id.synchro_delete:
 				getItemsChecked();
-				startActivity(new Intent(this, About.class));
+				deleteItems();
+				finish();
 				return true;
 			case R.id.synchro_upload:
 				getItemsChecked();
@@ -164,13 +169,44 @@ public class Synchro extends ListActivity {
 
 	private void getItemsChecked() {
 		String res = "";
+		selectedMatches = new String[cbla.getCount()];
+		
 		for (int i=0; i< cbla.getCount(); i++) {
 			CheckBoxifiedText obj = (CheckBoxifiedText) cbla.getItem(i);
-			res += "" + i + ":" + obj.getChecked();
+			
+			if (obj.getChecked()) {
+				selectedMatches[i] = matches_field1[i];
+			}
+			else {
+				selectedMatches[i] = "0";
+			}
 		}
 		
-		Toast.makeText(Synchro.this, res,
+/*		Toast.makeText(Synchro.this, res,
                 Toast.LENGTH_SHORT).show();
-	}
+*/	}
 	
+	private void deleteItems() {
+		String sql = "";
+		for (int i=0; i<selectedMatches.length;i++) {
+			sql = "delete from matches where ID in (";
+			if (!selectedMatches[i].equals("0"))
+			{
+				sql += selectedMatches[i] + ",";
+			}
+			sql += "0);";
+		}
+		
+		try {
+			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
+		 	db.execSQL(sql);
+		}
+		catch(Exception e) {
+    		Log.e("Error", "Error INSERTING new match", e);
+    	} 
+    	finally {
+    		if (db != null)
+    			db.close();
+    	}
+	}
 }
