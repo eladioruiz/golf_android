@@ -1,10 +1,6 @@
 package org.example.mygolfcard;
 
-import org.example.mygolfcard.NewMatch.InitTask;
 import org.example.mygolfcard.RestClient.RequestMethod;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -20,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +33,6 @@ public class Card extends Activity implements OnClickListener {
 	
 	private boolean connectionOK;
 	private String auth_token;
-	private String auth_user_id;
 	
 	private String aux_holes;
 	
@@ -61,7 +55,6 @@ public class Card extends Activity implements OnClickListener {
 		if (connectionOK) {
 			Authentication.readDataUser(Card.this);
 			auth_token    = Authentication.getToken();
-			auth_user_id  = Authentication.getUserId();
 			InitTask task = new InitTask();
 			task.execute();
 		}

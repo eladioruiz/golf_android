@@ -54,6 +54,12 @@
 	<string name="course_details_shortcut">d</string>
 	
 	<string name="alert_button_default">Aceptar</string>
+	<string name="alert_dialog_confirm">Confirmar</string>
+	<string name="alert_dialog_cancel">Cancelar</string>
+	<string name="alert_dialog_title_delete_matches">Borrado Partidos</string>
+	<string name="alert_dialog_delete_matches">¿Desea realmente borrar los partidos pendientes seleccionados?</string>
+	<string name="alert_dialog_title_upload_matches">Sincronización Partidos</string>
+	<string name="alert_dialog_upload_matches">Opción actualmente no implementada.\nDisculpe las molestias.</string>
 	<string name="alert_title_no_save">Error guardando datos</string>
 	<string name="no_internet">No tiene conexión a Internet.\nSe usarán los últimos datos de acceso disponibles.</string>
 	<string name="no_internet_connect">Esta opción sólo está disponible con una conexión a Internet. Conecte su Wi-Fi o 3G y reinicie la aplicación.\nDisculpe las molestias.\n</string>
@@ -78,6 +84,9 @@
     <string name="main_no_items">No hay elementos para mostrar</string>
     <string name="title_form_validation">Validación Formulario</string>
     <string name="form_validation">Los datos del formulario no son correctos:\n</string>
+    
+    <string name="synchro_delete">Borrado</string>
+    <string name="synchro_upload">Sincronización con MyGolfCard</string>
 </resources>
 
 

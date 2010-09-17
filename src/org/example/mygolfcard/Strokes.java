@@ -1,5 +1,6 @@
 package org.example.mygolfcard;
 
+import org.example.mygolfcard.RestClient.RequestMethod;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -7,7 +8,10 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -26,7 +30,7 @@ public class Strokes extends Activity implements OnClickListener {
 	private View nextButton;
 	private int holeNumber;
 	private int totalHoles;
-	private int course_id;
+	private String course_id;
 	private String match_info;
 	private String player_id[] = new String[4];
 	private TextView tx1;
@@ -46,7 +50,10 @@ public class Strokes extends Activity implements OnClickListener {
 	
 	private boolean connectionOK;
 	private String auth_token;
-	private String auth_user_id;
+	
+	private String aux_holes;
+	
+	private String URL_HOLES;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -56,9 +63,11 @@ public class Strokes extends Activity implements OnClickListener {
 		
 		holeNumber 	= Integer.parseInt(getIntent().getCharSequenceExtra("hole_number").toString());
 		totalHoles	= Integer.parseInt(getIntent().getCharSequenceExtra("total_holes").toString());
-		course_id 	= Integer.parseInt(getIntent().getCharSequenceExtra("course_id").toString());
+		course_id 	= getIntent().getCharSequenceExtra("course_id").toString();
 		player_id	= getIntent().getStringArrayExtra("player_id");
 		match_info 	= getIntent().getCharSequenceExtra("match_info").toString();
+		
+		URL_HOLES = getString(R.string.URL_APIS) + getString(R.string.ACTION_INFO_HOLES);
 		
 		String result = Authentication.readFriends(Strokes.this);
 		setInfoPlayers(result);
@@ -75,8 +84,19 @@ public class Strokes extends Activity implements OnClickListener {
 		else {
 			Toast.makeText(Strokes.this, R.string.no_holes,
                     Toast.LENGTH_SHORT).show();
+			
+			connectionOK = Authentication.checkConnection(Strokes.this);
+			if (connectionOK) {
+				Authentication.readDataUser(Strokes.this);
+				auth_token    = Authentication.getToken();
+				InitTask task = new InitTask();
+				task.execute();
+			}
+			else {
+				Toast.makeText(Strokes.this, R.string.no_internet,
+	                    Toast.LENGTH_SHORT).show();
+			}
 		}
-		
 	}
 	
 	public void onClick(View v) {
@@ -103,7 +123,7 @@ public class Strokes extends Activity implements OnClickListener {
 			Intent i = new Intent(this, Strokes.class);
 			i.putExtra("hole_number", "" + holeNumber);
 			i.putExtra("total_holes", "" + totalHoles);
-			i.putExtra("course_id", "" + course_id);
+			i.putExtra("course_id", course_id);
 			i.putExtra("match_info", match_info);
 			i.putExtra("player_id", player_id);
 			startActivity(i);
@@ -300,5 +320,83 @@ public class Strokes extends Activity implements OnClickListener {
 		
 		return res;
 	}
+
+	private String getInfoHoles() {
+		String response;
+    	
+		Log.i( "strokes", "getting info holes");
+		
+	    RestClient client = new RestClient(URL_HOLES);
+	    client.AddParam("token", auth_token);
+	    client.AddParam("course_id", course_id);
+	    
+	    response = "";
+	    try {
+	        client.Execute(RequestMethod.POST);
+	        response = client.getResponse();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    
+	    Authentication.saveInfoHoles(Strokes.this, response);
+	    aux_holes = response;
+	    
+	    Log.i( "strokes", "getting holes " + response.toString());
+	    
+	    return response;
+	}
 	
+	/**
+	 * sub-class of AsyncTask
+	 */
+	protected class InitTask extends AsyncTask<Context, Integer, String>
+	{
+		private ProgressDialog dialog;		
+		
+		public InitTask () {
+			
+		};
+		
+		// -- run intensive processes here
+		// -- notice that the datatype of the first param in the class definition matches the param passed to this method 
+		// -- and that the datatype of the last param in the class definition matches the return type of this mehtod
+		@Override
+		protected String doInBackground( Context... params ) 
+		{
+			getInfoHoles();
+			return "";
+		}
+
+		// -- gets called just before thread begins
+		@Override
+		protected void onPreExecute() 
+		{
+			Log.i( "makemachine", "onPreExecute()" );
+			super.onPreExecute();
+			this.dialog = ProgressDialog.show(Strokes.this, "Conexión Remota", "Recuperando datos de servidor remoto de My Golf Card.", true);
+		}
+
+		// -- called from the publish progress 
+		// -- notice that the datatype of the second param gets passed to this method
+		@Override
+		protected void onProgressUpdate(Integer... values) 
+		{
+			super.onProgressUpdate(values);
+			Log.i( "makemachine", "onProgressUpdate(): " +  String.valueOf( values[0] ) );
+			//_percentField.setText( ( values[0] * 2 ) + "%");
+			//_percentField.setTextSize( values[0] );
+		}
+
+		// -- called as soon as doInBackground method completes
+		// -- notice that the third param gets passed to this method
+		@Override
+		protected void onPostExecute( String result ) 
+		{
+			super.onPostExecute(result);
+			Log.i( "makemachine", "onPostExecute(): " + result );
+			this.dialog.cancel();
+			setInfoHoles(aux_holes);
+		}
+	}   	
+
 } 

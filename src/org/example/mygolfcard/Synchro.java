@@ -1,11 +1,12 @@
 package org.example.mygolfcard;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,12 +16,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 public class Synchro extends ListActivity {
+	private static final int DIALOG_SYNCHRO_DELETE = 1;
+    private static final int DIALOG_SYNCHRO_UPLOAD = 2;
+    
 	private String[] matches_field1;
 	private String[] matches_field2;
 	private String[] matches_field3;
@@ -42,7 +43,7 @@ public class Synchro extends ListActivity {
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		setContentView(R.layout.test);
+		setContentView(R.layout.synchro);
 		
 		getMatches();
 		setInfo();
@@ -68,14 +69,13 @@ public class Synchro extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.synchro_delete:
-				getItemsChecked();
-				deleteItems();
-				finish();
+				showDialog(DIALOG_SYNCHRO_DELETE);
 				return true;
+				
 			case R.id.synchro_upload:
-				getItemsChecked();
-				startActivity(new Intent(this, About.class));
+				showDialog(DIALOG_SYNCHRO_UPLOAD);
 				return true;
+				
 			case R.id.menuapp:
 				startActivity(new Intent(this, MenuApp.class));
 				finish();
@@ -83,6 +83,46 @@ public class Synchro extends ListActivity {
 		}
 		return false;
 	}    
+	
+	protected Dialog onCreateDialog(int id) {
+        switch (id) {
+	        case DIALOG_SYNCHRO_DELETE:
+				return new AlertDialog.Builder(Synchro.this)
+			        .setIcon(R.drawable.alert_dialog_icon)
+			        .setTitle(R.string.alert_dialog_title_delete_matches)
+			        .setMessage(R.string.alert_dialog_delete_matches)
+			        .setPositiveButton(R.string.alert_dialog_confirm, new DialogInterface.OnClickListener() {
+			            public void onClick(DialogInterface dialog, int whichButton) {
+			            	getItemsChecked();
+							deleteItems();
+							finish();
+			            }
+			        })
+			        .setNegativeButton(R.string.alert_dialog_cancel, new DialogInterface.OnClickListener() {
+			            public void onClick(DialogInterface dialog, int whichButton) {
+			                /* User clicked Cancel so do some stuff */
+			            }
+			        })
+			        .create();
+	        case DIALOG_SYNCHRO_UPLOAD:
+	        	return new AlertDialog.Builder(Synchro.this)
+	                .setIcon(R.drawable.alert_dialog_icon)
+	                .setTitle(R.string.alert_dialog_title_upload_matches)
+	                .setMessage(R.string.alert_dialog_upload_matches)
+	                .setPositiveButton(R.string.alert_dialog_confirm, new DialogInterface.OnClickListener() {
+	                    public void onClick(DialogInterface dialog, int whichButton) {
+	                    	//        				
+	                    }
+	                })
+	                /*.setNegativeButton(R.string.alert_dialog_cancel, new DialogInterface.OnClickListener() {
+	                    public void onClick(DialogInterface dialog, int whichButton) {
+	                        
+	                    }
+	                })*/
+	                .create();
+        }
+        return null;
+	}
 	
 	private void getMatches() {
 		String sql;
@@ -168,7 +208,6 @@ public class Synchro extends ListActivity {
 	}
 
 	private void getItemsChecked() {
-		String res = "";
 		selectedMatches = new String[cbla.getCount()];
 		
 		for (int i=0; i< cbla.getCount(); i++) {
@@ -188,21 +227,23 @@ public class Synchro extends ListActivity {
 	
 	private void deleteItems() {
 		String sql = "";
-		for (int i=0; i<selectedMatches.length;i++) {
-			sql = "delete from matches where ID in (";
+		
+		sql = "delete from matches where ID in (";
+		for (int i=0; i<selectedMatches.length;i++) {			
 			if (!selectedMatches[i].equals("0"))
 			{
 				sql += selectedMatches[i] + ",";
 			}
-			sql += "0);";
 		}
+		sql += "0);";
 		
 		try {
+			Log.e("Info", "DELETING matches : " + sql);
 			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
 		 	db.execSQL(sql);
 		}
 		catch(Exception e) {
-    		Log.e("Error", "Error INSERTING new match", e);
+    		Log.e("Error", "Error DELETING matches", e);
     	} 
     	finally {
     		if (db != null)
