@@ -11,6 +11,8 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
@@ -32,7 +34,8 @@ public class Strokes extends Activity implements OnClickListener {
 	private int totalHoles;
 	private String course_id;
 	private String match_info;
-	private String player_id[] = new String[4];
+	private String match_id;
+	private String players_id[] = new String[4];
 	private TextView tx1;
 	private TextView tx2;
 	
@@ -54,6 +57,10 @@ public class Strokes extends Activity implements OnClickListener {
 	private String aux_holes;
 	
 	private String URL_HOLES;
+
+	private SQLiteDatabase db = null;
+	private String DATABASE_NAME = "mygolfcard.db";
+	
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -64,7 +71,8 @@ public class Strokes extends Activity implements OnClickListener {
 		holeNumber 	= Integer.parseInt(getIntent().getCharSequenceExtra("hole_number").toString());
 		totalHoles	= Integer.parseInt(getIntent().getCharSequenceExtra("total_holes").toString());
 		course_id 	= getIntent().getCharSequenceExtra("course_id").toString();
-		player_id	= getIntent().getStringArrayExtra("player_id");
+		players_id	= getIntent().getStringArrayExtra("players_id");
+		match_id	= getIntent().getCharSequenceExtra("match_id").toString();
 		match_info 	= getIntent().getCharSequenceExtra("match_info").toString();
 		
 		URL_HOLES = getString(R.string.URL_APIS) + getString(R.string.ACTION_INFO_HOLES);
@@ -125,7 +133,8 @@ public class Strokes extends Activity implements OnClickListener {
 			i.putExtra("total_holes", "" + totalHoles);
 			i.putExtra("course_id", course_id);
 			i.putExtra("match_info", match_info);
-			i.putExtra("player_id", player_id);
+			i.putExtra("match_id", match_id);
+			i.putExtra("players_id", players_id);
 			startActivity(i);
 			finish();
 		
@@ -178,6 +187,11 @@ public class Strokes extends Activity implements OnClickListener {
 	void setKey(int targetView, String value) {
 		String res;
 		int iPos;
+		String aux_match_id;
+		String aux_player_id;
+		int aux_hole;
+		String aux_strokes;
+		String aux_putts = "0"; // Por defecto, no se utiliza todavia
 		
 		Button b = (Button) findViewById(targetView);
 		res = b.getText().toString();
@@ -187,6 +201,54 @@ public class Strokes extends Activity implements OnClickListener {
 		}
 		
 		b.setText(res + " : " + value);
+		
+		aux_match_id = match_id;
+		aux_player_id = getPlayerIdFromView(targetView);
+		aux_hole = holeNumber;
+		aux_strokes = value;
+		
+		String sql = "";
+		try {
+			// Guardamos la información también BD
+			sql = "delete from strokes where match_id=" + aux_match_id + " and player_id=" + aux_player_id + " and hole=" + aux_hole + ";";
+			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
+		 	db.execSQL(sql);
+		 	
+		 	Log.i("SQL", "DELETING STROKES: " + sql);
+		 	
+		 	sql = "insert into strokes (match_id, player_id, hole, strokes, putts) values (" + aux_match_id + "," + aux_player_id + "," + aux_hole + "," + aux_strokes + "," + aux_putts + ");";
+			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
+		 	db.execSQL(sql);
+			
+			Log.i("SQL", "INSERTING STROKES: " + sql);
+		}
+		catch(Exception e) {
+    		Log.e("Error", "Error INSERTING new match", e);
+    	} 
+    	finally {
+    		if (db != null)
+    			db.close();
+    	}
+	}
+
+	private String getPlayerIdFromView(int v) {
+		String res = "";
+		
+		switch (v) {
+			case R.id.strokesButton_1:
+				res = players_field1[0];
+				break;
+			case R.id.strokesButton_2:
+				res = players_field1[1];
+				break;
+			case R.id.strokesButton_3:
+				res = players_field1[2];
+				break;
+			case R.id.strokesButton_4:
+				res = players_field1[3];
+				break;
+		}
+		return res;
 	}
 	
 	private void findViews() {
@@ -215,13 +277,15 @@ public class Strokes extends Activity implements OnClickListener {
 	}
 
 	private void initViews() {
+		String strokes = "0";
 		tx1.setText(match_info);		
 		
 		for (int i = 0; i < playerButton.length; i++) {
-			playerButton[i].setText(getPlayerName(player_id[i]));
-			setKey(playerButton[i].getId(), "0");
+			strokes = getStrokesHole(match_id,players_id[i],holeNumber);
+			playerButton[i].setText(getPlayerName(players_id[i]) + " : " + strokes);
+			//setKey(playerButton[i].getId(), "0");
 			
-			if (player_id[i].equals("0")) {
+			if (players_id[i].equals("0")) {
 				playerButton[i].setVisibility(4);
 			}
 		}
@@ -305,6 +369,32 @@ public class Strokes extends Activity implements OnClickListener {
 			}
 		}
 		
+		return res;
+	}
+	
+	private String getStrokesHole(String match_id, String player_id, int hole){
+		String res = "0";
+		String sql = "";
+		
+		try {
+			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
+			sql = "select strokes from strokes where match_id=" + match_id + " and player_id=" + player_id + " and hole=" + hole + ";";
+		 	Cursor c = db.rawQuery(sql, null);
+		 	int colStrokes		= c.getColumnIndex("strokes");
+		 	
+		 	c.moveToFirst();
+		 	if (c != null) {
+		 		res = "" + c.getInt(colStrokes);
+		 	}
+		}
+		catch(Exception e) {
+    		Log.e("Error", "Error reading DB", e);
+    	} 
+    	finally {
+    		if (db != null)
+    			db.close();
+    	}
+    	
 		return res;
 	}
 	

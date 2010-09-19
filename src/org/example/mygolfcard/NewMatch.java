@@ -40,6 +40,8 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	private TextView newmatch_date;
 	private TextView newmatch_hour;
 	private TextView newmatch_n_holes;
+	private String newmatch_id;
+	
 	private AutoCompleteTextView newmatch_player[] = new AutoCompleteTextView[4];
 	private Spinner newmatch_tee[] = new Spinner[4];
 	private String[] courses; 
@@ -49,7 +51,7 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	private String[] courses_field2;
 	private String[] players_field1;
 	private String[] players_field2;
-	private String newmatch_id;
+	
 	private Button pickDate;
 	private Button pickTime;
 	private View okButton;
@@ -76,7 +78,7 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
     static final int DATE_DIALOG_ID = 1;
 
 	private SQLiteDatabase db = null;
-	private String DATABASE_NAME = "mygolfcard";
+	private String DATABASE_NAME = "mygolfcard.db";
 	
 	String course 	= "";
 	String date		= "";
@@ -330,6 +332,15 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
     						"player2_id INT(5), tee2 INT(1), " +
     						"player3_id INT(5), tee3 INT(1), " +
     						"player4_id INT(5), tee4 INT(1)); ");
+    		
+    		db.execSQL(	"CREATE TABLE IF NOT EXISTS "
+    				+	"strokes "                     
+    				+ 	" (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+    						"match_id INT(5),  " +
+    						"player_id INT(5), " +
+    						"hole INT(2), " +
+    						"strokes INT(2), putts INT(2), " +
+    						"time NOT NULL DEFAULT CURRENT_TIMESTAMP); ");
     	}
     	catch(Exception e) {
     		Log.e("Error", "Error CREATING DB", e);
@@ -360,6 +371,7 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 			
 		 	// Recupera el último partido introducido, para pasarlo a la siguiente página como param
 			sql = "select * from matches order by id desc limit 1;";
+			// REVISAR sql = "select last_insert_rowid;";
 			Cursor c = db.rawQuery(sql, null);
 			int colMatchId		= c.getColumnIndex("ID");
 			
@@ -377,7 +389,7 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	        editor.putString("sql", sql);
 	        editor.commit();
 		        
-			Log.i("SQL", "INSERTING : " + sql);
+			Log.i("SQL", "INSERTING NEW MATCH: " + sql);
 		}
 		catch(Exception e) {
     		Log.e("Error", "Error INSERTING new match", e);

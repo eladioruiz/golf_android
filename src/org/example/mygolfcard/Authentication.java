@@ -33,7 +33,7 @@ public class Authentication {
 	                Toast.LENGTH_SHORT).show();
 		}
 */
-		//bTieneConexion = false;
+		bTieneConexion = false;
 		
 		return bTieneConexion;
 	}

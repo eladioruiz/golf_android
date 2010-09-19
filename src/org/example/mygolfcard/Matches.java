@@ -30,7 +30,7 @@ public class Matches extends ListActivity {
 	private String auth_token;
 	private String auth_user_id;
 	private boolean connectionOK;
-	private String URL;
+	private String URL_MATCHES;
 	
 	/** Called with the activity is first created. */
 	@Override
@@ -38,7 +38,7 @@ public class Matches extends ListActivity {
 		super.onCreate(icicle);
 		setContentView(R.layout.matches);
 		
-		URL = getString(R.string.URL_APIS) + getString(R.string.ACTION_MATCHES);
+		URL_MATCHES = getString(R.string.URL_APIS) + getString(R.string.ACTION_MATCHES);
 		
 		connectionOK = Authentication.checkConnection(Matches.this);
 		if (connectionOK) {
@@ -78,7 +78,7 @@ public class Matches extends ListActivity {
 	public String getMatches() {
 		String response;
     	
-	    RestClient client = new RestClient(URL);
+	    RestClient client = new RestClient(URL_MATCHES);
 	    client.AddParam("token", auth_token);
 	    client.AddParam("user_id", auth_user_id);
 	    

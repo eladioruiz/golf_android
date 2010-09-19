@@ -22,13 +22,14 @@ import android.widget.Toast;
 public class Card extends Activity implements OnClickListener {
 	private final View holeButton[] = new View[18];
 	private SQLiteDatabase db = null;
-	private String DATABASE_NAME = "mygolfcard";
+	private String DATABASE_NAME = "mygolfcard.db";
 	private String course_id;
 	private String course_name;
 	private String date_hour;
 	private String n_holes;
 	private String match_info;
-	private String player_id[] = new String[4];
+	private String match_id;
+	private String players_id[] = new String[4];
 	private TextView cardMatch;
 	
 	private boolean connectionOK;
@@ -147,7 +148,8 @@ public class Card extends Activity implements OnClickListener {
 		i.putExtra("total_holes", n_holes);
 		i.putExtra("course_id", course_id);
 		i.putExtra("match_info", match_info);
-		i.putExtra("player_id", player_id);
+		i.putExtra("match_id", match_id);
+		i.putExtra("players_id", players_id);
 		startActivity(i); 
 	}
 
@@ -216,7 +218,7 @@ public class Card extends Activity implements OnClickListener {
 		
 		try {
 			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
-			String match_id = getIntent().getCharSequenceExtra("match_id").toString();
+			match_id = getIntent().getCharSequenceExtra("match_id").toString();
 			sql = "select * from matches where ID=" + match_id + ";";
 		 	Cursor c = db.rawQuery(sql, null);
 		 	int colCourseId		= c.getColumnIndex("course_id");
@@ -236,10 +238,10 @@ public class Card extends Activity implements OnClickListener {
 		 			course_id 		= c.getString(colCourseId);
 		 			date_hour		= c.getString(colDateHour);
 		 			n_holes			= c.getString(colHoles);
-		 			player_id[0]	= c.getString(colPlayer1);
-		 			player_id[1]	= c.getString(colPlayer2);
-		 			player_id[2]	= c.getString(colPlayer3);
-		 			player_id[3]	= c.getString(colPlayer4);
+		 			players_id[0]	= c.getString(colPlayer1);
+		 			players_id[1]	= c.getString(colPlayer2);
+		 			players_id[2]	= c.getString(colPlayer3);
+		 			players_id[3]	= c.getString(colPlayer4);
 		 		} while (c.moveToNext());
 		 	}
 		 	

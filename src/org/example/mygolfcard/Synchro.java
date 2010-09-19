@@ -28,7 +28,7 @@ public class Synchro extends ListActivity {
 	private String[] selectedMatches;
 		
 	private SQLiteDatabase db = null;
-	private String DATABASE_NAME = "mygolfcard";
+	private String DATABASE_NAME = "mygolfcard.db";
 	private String match_id;
 	private String course_name;
 	private String date_hour;
@@ -227,20 +227,36 @@ public class Synchro extends ListActivity {
 	
 	private void deleteItems() {
 		String sql = "";
+		String where = "";
 		
-		sql = "delete from matches where ID in (";
+		
 		for (int i=0; i<selectedMatches.length;i++) {			
 			if (!selectedMatches[i].equals("0"))
 			{
-				sql += selectedMatches[i] + ",";
+				where += selectedMatches[i] + ",";
 			}
 		}
-		sql += "0);";
+		where += "0";
+		
+		sql = "delete from matches where ID in (";
+		sql += where + ");";
 		
 		try {
-			Log.e("Info", "DELETING matches : " + sql);
+			Log.i("Info", "DELETING matches : " + sql);
 			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
+			
+			// Limpieza para mantener la integridad referencial entre matches y strokes
+			sql = "delete from strokes where not match_id in (select id from matches)";
+			db.execSQL(sql);
+			
+			sql = "delete from strokes where match_id in (";
+			sql += where + ");";
 		 	db.execSQL(sql);
+		 	
+			sql = "delete from matches where id in (";
+			sql += where + ");";
+		 	db.execSQL(sql);
+		 	
 		}
 		catch(Exception e) {
     		Log.e("Error", "Error DELETING matches", e);
