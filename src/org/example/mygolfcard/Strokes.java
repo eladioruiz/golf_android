@@ -407,16 +407,24 @@ public class Strokes extends Activity implements OnClickListener {
 		try {
 			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
 		 	Cursor c = db.rawQuery(sql, null);
-		 	int colMatchId		= c.getColumnIndex("match_id");
 		 	int colPlayerId		= c.getColumnIndex("player_id");
 		 	int colSumStrokes	= c.getColumnIndex("sum_strokes");
 		 	
+		 	c.moveToLast();
 		 	c.moveToFirst();
 		 	if (c != null) {
-		 		do {
-		 			res += "<b>" + getPlayerName(c.getString(colPlayerId)) + "</b> : " + c.getInt(colSumStrokes) + "<br>";
+		 		if (c.getCount()>0) {
+			 		do {
+			 			res += "<b>" + getPlayerName(c.getString(colPlayerId)) + "</b> : " + c.getInt(colSumStrokes) + "<br>";
+			 		}
+			 		while (c.moveToNext());
 		 		}
-		 		while (c.moveToNext());
+		 		else {
+			 		res = "Todavía no hay datos de golpes asociados a este partido.";
+			 	}
+		 	}
+		 	else {
+		 		res = "Todavía no hay datos de golpes asociados a este partido.";
 		 	}
 		 	
 		 	c.close();

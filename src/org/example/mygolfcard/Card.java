@@ -1,8 +1,12 @@
 package org.example.mygolfcard;
 
 import org.example.mygolfcard.RestClient.RequestMethod;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +14,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +35,10 @@ public class Card extends Activity implements OnClickListener {
 	private String match_info;
 	private String match_id;
 	private String players_id[] = new String[4];
+	
+	private String[] players_field1;
+	private String[] players_field2;
+	
 	private TextView cardMatch;
 	
 	private boolean connectionOK;
@@ -44,6 +53,9 @@ public class Card extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.card_2);
+		
+		String result = Authentication.readFriends(Card.this);
+		setInfoPlayers(result);
 		
 		getMatchinDB();
 		findViews();
@@ -168,6 +180,17 @@ public class Card extends Activity implements OnClickListener {
 				startActivity(new Intent(this, Synchro.class));
 				finish();
 				return true;
+
+			case R.id.resume:
+				//startActivity(new Intent(this, Resume.class));
+				new AlertDialog.Builder(this)
+					.setIcon(R.drawable.info_dialog_icon_tra)
+					.setTitle(R.string.resume_match)
+					.setMessage(Html.fromHtml(getResumeInfo(match_id)))
+					.setPositiveButton(R.string.alert_button_default, null)
+					.show();
+				return true;
+				
 		}
 		return false;
 	}
@@ -284,7 +307,84 @@ public class Card extends Activity implements OnClickListener {
 	private void setInfoHoles(String result) {
 		//	
 	}
-	
+
+	private String getResumeInfo(String match_id) {
+		String res = "";
+		String sql = "";
+		
+		sql = "SELECT match_id, player_id, sum(strokes) as sum_strokes FROM strokes where match_id=" + match_id + " group by match_id, player_id order by sum(strokes) ";
+
+		try {
+			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
+		 	Cursor c = db.rawQuery(sql, null);
+		 	int colPlayerId		= c.getColumnIndex("player_id");
+		 	int colSumStrokes	= c.getColumnIndex("sum_strokes");
+		 	
+		 	c.moveToLast();
+		 	c.moveToFirst();
+		 	if (c != null) {
+		 		if (c.getCount()>0) {
+			 		do {
+			 			res += "<b>" + getPlayerName(c.getString(colPlayerId)) + "</b> : " + c.getInt(colSumStrokes) + "<br>";
+			 		}
+			 		while (c.moveToNext());
+		 		}
+		 		else {
+			 		res = "Todavía no hay datos de golpes asociados a este partido.";
+			 	}		 		
+		 	}
+		 	else {
+		 		res = "Todavía no hay datos de golpes asociados a este partido.";
+		 	}
+		 	
+		 	c.close();
+		}
+		catch(Exception e) {
+    		Log.e("Error", "Error reading DB", e);
+    	} 
+    	finally {
+    		if (db != null)
+    			db.close();
+    	}
+    	
+		
+		return res;
+	}
+
+	private void setInfoPlayers(String result) {
+		JSONObject jsonObj;
+		JSONArray  jsonArr;
+
+		try {
+			jsonArr = new JSONArray(result);
+			
+			players_field1 = new String[jsonArr.length()];
+			players_field2 = new String[jsonArr.length()];
+			
+			for (int i=0; i<jsonArr.length(); i++) {
+				jsonObj = new JSONObject(jsonArr.get(i).toString());
+				
+				players_field1[i] = jsonObj.getString("id");
+				players_field2[i] = jsonObj.getString("name");
+				Log.i("JSON", "" + i);				
+			}			
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}		
+	}
+
+	private String getPlayerName(String playerId) {
+		String res = "0";
+		
+		for (int i=0; i<players_field1.length; i++) {
+			if (playerId.equals(players_field1[i])) {
+				res = players_field2[i];
+			}
+		}
+		
+		return res;
+	}
+		
 	/**
 	 * sub-class of AsyncTask
 	 */
