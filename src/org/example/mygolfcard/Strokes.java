@@ -166,7 +166,7 @@ public class Strokes extends Activity implements OnClickListener {
 				new AlertDialog.Builder(this)
 					.setIcon(R.drawable.info_dialog_icon_tra)
 					.setTitle(R.string.resume_match)
-					.setMessage(Html.fromHtml("<b>Bea (HCP : 36)</b> : 45<br><b>Eladio (HCP : 36)</b> : 46<br><b>Juan (HCP : 36)</b> : 48<br><b>Merche (HCP : 36)</b> : 50"))
+					.setMessage(Html.fromHtml(getResumeInfo(match_id)))
 					.setPositiveButton(R.string.alert_button_default, null)
 					.show();
 				return true;
@@ -395,6 +395,41 @@ public class Strokes extends Activity implements OnClickListener {
     			db.close();
     	}
     	
+		return res;
+	}
+
+	private String getResumeInfo(String match_id) {
+		String res = "";
+		String sql = "";
+		
+		sql = "SELECT match_id, player_id, sum(strokes) as sum_strokes FROM strokes where match_id=" + match_id + " group by match_id, player_id order by sum(strokes) ";
+
+		try {
+			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
+		 	Cursor c = db.rawQuery(sql, null);
+		 	int colMatchId		= c.getColumnIndex("match_id");
+		 	int colPlayerId		= c.getColumnIndex("player_id");
+		 	int colSumStrokes	= c.getColumnIndex("sum_strokes");
+		 	
+		 	c.moveToFirst();
+		 	if (c != null) {
+		 		do {
+		 			res += "<b>" + getPlayerName(c.getString(colPlayerId)) + "</b> : " + c.getInt(colSumStrokes) + "<br>";
+		 		}
+		 		while (c.moveToNext());
+		 	}
+		 	
+		 	c.close();
+		}
+		catch(Exception e) {
+    		Log.e("Error", "Error reading DB", e);
+    	} 
+    	finally {
+    		if (db != null)
+    			db.close();
+    	}
+    	
+		
 		return res;
 	}
 	
