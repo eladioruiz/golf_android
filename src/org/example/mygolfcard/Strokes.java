@@ -28,8 +28,8 @@ import android.widget.Toast;
 
 public class Strokes extends Activity implements OnClickListener {
 	private final Button playerButton[] = new Button[4];
-	private View previousButton;
-	private View nextButton;
+	private Button previousButton;
+	private Button nextButton;
 	private int holeNumber;
 	private int totalHoles;
 	private String course_id;
@@ -289,6 +289,21 @@ public class Strokes extends Activity implements OnClickListener {
 				playerButton[i].setVisibility(4);
 			}
 		}
+		
+		previousButton.setText(formatHoleNumber(holeNumber-1));
+		nextButton.setText(formatHoleNumber(holeNumber+1));
+		
+		previousButton.setEnabled(true);
+		nextButton.setEnabled(true);
+		if (holeNumber==1) {
+			previousButton.setEnabled(false);
+			previousButton.setText("--");
+		}
+		
+		if (holeNumber==totalHoles) {
+			nextButton.setEnabled(false);
+			nextButton.setText("--");
+		}
 	}
 
 	private void setInfoPlayers(String result) {
@@ -454,6 +469,15 @@ public class Strokes extends Activity implements OnClickListener {
 		return res;
 	}
 
+	private String formatHoleNumber(int hole) {
+		if (hole < 10) {
+			return " " + hole;
+		}
+		else {
+			return "" + hole;
+		}
+	}
+	
 	private String getInfoHoles() {
 		String response;
     	

@@ -64,7 +64,7 @@ public final class R {
         public static final int exit_button=0x7f0a0029;
         public static final int field1=0x7f0a002a;
         public static final int field2=0x7f0a002b;
-        public static final int hole_info=0x7f0a0047;
+        public static final int hole_info=0x7f0a0048;
         public static final int keypad=0x7f0a0019;
         public static final int keypad_1=0x7f0a001a;
         public static final int keypad_10=0x7f0a0023;
@@ -108,12 +108,12 @@ public final class R {
         public static final int selection=0x7f0a0018;
         public static final int settings=0x7f0a004f;
         public static final int spinner_item=0x7f0a0046;
-        public static final int strokesButton_1=0x7f0a0048;
-        public static final int strokesButton_2=0x7f0a0049;
-        public static final int strokesButton_3=0x7f0a004a;
-        public static final int strokesButton_4=0x7f0a004b;
-        public static final int strokes_next=0x7f0a004d;
-        public static final int strokes_previous=0x7f0a004c;
+        public static final int strokesButton_1=0x7f0a004a;
+        public static final int strokesButton_2=0x7f0a004b;
+        public static final int strokesButton_3=0x7f0a004c;
+        public static final int strokesButton_4=0x7f0a004d;
+        public static final int strokes_next=0x7f0a0049;
+        public static final int strokes_previous=0x7f0a0047;
         public static final int synchro=0x7f0a0050;
         public static final int synchro_delete=0x7f0a0055;
         public static final int synchro_upload=0x7f0a0054;

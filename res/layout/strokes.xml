@@ -24,25 +24,51 @@
 			android:layout_height="5dip"
 			android:layout_width="fill_parent"
 			android:text=" " />
-		<TextView
-			android:id="@+id/hole_info"
-			android:padding="5dip"
+		<LinearLayout
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
-			android:textColor="#000000"
-			android:textSize="12.5sp"
-			android:background="#FFFFFF"
-			android:text="Hoyo 3:\nPar : 5     Handicap :18\nLong : (R) 5879  (A) 6378" />
+			android:orientation="horizontal"
+			android:paddingTop="10dip"
+			android:paddingBottom="20dip"
+			android:gravity="center" >
+			<Button
+				android:id="@+id/strokes_previous"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text=""
+				android:textStyle="bold"
+				android:textSize="17.0sp"
+				android:textColor="@color/red" 
+				android:padding="15dip"
+				android:gravity="center_vertical"/>
+			<TextView
+				android:id="@+id/hole_info"
+				android:padding="5dip"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:textColor="#FFFFFF"
+				android:textSize="13.0sp"
+				android:background="#1D5C2A"
+				android:paddingLeft="25dip"
+				android:paddingRight="25dip"
+				android:text="" />
+			<Button
+				android:id="@+id/strokes_next"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text=""
+				android:textStyle="bold"
+				android:textSize="17.0sp"
+				android:textColor="@color/red"
+				android:padding="15dip" 
+				android:gravity="center_vertical"/>
+		</LinearLayout>
 		<TableLayout
 			android:padding="7dip"
 			android:layout_height="fill_parent"
 			android:layout_width="fill_parent"
 			android:stretchColumns="0,1"
 			android:gravity="center_vertical">
-			<TextView 
-				android:id="@+id/label_players"
-				android:text="Jugadores :  "
-				android:paddingTop="10dip"/>
 			<TableRow
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
@@ -69,28 +95,6 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="---" />
-			</TableRow>
-		</TableLayout>
-		<TableLayout
-			android:padding="10dip"
-			android:layout_height="fill_parent"
-			android:layout_width="fill_parent"
-			android:stretchColumns="0,1">
-			<TextView
-				android:layout_height="7dip"
-				android:layout_width="fill_parent"
-				android:text="\n\n" />
-			<TableRow>
-				<Button
-					android:id="@+id/strokes_previous"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Anterior" />
-				<Button
-					android:id="@+id/strokes_next"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="Siguiente" />
 			</TableRow>
 		</TableLayout>
 	</LinearLayout>		

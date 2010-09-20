@@ -224,7 +224,8 @@ public class Card extends Activity implements OnClickListener {
 	}
 
 	private void initViews() {
-		match_info = "Campo : " + course_name + "\n" + "Fecha/Hora : " + date_hour;
+		//match_info = "Campo : " + course_name + "\n" + "Fecha/Hora : " + date_hour;
+		match_info = course_name + "\n" + date_hour;
 		cardMatch.setText(match_info);
 		for (int i = Integer.parseInt(n_holes); i < holeButton.length; i++) {
 			//

@@ -76,6 +76,7 @@
 		<TableRow
 			android:layout_width="fill_parent"
 			android:layout_height="15dip"
+			android:paddingTop="10dip"
 			android:rowHeight="15dip">
 			<AutoCompleteTextView android:id="@+id/newmatch_player_1"
 				android:layout_width="fill_parent"
@@ -89,7 +90,8 @@
 			<Spinner android:id="@+id/newmatch_tee_1"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:drawSelectorOnTop="false"/>
+				android:textSize="14.5sp"
+				android:drawSelectorOnTop="true"/>
 		</TableRow>
 		<TableRow>
 			<AutoCompleteTextView android:id="@+id/newmatch_player_2"
@@ -104,6 +106,7 @@
 			<Spinner android:id="@+id/newmatch_tee_2"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
+				android:textSize="14.5sp"
 				android:drawSelectorOnTop="true"/>
 		</TableRow>
 		<TableRow>
@@ -119,6 +122,7 @@
 			<Spinner android:id="@+id/newmatch_tee_3"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
+				android:textSize="14.5sp"
 				android:drawSelectorOnTop="true"/>
 		</TableRow>
 		<TableRow>
@@ -134,9 +138,11 @@
 			<Spinner android:id="@+id/newmatch_tee_4"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
+				android:textSize="14.5sp"
 				android:drawSelectorOnTop="true"/>
 		</TableRow>
-		<TableRow>
+		<TableRow
+			android:gravity="center">
 			<Button
 				android:id="@+id/newmatch_ok"
 				android:layout_width="wrap_content"
