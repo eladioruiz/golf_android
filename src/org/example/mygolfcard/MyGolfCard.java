@@ -46,6 +46,7 @@ public class MyGolfCard extends Activity  implements OnClickListener {
         editor.remove("date");
         editor.remove("hour");
         editor.remove("holes");
+        editor.clear();
         editor.commit();
         editor.clear();
         editor.commit();
@@ -59,8 +60,6 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 		// Set up click listeners for all the buttons
 		View exitButton = findViewById(R.id.exit_button);
 		exitButton.setOnClickListener(this);
-		
-		
     }
     
     // ...
@@ -117,8 +116,15 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	    		break;
 
 	    	case R.id.exit_button:
+	    		Intent i = new Intent(this, CardGraph.class);
+	    		i.putExtra("match_id", 11);
+	    		i.putExtra("mitad", 1);
+	    		i.putExtra("type_match", 1);
+        		startActivity(i);
+
 	    		finish();
 	    		break;
+	    		
     	}
     }
 
@@ -148,6 +154,7 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 		auth_token = "";
 		auth_user_id = "";
 		auth_error_code = "";
+		
 		try {
 			json = new JSONObject(jsonResponse);
 			auth_token = json.get("token").toString();
@@ -156,7 +163,6 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	private void manageAuthentication() {
@@ -180,24 +186,6 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	private void saveDataUser() {
 		if (!Authentication.saveDataUser(MyGolfCard.this,auth_token,auth_user_id))
 			finish();
-		/*try {
-			OutputStreamWriter out=new OutputStreamWriter(openFileOutput("token.txt",MODE_PRIVATE));
-			
-			out.write(auth_token);
-			out.close();
-		}
-		catch (java.io.FileNotFoundException e) {
-			// that's OK, we probably haven't created it yet
-		}
-		catch (Throwable t) {
-			new AlertDialog.Builder(this)
-				.setIcon(R.drawable.alert_dialog_icon)
-				.setTitle("Error guardando sesión")
-				.setMessage("La aplicación no ha podido guardar los datos correspondientes a su sesión. Por favor, vuelva a introducirlos.\n")
-				.setPositiveButton("Aceptar", null)
-				.show();
-			finish();
-		}*/
 	}
 	
 	/**
