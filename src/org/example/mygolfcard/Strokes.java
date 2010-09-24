@@ -11,6 +11,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -59,7 +60,7 @@ public class Strokes extends Activity implements OnClickListener {
 	private String URL_HOLES;
 
 	private SQLiteDatabase db = null;
-	private String DATABASE_NAME = "mygolfcard.db";
+	private String DATABASE_NAME;
 	
 	
 	/** Called when the activity is first created. */
@@ -67,6 +68,8 @@ public class Strokes extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.strokes);
+		
+		DATABASE_NAME = getString(R.string.DB_NAME);
 		
 		holeNumber 	= Integer.parseInt(getIntent().getCharSequenceExtra("hole_number").toString());
 		totalHoles	= Integer.parseInt(getIntent().getCharSequenceExtra("total_holes").toString());
@@ -107,6 +110,12 @@ public class Strokes extends Activity implements OnClickListener {
 		}
 	}
 	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+	  // ignore orientation/keyboard change
+	  super.onConfigurationChanged(newConfig);
+	}
+
 	public void onClick(View v) {
 		boolean bRes = false;
 		
@@ -180,6 +189,16 @@ public class Strokes extends Activity implements OnClickListener {
 				startActivity(new Intent(this, MenuApp.class));
 				finish();
 				return true;
+				
+			case R.id.card_graph:
+	    		Intent i = new Intent(this, CardGraph.class);
+	    		i.putExtra("match_id", match_id);
+	    		i.putExtra("mitad", 1);
+	    		i.putExtra("type_match", 1);
+        		startActivity(i);
+
+        		return true;
+				
 		}
 		return false;
 	}
@@ -236,16 +255,16 @@ public class Strokes extends Activity implements OnClickListener {
 		
 		switch (v) {
 			case R.id.strokesButton_1:
-				res = players_field1[0];
+				res = players_id[0];
 				break;
 			case R.id.strokesButton_2:
-				res = players_field1[1];
+				res = players_id[1];
 				break;
 			case R.id.strokesButton_3:
-				res = players_field1[2];
+				res = players_id[2];
 				break;
 			case R.id.strokesButton_4:
-				res = players_field1[3];
+				res = players_id[3];
 				break;
 		}
 		return res;

@@ -6,7 +6,7 @@ import android.os.Bundle;
 public class CardGraph extends Activity {
 	private CardGraphView cardGraphView;
 
-	private int match_id;
+	private String match_id;
 	private int mitad;
 	private int typeMatch;	
 
@@ -14,11 +14,11 @@ public class CardGraph extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		match_id	= getIntent().getIntExtra("match_id", 0); 
+		match_id	= getIntent().getCharSequenceExtra("match_id").toString(); 
 		mitad		= getIntent().getIntExtra("mitad", 1);
 		typeMatch	= getIntent().getIntExtra("type_match", 1);
 		
-		cardGraphView = new CardGraphView(this,match_id,mitad,typeMatch);
+		cardGraphView = new CardGraphView(this,Integer.parseInt(match_id),mitad,typeMatch);
 		/*cardGraphView.setMatchId(match_id);
 		cardGraphView.setTypeMatch(typeMatch);
 		cardGraphView.setMitad(mitad);*/

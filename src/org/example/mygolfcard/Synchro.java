@@ -8,6 +8,7 @@ import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -28,7 +29,7 @@ public class Synchro extends ListActivity {
 	private String[] selectedMatches;
 		
 	private SQLiteDatabase db = null;
-	private String DATABASE_NAME = "mygolfcard.db";
+	private String DATABASE_NAME;
 	private String match_id;
 	private String course_name;
 	private String date_hour;
@@ -45,8 +46,16 @@ public class Synchro extends ListActivity {
 		super.onCreate(icicle);
 		setContentView(R.layout.synchro);
 		
+		DATABASE_NAME = getString(R.string.DB_NAME);
+		
 		getMatches();
 		setInfo();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+	  // ignore orientation/keyboard change
+	  super.onConfigurationChanged(newConfig);
 	}
 
 	public void onListItemClick(ListView parent, View v, int position,long id) {

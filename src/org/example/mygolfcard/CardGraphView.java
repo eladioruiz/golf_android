@@ -1,5 +1,9 @@
 package org.example.mygolfcard;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -36,22 +40,31 @@ public class CardGraphView extends View {
 	private int typeMatch;
 
 	private SQLiteDatabase db = null;
-	private String DATABASE_NAME = "mygolfcard.db";
+	private String DATABASE_NAME = "";
 	
 	private int colPlayer[] = new int[4];
 	
 	private int aux_player_id[] = new int[4]; 
 	private int arrStrokes[][] = new int[4][19];
+
+	private String[] players_field1;
+	private String[] players_field2;
 	
+
 	public CardGraphView(Context context, int match_id, int mitad, int type_match) {
 		super(context);
+
+		String result = Authentication.readFriends(context);
+		setInfoPlayers(result);
+		
+		DATABASE_NAME = context.getString(R.string.DB_NAME);
 
 		ctxCardGraph = context;
 
 		this.match_id = match_id;
 		this.mitad = mitad;
 		this.typeMatch = type_match;
-		getInfoCard();
+		
 		
 		setFocusable(true);
 		setFocusableInTouchMode(true);
@@ -72,6 +85,8 @@ public class CardGraphView extends View {
 		int j;
 		
 		Log.d(TAG, "onDraw");
+		
+		getInfoCard();
 		
 		// Draw the background...
 		Paint background = new Paint();
@@ -119,6 +134,8 @@ public class CardGraphView extends View {
 		canvas.drawLine(0, i * height, getWidth(), i * height, dark);
 		canvas.drawLine(0, i * height + 1, getWidth(), i * height + 1, hilite);
 		
+		
+		
 		// Draw the numbers...
 		// Define color and style for numbers
 		/////////////////////////////////////////////////////////////////////////
@@ -128,6 +145,14 @@ public class CardGraphView extends View {
 		players.setTextSize(height * 0.55f);
 		players.setTextScaleX(width / height);
 		players.setTextAlign(Paint.Align.LEFT);
+		
+		Paint players_total = new Paint(Paint.ANTI_ALIAS_FLAG);
+		players_total.setColor(getResources().getColor(R.color.card_players));
+		players_total.setStyle(Style.FILL);
+		players_total.setTextSize(height * 0.60f);
+		players_total.setTextScaleX(width / height);
+		players_total.setTextAlign(Paint.Align.RIGHT);
+		
 		// Draw the number in the center of the tile
 		FontMetrics fm_p = players.getFontMetrics();
 
@@ -137,22 +162,8 @@ public class CardGraphView extends View {
 		// Centering in Y: measure ascent/descent first
 		float y = height / 2 - (fm_p.ascent + fm_p.descent) / 2;
 		
-		// Drawing Players
-		i = 0;
-		j = 6;
-		canvas.drawText("Eladio Ruiz",  (i * width) + 1, (j * height) + y, players);
-		
-		i = 0;
-		j = 7;
-		canvas.drawText("Beatriz Pardo",  (i * width) + 1, (j * height) + y, players);
-		
-		i = 0;
-		j = 8;
-		canvas.drawText("Juan Pardo",  (i * width) + 1, (j * height) + y, players);
-		
-		i = 0;
-		j = 9;
-		canvas.drawText("Merche Calvo",  (i * width) + 1 , (j * height) + y, players);
+		canvas.drawCircle((float)(2.5 * width), (float)(1.5 * height), (float)(1 * width), dark);
+		canvas.drawText(mitad==1 ? "2P" : "1P", (float)(1.75 * width + x), (float)(1 * height + y), players);
 		
 		/////////////////////////////////////////////////////////////////////////
 		Paint nHoles = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -172,7 +183,7 @@ public class CardGraphView extends View {
 		
 		// Drawing info holes
 		j= 3;
-		//int mitad = 2;
+		
 		for (i=5;i<=13;i++) {
 			int holeNumber = i - 4 + ((mitad-1) * 9);
 			canvas.drawText("" + holeNumber,  (i * width) + x, (j * height) + y, nHoles);
@@ -226,10 +237,29 @@ public class CardGraphView extends View {
 		canvas.drawText("T",  (i * width) + x, (j * height) + y, infoHoles);
 		
 		// INFO MATCH
+		// Drawing Players
+		i = 0;
+		j = 6;
+		int sum_mitad = 0;
+		for (int iPlayer=0;iPlayer<aux_player_id.length;iPlayer++) {
+			i = 0;
+			sum_mitad = 0;
+			
+			canvas.drawText(getPlayerName(""+ aux_player_id[iPlayer]),  (i * width) + 1, (j * height) + y, players);
+			++i;
+			
+			for (int z=1 + ((mitad-1) * 9);z<10 + ((mitad-1) * 9);z++) {
+				sum_mitad += arrStrokes[iPlayer][z];
+				canvas.drawText("" + arrStrokes[iPlayer][z], ((i+4) * width) + x, (j* height) + y, players);
+				++i;
+			}
+			canvas.drawText("" + sum_mitad, ((i+5) * width) , (j* height) + y, players_total);
+			
+			++j;
+		}
+				
 		for (j=0;j<4;j++) {
-			for (i=1 + ((mitad-1) * 9);i<10 + ((mitad-1) * 9);i++) {
-				canvas.drawText("" + arrStrokes[j][i], ((i+4) * width) + x, ((j + 6)* height) + y, players);
-			}			
+						
 		}
 	}
 	
@@ -240,6 +270,9 @@ public class CardGraphView extends View {
 		
 		select((int) (event.getX() / width), (int) (event.getY() / height));
 		Log.d(TAG, "onTouchEvent: x " + selX + ", y " + selY);
+		
+		changeMitad(selX,selY);
+		
 		return true;
 	}
 	
@@ -326,22 +359,18 @@ public class CardGraphView extends View {
 		 			c2.moveToLast();
 				 	c2.moveToFirst();
 				 	if (c2 != null) {
-				 		j = 0;
 				 		do {
 				 			int holeNumber 	= c2.getInt(colHoleNumber);
 				 			int strokes		= c2.getInt(colStrokes);
 				 		
 				 			arrStrokes[i][holeNumber] = strokes;
-				 			++j;
 				 		}
 				 		while (c2.moveToNext());
-				 	}
-		 			
+				 	}		 			
 		 			c2.close();
 		 		}
 		 	}
 	 		c.close();
-	 		
 		}
 		catch(Exception e) {
     		Log.e("Error", "Error reading DB", e);
@@ -352,14 +381,53 @@ public class CardGraphView extends View {
     	}
 	}
 	
-	private void drawInfo() {
-		int i;
-		int j;
-		
-	}
-	
 	private void getInfoCardRemote()
 	{
 		
+	}
+	
+	private String getPlayerName(String playerId) {
+		String res = "---";
+		
+		for (int i=0; i<players_field1.length; i++) {
+			if (playerId.equals(players_field1[i])) {
+				res = players_field2[i];
+			}
+		}
+		
+		return res;
+	}
+		
+	private void setInfoPlayers(String result) {
+		JSONObject jsonObj;
+		JSONArray  jsonArr;
+
+		try {
+			jsonArr = new JSONArray(result);
+			
+			players_field1 = new String[jsonArr.length()];
+			players_field2 = new String[jsonArr.length()];
+			
+			for (int i=0; i<jsonArr.length(); i++) {
+				jsonObj = new JSONObject(jsonArr.get(i).toString());
+				
+				players_field1[i] = jsonObj.getString("id");
+				players_field2[i] = jsonObj.getString("name");
+				Log.i("JSON", "" + i);				
+			}			
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}		
+	}
+
+	private void changeMitad(int x, int y) {
+		if (x>=1 && x<=3 & y>=0 && y<=2)
+		{
+			if (mitad==1)
+				mitad = 2;
+			else
+				mitad = 1;
+		}
+		invalidate();
 	}
 }

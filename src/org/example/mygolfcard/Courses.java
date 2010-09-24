@@ -1,18 +1,20 @@
 package org.example.mygolfcard;
 
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
 import org.example.mygolfcard.RestClient.RequestMethod;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONArray;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -52,6 +54,12 @@ public class Courses extends ListActivity {
 			String result = Authentication.readCourses(Courses.this);
 			setInfo(result);
 		}
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+	  // ignore orientation/keyboard change
+	  super.onConfigurationChanged(newConfig);
 	}
 
 	public void onListItemClick(ListView parent, View v, int position,long id) {

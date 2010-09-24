@@ -11,8 +11,13 @@
 	<item android:id="@+id/synchro"
       android:title="@string/synchro_label"
       android:alphabeticShortcut="@string/synchro_shortcut" />
+    
     <item android:id="@+id/resume"
       android:title="@string/resume_label"
       android:alphabeticShortcut="@string/resume_shortcut" />
+      
+    <item android:id="@+id/card_graph"
+      android:title="@string/card_graph_label"
+      android:alphabeticShortcut="@string/card_graph_shortcut" />
       
 </menu>

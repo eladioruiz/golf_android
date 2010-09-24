@@ -49,6 +49,10 @@
 	<string name="resume_title">My Golf Card - Resumen</string>
 	<string name="resume_shortcut">r</string>
 	
+	<string name="card_graph_label">Tarjeta</string>
+	<string name="card_graph_title">My Golf Card - Tarjeta</string>
+	<string name="card_graph_shortcut">g</string>
+	
 	<string name="course_details_label">Detalles del Campo</string>
 	<string name="course_detail_title">My Golf Card - Detalles del Campo</string>
 	<string name="course_details_shortcut">d</string>
@@ -79,6 +83,7 @@
     <string name="ACTION_MATCH">getmatche</string>
     <string name="ACTION_COURSE">getcourse</string>
     <string name="ACTION_INFO_HOLES">getinfoholes</string>
+    <string name="DB_NAME">mygolfcard.db</string>
         
     <string name="resume_match">Resumen Partido</string> 
     <string name="main_no_items">No hay elementos para mostrar</string>

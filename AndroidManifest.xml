@@ -28,11 +28,13 @@
         </activity>
         
         <activity android:name=".Card"
-	        android:label="@string/card_title">
+	        android:label="@string/card_title"
+	        android:configChanges="keyboard|keyboardHidden|orientation">
         </activity>
         
         <activity android:name=".Strokes"
-	        android:label="@string/strokes_title">
+	        android:label="@string/strokes_title"
+	        android:configChanges="keyboard|keyboardHidden|orientation">
         </activity>
         
 		<activity android:name=".About"
@@ -41,11 +43,13 @@
         </activity>
         
         <activity android:name=".Matches"
-	        android:label="@string/matches_title">
+	        android:label="@string/matches_title"
+	        android:configChanges="keyboard|keyboardHidden|orientation">
         </activity>
         
         <activity android:name=".Courses"
-	        android:label="@string/courses_title">
+	        android:label="@string/courses_title"
+	        android:configChanges="keyboard|keyboardHidden|orientation">
         </activity>
         
         <activity android:name=".Course"
@@ -62,7 +66,8 @@
 		</activity>
 		
 		<activity android:name=".Synchro"
-			android:label="@string/synchro_title">
+			android:label="@string/synchro_title"
+			android:configChanges="keyboard|keyboardHidden|orientation">
 		</activity>
 
 		<activity android:name=".Checkbox"
@@ -72,7 +77,9 @@
 		
 		<activity android:name=".CardGraph"
 			android:label="@string/card_title" 
-			android:theme="@style/Theme.Green" >
+			android:theme="@style/Theme.Green" 
+			android:screenOrientation="landscape"
+			android:configChanges="keyboard|keyboardHidden|orientation">
 		</activity>
 		
     </application>

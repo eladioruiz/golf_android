@@ -13,7 +13,7 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -57,6 +57,12 @@ public class Matches extends ListActivity {
 			setInfo(result);
 		}
 		
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+	  // ignore orientation/keyboard change
+	  super.onConfigurationChanged(newConfig);
 	}
 
 	public void onListItemClick(ListView parent, View v, int position,long id) {

@@ -116,13 +116,13 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	    		break;
 
 	    	case R.id.exit_button:
-	    		Intent i = new Intent(this, CardGraph.class);
-	    		i.putExtra("match_id", 11);
+/*	    		Intent i = new Intent(this, CardGraph.class);
+	    		i.putExtra("match_id", "9");
 	    		i.putExtra("mitad", 1);
 	    		i.putExtra("type_match", 1);
         		startActivity(i);
 
-	    		finish();
+*/	    		finish();
 	    		break;
 	    		
     	}

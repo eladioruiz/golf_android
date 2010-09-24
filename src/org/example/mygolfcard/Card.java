@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -27,7 +28,7 @@ import android.widget.Toast;
 public class Card extends Activity implements OnClickListener {
 	private final View holeButton[] = new View[18];
 	private SQLiteDatabase db = null;
-	private String DATABASE_NAME = "mygolfcard.db";
+	private String DATABASE_NAME;
 	private String course_id;
 	private String course_name;
 	private String date_hour;
@@ -54,6 +55,8 @@ public class Card extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.card_2);
 		
+		DATABASE_NAME = getString(R.string.DB_NAME);
+		
 		String result = Authentication.readFriends(Card.this);
 		setInfoPlayers(result);
 		
@@ -77,6 +80,12 @@ public class Card extends Activity implements OnClickListener {
 		}
 	}
 	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+	  // ignore orientation/keyboard change
+	  super.onConfigurationChanged(newConfig);
+	}
+
 	public void onClick(View v) {
 		String hole_number;
 		
@@ -179,6 +188,7 @@ public class Card extends Activity implements OnClickListener {
 			case R.id.synchro:
 				startActivity(new Intent(this, Synchro.class));
 				finish();
+				
 				return true;
 
 			case R.id.resume:
@@ -190,7 +200,15 @@ public class Card extends Activity implements OnClickListener {
 					.setPositiveButton(R.string.alert_button_default, null)
 					.show();
 				return true;
-				
+	
+			case R.id.card_graph:
+	    		Intent i = new Intent(this, CardGraph.class);
+	    		i.putExtra("match_id", match_id);
+	    		i.putExtra("mitad", 1);
+	    		i.putExtra("type_match", 1);
+        		startActivity(i);
+
+        		return true;
 		}
 		return false;
 	}
