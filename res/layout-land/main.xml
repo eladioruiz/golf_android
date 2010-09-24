@@ -14,19 +14,19 @@
 		</TableRow>
 		<TableRow>
 			<TextView android:text="Usuario : " android:layout_gravity="right"
-				android:layout_width="fill_parent" android:paddingTop="15dip" />
+				android:layout_width="fill_parent" android:paddingTop="10dip" android:textSize="13.5sp"/>
 			<EditText android:id="@+id/login_user"
 				android:layout_height="wrap_content" android:layout_width="fill_parent"
 				android:layout_gravity="left" android:width="120sp" android:text="eladioruiz"
-				android:singleLine="true" />
+				android:singleLine="true" android:textSize="13.5sp"/>
 			<TextView android:text="Contraseña : "
 				android:layout_gravity="right" android:layout_width="fill_parent"
-				android:paddingTop="15dip" />
+				android:paddingTop="10dip" android:textSize="13.5sp"/>
 			<EditText android:id="@+id/login_password"
 				android:layout_height="wrap_content" android:layout_width="fill_parent"
 				android:width="120sp" android:layout_gravity="left"
 				android:password="true" android:text="eladioruiz"
-				android:singleLine="true" />
+				android:singleLine="true" android:textSize="13.5sp"/>
 		</TableRow>
 		<TableRow
 			android:gravity="center">

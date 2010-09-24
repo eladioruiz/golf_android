@@ -26,11 +26,14 @@ public class CardGraphView extends View {
 	private int selY; // Y index of selection
 	private final Rect selRect = new Rect();
 	
-	private static int COLS= 15;
+	private static int COLS= 16;
 	private static int ROWS= 10;
 	
 	private static int FIRST_COL= 5;
 	private static int FIRST_ROW= 3;
+	private static int PARTIAL_COL= 5;
+	private static int TOTAL_COL= 6;
+	private static int TITLE_COL= 5;
 
 	private static int TYPEMATCH_INTERNAL 	= 1;
 	private static int TYPEMATCH_REMOTE		= 2;
@@ -106,8 +109,8 @@ public class CardGraphView extends View {
 		
 		// Draw the minor vertical grid lines
 		for (i = FIRST_COL; i < COLS; i++) {
-			canvas.drawLine(i * width, 0, i * width, getHeight(), light);  // lineas vert
-			canvas.drawLine(i * width + 1, 0, i * width + 1, getHeight(), hilite);  // lineas vert
+			canvas.drawLine(i * width, 3 * height, i * width, getHeight(), light);  // lineas vert
+			canvas.drawLine(i * width + 1, 3 * height, i * width + 1, getHeight(), hilite);  // lineas vert
 		}
 		
 		// Draw the minor horizontal grid lines
@@ -122,8 +125,11 @@ public class CardGraphView extends View {
 		canvas.drawLine(i * width + 1, 0, i * width + 1, getHeight(), hilite);
 		
 		i = 14;
-		canvas.drawLine(i * width, 0, i * width, getHeight(), dark);
-		canvas.drawLine(i * width + 1, 0, i * width + 1, getHeight(), hilite);
+		canvas.drawLine(i * width, 3 * height, i * width, getHeight(), dark);
+		canvas.drawLine(i * width + 1, 3 * height, i * width + 1, getHeight(), hilite);
+		
+		i = 15;
+		canvas.drawLine(i * width, 3 * height, i * width, getHeight(), dark);
 		
 		// Draw the major horizontal grid lines
 		i = 3;
@@ -144,7 +150,14 @@ public class CardGraphView extends View {
 		players.setStyle(Style.FILL);
 		players.setTextSize(height * 0.55f);
 		players.setTextScaleX(width / height);
-		players.setTextAlign(Paint.Align.CENTER);
+		players.setTextAlign(Paint.Align.LEFT);
+		
+		Paint strokes = new Paint(Paint.ANTI_ALIAS_FLAG);
+		strokes.setColor(getResources().getColor(R.color.card_players));
+		strokes.setStyle(Style.FILL);
+		strokes.setTextSize(height * 0.55f);
+		strokes.setTextScaleX(width / height);
+		strokes.setTextAlign(Paint.Align.CENTER);
 		
 		Paint players_total = new Paint(Paint.ANTI_ALIAS_FLAG);
 		players_total.setColor(getResources().getColor(R.color.card_players));
@@ -163,7 +176,10 @@ public class CardGraphView extends View {
 		float y = height / 2 - (fm_p.ascent + fm_p.descent) / 2;
 		
 		canvas.drawCircle((float)(2.5 * width), (float)(1.5 * height), (float)(1 * width), dark);
-		canvas.drawText(mitad==1 ? "2P" : "1P", (float)(2 * width + x), (float)(1 * height + y), players);
+		canvas.drawText(mitad==1 ? "2P" : "1P", (float)(1.75 * width + x), (float)(1 * height + y), players);
+		
+		canvas.drawText("RACE", (TITLE_COL * width + x), (float)(0.75 * height + y), players);
+		canvas.drawText("10/02/2010 12:00", (TITLE_COL * width + x), (float)(1.5 * height + y), players);
 		
 		/////////////////////////////////////////////////////////////////////////
 		Paint nHoles = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -234,6 +250,11 @@ public class CardGraphView extends View {
 		i = 14;
 		infoHoles.setTextAlign(Paint.Align.CENTER);
 		infoHoles.setColor(getResources().getColor(android.R.color.black));
+		canvas.drawText("P",  (i * width) + x, (j * height) + y, infoHoles);
+		
+		i = 15;
+		infoHoles.setTextAlign(Paint.Align.CENTER);
+		infoHoles.setColor(getResources().getColor(android.R.color.black));
 		canvas.drawText("T",  (i * width) + x, (j * height) + y, infoHoles);
 		
 		// INFO MATCH
@@ -241,19 +262,26 @@ public class CardGraphView extends View {
 		i = 0;
 		j = 6;
 		int sum_mitad = 0;
+		int sum_total = 0;
 		for (int iPlayer=0;iPlayer<aux_player_id.length;iPlayer++) {
 			i = 0;
 			sum_mitad = 0;
+			sum_total = 0;
 			
 			canvas.drawText(getPlayerName(""+ aux_player_id[iPlayer]),  (i * width) + 1, (j * height) + y, players);
 			++i;
 			
 			for (int z=1 + ((mitad-1) * 9);z<10 + ((mitad-1) * 9);z++) {
 				sum_mitad += arrStrokes[iPlayer][z];
-				canvas.drawText("" + arrStrokes[iPlayer][z], ((i+4) * width) + x, (j* height) + y, players);
+				canvas.drawText("" + arrStrokes[iPlayer][z], ((i+4) * width) + x, (j* height) + y, strokes);
 				++i;
 			}
-			canvas.drawText("" + sum_mitad, ((i+5) * width) , (j* height) + y, players_total);
+			
+			for (int z=1;z<19;z++) {
+				sum_total += arrStrokes[iPlayer][z];
+			}
+			canvas.drawText("" + sum_mitad, ((i + PARTIAL_COL) * width) , (j* height) + y, players_total);
+			canvas.drawText("" + sum_total, ((i + TOTAL_COL) * width) , (j* height) + y, players_total);
 			
 			++j;
 		}

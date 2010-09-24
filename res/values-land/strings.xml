@@ -3,8 +3,9 @@
     <string name="hello">Hello World, MyGolfCard!</string>
     <string name="app_name">Android My Golf Card</string>
     <string name="presentation">\
-    ¿Se ha dado ya de alta en <b>My Golf Card</b>de forma totalmente gratuita en http://www.mygolfcard.es ?\n\n
-    Con esta aplicación para su móvil podrá apuntar después de cada hoyo su puntuación y si lo desea la de sus compañeros.\n\n
+    Esta aplicación para su movil Android es el complemento perfecto para sus datos en mi <b>My Golf Card</b>.\n
+    Si todavía no lo ha hecho, puede darse de alta de forma totalmente gratuita en http://www.mygolfcard.es\n\n
+    Ahora podrá apuntar en tiempo real, después de cada hoyo, su puntuación y si lo desea la de sus compañeros.\n
     Al final del partido sólo tendrá que subir los datos del partido a My Golf Card con un simple click y ya tendrá publicada su tarjeta.\n
     </string>
     
