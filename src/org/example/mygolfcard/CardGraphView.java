@@ -144,7 +144,7 @@ public class CardGraphView extends View {
 		players.setStyle(Style.FILL);
 		players.setTextSize(height * 0.55f);
 		players.setTextScaleX(width / height);
-		players.setTextAlign(Paint.Align.LEFT);
+		players.setTextAlign(Paint.Align.CENTER);
 		
 		Paint players_total = new Paint(Paint.ANTI_ALIAS_FLAG);
 		players_total.setColor(getResources().getColor(R.color.card_players));
@@ -163,7 +163,7 @@ public class CardGraphView extends View {
 		float y = height / 2 - (fm_p.ascent + fm_p.descent) / 2;
 		
 		canvas.drawCircle((float)(2.5 * width), (float)(1.5 * height), (float)(1 * width), dark);
-		canvas.drawText(mitad==1 ? "2P" : "1P", (float)(1.75 * width + x), (float)(1 * height + y), players);
+		canvas.drawText(mitad==1 ? "2P" : "1P", (float)(2 * width + x), (float)(1 * height + y), players);
 		
 		/////////////////////////////////////////////////////////////////////////
 		Paint nHoles = new Paint(Paint.ANTI_ALIAS_FLAG);
