@@ -38,7 +38,7 @@ public class MyGolfCard extends Activity  implements OnClickListener {
         
         connectionOK = Authentication.checkConnection(MyGolfCard.this);
         if (connectionOK) {
-        	Authentication.deleteAuth(MyGolfCard.this);
+        	//Authentication.deleteAuth(MyGolfCard.this);
         }
         
         SharedPreferences.Editor editor = getPreferences(0).edit();
@@ -116,18 +116,17 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	    		break;
 
 	    	case R.id.exit_button:
-/*	    		Intent i = new Intent(this, CardGraph.class);
-	    		i.putExtra("match_id", "9");
+	    		Intent i = new Intent(this, CardGraph.class);
+	    		i.putExtra("match_id", "45");
 	    		i.putExtra("mitad", 1);
-	    		i.putExtra("type_match", 1);
+	    		i.putExtra("type_match", 2);
         		startActivity(i);
 
-*/	    		finish();
+	    		finish();
 	    		break;
 	    		
     	}
     }
-
     
     private static String callAuthentication(String pLogin, String pPass) {
     	String response;

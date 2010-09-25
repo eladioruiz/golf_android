@@ -80,7 +80,8 @@
     <string name="ACTION_MATCHES">getmatches</string>
     <string name="ACTION_COURSES">getcourses</string>
     <string name="ACTION_FRIENDS">getfriends</string>
-    <string name="ACTION_MATCH">getmatche</string>
+    <string name="ACTION_MATCH">getmatch</string>
+    <string name="ACTION_STROKES">getstrokes</string>
     <string name="ACTION_COURSE">getcourse</string>
     <string name="ACTION_INFO_HOLES">getinfoholes</string>
     <string name="DB_NAME">mygolfcard.db</string>

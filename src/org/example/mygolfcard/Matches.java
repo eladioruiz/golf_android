@@ -121,7 +121,7 @@ public class Matches extends ListActivity {
 			for (int i=0; i<jsonArr.length(); i++) {
 				jsonObj = new JSONObject(jsonArr.get(i).toString());
 				
-				matches[i] = jsonObj.getString("course_name") + "\n" + jsonObj.getString("date_hour");
+				matches[i] = jsonObj.getString("players") ;
 				
 				matches_field1[i] = jsonObj.getString("course_name");
 				matches_field2[i] = jsonObj.getString("date_hour");

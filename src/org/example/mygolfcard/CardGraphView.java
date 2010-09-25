@@ -1,9 +1,17 @@
 package org.example.mygolfcard;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.example.mygolfcard.Matches.InitTask;
+import org.example.mygolfcard.RestClient.RequestMethod;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,13 +20,23 @@ import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.SimpleAdapter;
 
 public class CardGraphView extends View {
 	private static final String TAG = "MyGolfCard" ;
 	private Context ctxCardGraph;
+	
+	private String auth_token;
+	private String auth_user_id;
+	private boolean connectionOK;
+	private String URL_MATCH;
+	private String URL_STROKES;	
+	private String result_getmatch;
+	private String result_getstrokes;
 	
 	private float width; // width of one tile
 	private float height; // height of one tile
@@ -46,8 +64,11 @@ public class CardGraphView extends View {
 	private String DATABASE_NAME = "";
 	
 	private int colPlayer[] = new int[4];
-	
+
+	private String course_name;
+	private String date_hour_match;
 	private int aux_player_id[] = new int[4]; 
+	private int aux_playerweb_id[] = new int[4];
 	private int arrStrokes[][] = new int[4][19];
 
 	private String[] players_field1;
@@ -68,6 +89,7 @@ public class CardGraphView extends View {
 		this.mitad = mitad;
 		this.typeMatch = type_match;
 		
+		getInfoCard();
 		
 		setFocusable(true);
 		setFocusableInTouchMode(true);
@@ -89,7 +111,7 @@ public class CardGraphView extends View {
 		
 		Log.d(TAG, "onDraw");
 		
-		getInfoCard();
+		//getInfoCard();
 		
 		// Draw the background...
 		Paint background = new Paint();
@@ -349,10 +371,8 @@ public class CardGraphView extends View {
 	
 	private void getInfoCardInternal()
 	{
-		String res = "";
 		String sql = "";
 		int i = 0;
-		int j = 0;
 		
 		sql = "SELECT player1_id, player2_id, player3_id, player4_id FROM matches where id=" + match_id;
 
@@ -369,6 +389,8 @@ public class CardGraphView extends View {
 		 	c.moveToFirst();
 		 	if (c != null) {
 		 		i = 0;
+		 		
+		 		// recupera los ids de lo jugadores que participan en el partido
 		 		do {
 		 			aux_player_id[0] = c.getInt(colPlayer[0]);
 		 			aux_player_id[1] = c.getInt(colPlayer[1]);
@@ -411,7 +433,26 @@ public class CardGraphView extends View {
 	
 	private void getInfoCardRemote()
 	{
+		URL_MATCH 	= ctxCardGraph.getString(R.string.URL_APIS) + ctxCardGraph.getString(R.string.ACTION_MATCH);
+		URL_STROKES	= ctxCardGraph.getString(R.string.URL_APIS) + ctxCardGraph.getString(R.string.ACTION_STROKES);
 		
+		connectionOK = Authentication.checkConnection(ctxCardGraph);
+		if (connectionOK) {
+			Authentication.readDataUser(ctxCardGraph);
+			auth_token = Authentication.getToken();
+			auth_user_id = Authentication.getUserId();
+		
+			InitTask task = new InitTask();
+			task.execute();
+		}
+		else {
+			new AlertDialog.Builder(ctxCardGraph)
+				.setIcon(R.drawable.alert_dialog_icon)
+				.setTitle(R.string.remote_connection)
+				.setMessage(R.string.no_internet_connect)
+				.setPositiveButton(R.string.alert_button_default, null)
+				.show();
+		}
 	}
 	
 	private String getPlayerName(String playerId) {
@@ -458,4 +499,182 @@ public class CardGraphView extends View {
 		}
 		invalidate();
 	}
+	
+	public String getMatch() {
+		String response;
+    	
+		Log.i("CALL", "" + URL_MATCH);
+		
+	    RestClient client = new RestClient(URL_MATCH);
+	    client.AddParam("token", auth_token);
+	    client.AddParam("user_id", auth_user_id);
+	    client.AddParam("match_id", "" + match_id);
+	    
+	    Log.i("RESPONSE", "" + auth_user_id);
+	        
+	    response = "";
+	    try {
+	        client.Execute(RequestMethod.POST);
+	        response = client.getResponse();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    
+	    Log.i("RESPONSE", "" + response);
+	    
+	    return response;
+	}
+	
+	public String getStrokes(int player_id) {
+		String response;
+    	
+		Log.i("CALL", "" + URL_STROKES);
+		Log.i("Param token", "" + auth_token);
+		Log.i("Param user_id", "" + auth_user_id);
+		Log.i("Param match_id", "" + match_id);
+		Log.i("Param player_id", "" + player_id);
+		
+	    RestClient client = new RestClient(URL_STROKES);
+	    client.AddParam("token", auth_token);
+	    client.AddParam("user_id", auth_user_id);
+	    client.AddParam("match_id", "" + match_id);
+	    client.AddParam("player_id", "" + player_id);
+	    
+	    Log.i("RESPONSE", "" + auth_user_id);
+	        
+	    response = "";
+	    try {
+	        client.Execute(RequestMethod.POST);
+	        response = client.getResponse();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    
+	    Log.i("RESPONSE", "" + response);
+	    
+	    return response;
+	}
+	
+	public void setInfoMatch(String result) {
+		JSONObject jsonObj;
+		JSONArray  jsonArr;
+		String aux_players;
+
+		course_name = "";
+		date_hour_match = "";
+		try {
+			jsonObj = new JSONObject(result);
+			
+			aux_players 	= jsonObj.getString("players");
+			course_name 	= jsonObj.getString("course_name");
+			date_hour_match	= jsonObj.getString("date_hour_match");
+			
+			jsonArr = new JSONArray(aux_players);
+			
+			for (int i=0; i<jsonArr.length(); i++) {
+				jsonObj = new JSONObject(jsonArr.get(i).toString());
+				
+				aux_player_id[i] = Integer.parseInt(jsonObj.getString("user_id"));
+				aux_playerweb_id[i] = Integer.parseInt(jsonObj.getString("player_id"));
+				
+				Log.i("JSON", "" + aux_player_id[i]);
+				
+			}
+			Log.i("JSON", "" + aux_players);
+					
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void setInfoStrokes(int iPlayer, String result) {
+		JSONObject jsonObj;
+		JSONArray  jsonArr;
+		int hole_number;
+		int strokes;
+
+		course_name = "";
+		date_hour_match = "";
+		try {
+			jsonArr = new JSONArray(result);
+			
+			for (int i=0; i<jsonArr.length(); i++) {
+				jsonObj = new JSONObject(jsonArr.get(i).toString());
+				
+				hole_number = Integer.parseInt(jsonObj.getString("hole_number"));
+				strokes 	= Integer.parseInt(jsonObj.getString("strokes"));
+				
+				arrStrokes[iPlayer][hole_number] = strokes;
+				
+				Log.i("JSON", "" + hole_number + ":" + strokes);
+				
+			}
+					
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * sub-class of AsyncTask
+	 */
+	protected class InitTask extends AsyncTask<Context, Integer, String>
+	{
+		private ProgressDialog dialog;
+		
+		public InitTask () {
+			
+		}
+		
+		// -- run intensive processes here
+		// -- notice that the datatype of the first param in the class definition matches the param passed to this method 
+		// -- and that the datatype of the last param in the class definition matches the return type of this mehtod
+		@Override
+		protected String doInBackground( Context... params ) 
+		{
+			result_getmatch 	= getMatch();
+			setInfoMatch(result_getmatch);
+			for (int i=0;i<aux_playerweb_id.length;i++) {
+				result_getstrokes	= getStrokes(aux_playerweb_id[i]);
+				setInfoStrokes(i,result_getstrokes);
+			}
+			
+			return "";
+		}
+
+		// -- gets called just before thread begins
+		@Override
+		protected void onPreExecute() 
+		{
+			Log.i( "makemachine", "onPreExecute()" );
+			super.onPreExecute();
+			CharSequence title_remote = ctxCardGraph.getString(R.string.title_remote_connection);
+			CharSequence remote = ctxCardGraph.getString(R.string.remote_connection);
+			this.dialog = ProgressDialog.show(ctxCardGraph, title_remote, remote, true);
+		}
+
+		// -- called from the publish progress 
+		// -- notice that the datatype of the second param gets passed to this method
+		@Override
+		protected void onProgressUpdate(Integer... values) 
+		{
+			super.onProgressUpdate(values);
+			Log.i( "makemachine", "onProgressUpdate(): " +  String.valueOf( values[0] ) );
+			//_percentField.setText( ( values[0] * 2 ) + "%");
+			//_percentField.setTextSize( values[0] );
+		}
+
+		// -- called as soon as doInBackground method completes
+		// -- notice that the third param gets passed to this method
+		@Override
+		protected void onPostExecute( String result ) 
+		{
+			super.onPostExecute(result);
+			Log.i( "makemachine", "onPostExecute(): " + result );
+			this.dialog.cancel();
+			invalidate();
+			
+		}
+	}   
+		
 }
