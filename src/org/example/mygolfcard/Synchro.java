@@ -179,12 +179,7 @@ public class Synchro extends ListActivity {
 		 			matches_field3[i] 	= date_hour;
 		 			
 		 			++i;
-		 			
-		 			//HashMap<String, String> map = new HashMap<String, String>();
-					//map.put("course_name", matches_field2[i]);
-					//map.put("date_hour", matches_field3[i]);
-					//fillMaps.add(map);
-					
+		 							
 		 		} while (c.moveToNext());
 		 	}
 		 	
