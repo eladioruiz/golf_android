@@ -13,6 +13,7 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -68,8 +69,9 @@ public class Matches extends ListActivity {
 	public void onListItemClick(ListView parent, View v, int position,long id) {
 		//
 		if (connectionOK) {
-			Toast.makeText(Matches.this, R.string.no_implemented,
-					Toast.LENGTH_SHORT).show();
+			Intent intent = new Intent(this, Match.class);
+	        intent.putExtra("match_id", matches_field3[position]);
+	        startActivity(intent);
 		}
 		else {
 			new AlertDialog.Builder(Matches.this)
@@ -121,13 +123,13 @@ public class Matches extends ListActivity {
 			for (int i=0; i<jsonArr.length(); i++) {
 				jsonObj = new JSONObject(jsonArr.get(i).toString());
 				
-				matches[i] = jsonObj.getString("players") ;
+				//matches[i] = jsonObj.getString("players") ;
 				
 				matches_field1[i] = jsonObj.getString("course_name");
 				matches_field2[i] = jsonObj.getString("date_hour");
 				matches_field3[i] = jsonObj.getString("match_id");
 				
-				Log.i("JSON", "" + matches[i]);
+				//Log.i("JSON", "" + matches[i]);
 				
 				HashMap<String, String> map = new HashMap<String, String>();
 				map.put("course_name", matches_field1[i]);

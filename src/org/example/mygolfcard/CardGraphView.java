@@ -529,11 +529,7 @@ public class CardGraphView extends View {
 		String response;
     	
 		Log.i("CALL", "" + URL_STROKES);
-		Log.i("Param token", "" + auth_token);
-		Log.i("Param user_id", "" + auth_user_id);
-		Log.i("Param match_id", "" + match_id);
-		Log.i("Param player_id", "" + player_id);
-		
+
 	    RestClient client = new RestClient(URL_STROKES);
 	    client.AddParam("token", auth_token);
 	    client.AddParam("user_id", auth_user_id);

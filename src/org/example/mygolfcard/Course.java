@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 public class Course extends Activity {
 	private String auth_token;
+	private String auth_user_id;
 	
 	private String course_id;
 	private String course_name;
@@ -45,6 +46,7 @@ public class Course extends Activity {
 
 		Authentication.readDataUser(Course.this);
 		auth_token = Authentication.getToken();
+		auth_user_id = Authentication.getUserId();
 		
 		findViews();
 		//initViews();
@@ -106,6 +108,7 @@ public class Course extends Activity {
     	
 	    RestClient client = new RestClient(URL);
 	    client.AddParam("token", auth_token);
+	    client.AddParam("user_id", auth_user_id);
 	    client.AddParam("course_id", course_id);
 	    
 	    Log.i("RESPONSE", "" + course_id);

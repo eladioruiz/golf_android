@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:background="@color/background"
+	android:layout_height="fill_parent"
+	android:layout_width="fill_parent">
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:orientation="vertical"
+		android:paddingTop="5dip"
+		android:paddingLeft="5dip"
+		android:paddingRight="5dip">
+		<TextView
+			android:id="@+id/match_course_name"
+			android:padding="7dip"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:textColor="@color/colortext_title"
+			android:textSize="14.5sp"
+			android:background="@color/background_title"
+			android:text="-- Campo --" />
+		<LinearLayout
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:orientation="horizontal"
+			android:background="@color/background_title">
+			<TextView
+				android:id="@+id/match_date_hour"
+				android:padding="7dip"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:textColor="@color/colortext_title"
+				android:textSize="14.5sp"
+				android:background="@color/background_title"
+				android:text="-- Fecha/Hora --" />
+			<TextView
+				android:id="@+id/match_holes"
+				android:padding="7dip"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:textColor="@color/colortext_title"
+				android:textSize="14.5sp"
+				android:background="@color/background_title"
+				android:text="-- Hoyos --" />
+		</LinearLayout>
+		<TextView
+			android:layout_height="5dip"
+			android:layout_width="fill_parent"
+			android:text=" " />
+		<TableLayout
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:stretchColumns="0">
+			<TableRow
+				android:background="@color/background_title">
+				<TextView
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_title"
+					android:textSize="14.5sp"
+					android:text="----     Jugadores     ----" />
+				<TextView
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_title"
+					android:textSize="14.5sp"
+					android:text="1ªP" />
+				<TextView
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_title"
+					android:textSize="14.5sp"
+					android:text="2ªP" />
+				<TextView
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_title"
+					android:textSize="14.5sp"
+					android:text="TO" />
+			</TableRow>
+			<TableRow
+				android:paddingTop="2dip">
+				<TextView
+					android:id="@+id/match_player_1"
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_matchplayer"
+					android:background="@color/white"
+					android:textSize="14.5sp"
+					android:text="-- Jugador --" />
+				<TextView
+					android:id="@+id/match_player_1_1P"
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_matchplayer"
+					android:background="@color/white"
+					android:textSize="14.5sp"
+					android:text="1ªP" />
+				<TextView
+					android:id="@+id/match_player_1_2P"
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_matchplayer"
+					android:background="@color/white"
+					android:textSize="14.5sp"
+					android:text="2ªP" />
+				<TextView
+					android:id="@+id/match_player_1_TO"
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_matchplayer"
+					android:background="@color/white"
+					android:textSize="14.5sp"
+					android:text="TO" />
+			</TableRow>
+			<TableRow
+				android:paddingTop="2dip">
+				<TextView
+					android:id="@+id/match_player_2"
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_matchplayer"
+					android:background="@color/white"
+					android:textSize="14.5sp"
+					android:text="-- Jugador --" />
+				<TextView
+					android:id="@+id/match_player_2_1P"
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_matchplayer"
+					android:background="@color/white"
+					android:textSize="14.5sp"
+					android:text="1ªP" />
+				<TextView
+					android:id="@+id/match_player_2_2P"
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_matchplayer"
+					android:background="@color/white"
+					android:textSize="14.5sp"
+					android:text="2ªP" />
+				<TextView
+					android:id="@+id/match_player_2_TO"
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_matchplayer"
+					android:background="@color/white"
+					android:textSize="14.5sp"
+					android:text="TO" />
+			</TableRow>
+			<TableRow
+				android:paddingTop="2dip">
+				<TextView
+					android:id="@+id/match_player_3"
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_matchplayer"
+					android:background="@color/white"
+					android:textSize="14.5sp"
+					android:text="-- Jugador --" />
+				<TextView
+					android:id="@+id/match_player_3_1P"
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_matchplayer"
+					android:background="@color/white"
+					android:textSize="14.5sp"
+					android:text="1ªP" />
+				<TextView
+					android:id="@+id/match_player_3_2P"
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_matchplayer"
+					android:background="@color/white"
+					android:textSize="14.5sp"
+					android:text="2ªP" />
+				<TextView
+					android:id="@+id/match_player_3_TO"
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_matchplayer"
+					android:background="@color/white"
+					android:textSize="14.5sp"
+					android:text="TO" />
+			</TableRow>
+			<TableRow
+				android:paddingTop="2dip">
+				<TextView
+					android:id="@+id/match_player_4"
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_matchplayer"
+					android:background="@color/white"
+					android:textSize="14.5sp"
+					android:text="-- Jugador --" />
+				<TextView
+					android:id="@+id/match_player_4_1P"
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_matchplayer"
+					android:background="@color/white"
+					android:textSize="14.5sp"
+					android:text="1ªP" />
+				<TextView
+					android:id="@+id/match_player_4_2P"
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_matchplayer"
+					android:background="@color/white"
+					android:textSize="14.5sp"
+					android:text="2ªP" />
+				<TextView
+					android:id="@+id/match_player_4_TO"
+					android:padding="7dip"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:textColor="@color/colortext_matchplayer"
+					android:background="@color/white"
+					android:textSize="14.5sp"
+					android:text="TO" />
+			</TableRow>
+		</TableLayout>
+	</LinearLayout>		
+</ScrollView>
