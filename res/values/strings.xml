@@ -63,7 +63,7 @@
 	<string name="alert_dialog_title_delete_matches">Borrado Partidos</string>
 	<string name="alert_dialog_delete_matches">¿Desea realmente borrar los partidos pendientes seleccionados?</string>
 	<string name="alert_dialog_title_upload_matches">Sincronización Partidos</string>
-	<string name="alert_dialog_upload_matches">Opción actualmente no implementada.\nDisculpe las molestias.</string>
+	<string name="alert_dialog_upload_matches">¿Desea realmente sincronizar los partidos pendientes seleccionados?</string>
 	<string name="alert_title_no_save">Error guardando datos</string>
 	<string name="no_internet">No tiene conexión a Internet.\nSe usarán los últimos datos de acceso disponibles.</string>
 	<string name="no_internet_connect">Esta opción sólo está disponible con una conexión a Internet. Conecte su Wi-Fi o 3G y reinicie la aplicación.\nDisculpe las molestias.\n</string>
@@ -75,7 +75,8 @@
 	<string name="file_connection">La aplicación no ha encontrado datos de acceso previos a esta sesión. Deberá conectar su Wi-Fi o 3G para validar su acceso.\nDisculpe las molestias.\n</string>
 	<string name="no_holes">No hay información disponible sobre los hoyos de este campo.\nDisculpe las molestias.</string>
     
-    <string name="URL_APIS">http://dev.mygolfcard.es/api/</string>
+    <!--  <string name="URL_APIS">http://dev.mygolfcard.es/api/</string>  -->
+    <string name="URL_APIS">http://192.168.2.12:3000/api/</string>
     <string name="ACTION_AUTH">authentication</string>
     <string name="ACTION_MATCHES">getmatches</string>
     <string name="ACTION_COURSES">getcourses</string>
@@ -84,6 +85,8 @@
     <string name="ACTION_STROKES">getstrokes</string>
     <string name="ACTION_COURSE">getcourse</string>
     <string name="ACTION_INFO_HOLES">getinfoholes</string>
+    <string name="ACTION_UPLOAD">uploadmatch</string>
+    
     <string name="DB_NAME">mygolfcard.db</string>
         
     <string name="resume_match">Resumen Partido</string> 

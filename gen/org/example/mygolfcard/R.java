@@ -40,6 +40,7 @@ public final class R {
         public static final int info_dialog_icon=0x7f020002;
         public static final int info_dialog_icon_tr=0x7f020003;
         public static final int info_dialog_icon_tra=0x7f020004;
+        public static final int loading_dialog_icon=0x7f020005;
     }
     public static final class id {
         public static final int UpdateCheckBox=0x7f0a002d;
@@ -180,6 +181,8 @@ public final class R {
         public static final int menu_synchro=0x7f090005;
     }
     public static final class string {
+        /**     <string name="URL_APIS">http://dev.mygolfcard.es/api/</string> 
+         */
         public static final int ACTION_AUTH=0x7f070036;
         public static final int ACTION_COURSE=0x7f07003c;
         public static final int ACTION_COURSES=0x7f070038;
@@ -188,7 +191,10 @@ public final class R {
         public static final int ACTION_MATCH=0x7f07003a;
         public static final int ACTION_MATCHES=0x7f070037;
         public static final int ACTION_STROKES=0x7f07003b;
-        public static final int DB_NAME=0x7f07003e;
+        public static final int ACTION_UPLOAD=0x7f07003e;
+        public static final int DB_NAME=0x7f07003f;
+        /**   <string name="URL_APIS">http://dev.mygolfcard.es/api/</string>  
+         */
         public static final int URL_APIS=0x7f070035;
         public static final int about_label=0x7f070005;
         public static final int about_shortcut=0x7f070012;
@@ -215,10 +221,10 @@ public final class R {
         public static final int courses_title=0x7f07000e;
         public static final int exit_label=0x7f070004;
         public static final int file_connection=0x7f070033;
-        public static final int form_validation=0x7f070042;
+        public static final int form_validation=0x7f070043;
         public static final int hello=0x7f070000;
         public static final int keypad_title=0x7f07000f;
-        public static final int main_no_items=0x7f070040;
+        public static final int main_no_items=0x7f070041;
         public static final int matches_label=0x7f070007;
         public static final int matches_title=0x7f07000d;
         public static final int menuapp_label=0x7f070019;
@@ -234,20 +240,20 @@ public final class R {
         public static final int presentation=0x7f070002;
         public static final int remote_connection=0x7f070032;
         public static final int resume_label=0x7f07001b;
-        public static final int resume_match=0x7f07003f;
+        public static final int resume_match=0x7f070040;
         public static final int resume_shortcut=0x7f07001d;
         public static final int resume_title=0x7f07001c;
         public static final int settings_label=0x7f070013;
         public static final int settings_shortcut=0x7f070015;
         public static final int settings_title=0x7f070014;
         public static final int strokes_title=0x7f07000c;
-        public static final int synchro_delete=0x7f070043;
+        public static final int synchro_delete=0x7f070044;
         public static final int synchro_label=0x7f070016;
         public static final int synchro_shortcut=0x7f070018;
         public static final int synchro_title=0x7f070017;
-        public static final int synchro_upload=0x7f070044;
+        public static final int synchro_upload=0x7f070045;
         public static final int title_file_connection=0x7f070031;
-        public static final int title_form_validation=0x7f070041;
+        public static final int title_form_validation=0x7f070042;
         public static final int title_remote_connection=0x7f070030;
     }
     public static final class style {

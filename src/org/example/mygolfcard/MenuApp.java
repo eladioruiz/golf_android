@@ -40,7 +40,8 @@ public class MenuApp extends Activity  implements OnClickListener {
 		
 		Authentication.readDataUser(MenuApp.this);
 		auth_token = Authentication.getToken();
-	}
+		
+	} 
 	
 	public void onClick(View v) {
 		switch (v.getId()) {

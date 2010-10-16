@@ -3,14 +3,19 @@ package org.example.mygolfcard;
 import java.util.HashMap;
 import java.util.List;
 
+import org.example.mygolfcard.RestClient.RequestMethod;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -20,26 +25,42 @@ import android.view.View;
 import android.widget.ListView;
 
 public class Synchro extends ListActivity {
-	private static final int DIALOG_SYNCHRO_DELETE = 1;
-    private static final int DIALOG_SYNCHRO_UPLOAD = 2;
+	private static final int DIALOG_SYNCHRO_DELETE 		= 1;
+    private static final int DIALOG_SYNCHRO_UPLOAD 		= 2;
+    private static final int DIALOG_SYNCHRO_PROGRESS	= 3;
     
 	private String[] matches_field1;
 	private String[] matches_field2;
 	private String[] matches_field3;
+	private String[] matches_field4;
+	private String[] matches_field5;
 	private String[] selectedMatches;
 		
 	private SQLiteDatabase db = null;
 	private String DATABASE_NAME;
 	private String match_id;
 	private String course_name;
+	private String course_id;
 	private String date_hour;
 	private String n_holes;
 	private String player_id[] = new String[4];
+	private String tee_id[] = new String[4];
+	private int holes[][];
+	
+	private String auth_user_id;
 	
 	private CheckBoxifiedTextListAdapter cbla;
 	
 	List<HashMap<String, String>> fillMaps;
 	
+	private String URL_UPLOAD;
+	
+	private static final int MAX_PROGRESS = 100;
+    
+    int totalSelected = 0;
+    
+    InitTask task ;
+
 	/** Called with the activity is first created. */
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -47,9 +68,14 @@ public class Synchro extends ListActivity {
 		setContentView(R.layout.synchro);
 		
 		DATABASE_NAME = getString(R.string.DB_NAME);
+		URL_UPLOAD = getString(R.string.URL_APIS) + getString(R.string.ACTION_UPLOAD);
+		
+		Authentication.readDataUser(Synchro.this);
+		auth_user_id = Authentication.getUserId();
 		
 		getMatches();
 		setInfo();
+		
 	}
 
 	@Override
@@ -83,6 +109,7 @@ public class Synchro extends ListActivity {
 				
 			case R.id.synchro_upload:
 				showDialog(DIALOG_SYNCHRO_UPLOAD);
+				
 				return true;
 				
 			case R.id.menuapp:
@@ -113,6 +140,7 @@ public class Synchro extends ListActivity {
 			            }
 			        })
 			        .create();
+				
 	        case DIALOG_SYNCHRO_UPLOAD:
 	        	return new AlertDialog.Builder(Synchro.this)
 	                .setIcon(R.drawable.alert_dialog_icon)
@@ -120,25 +148,40 @@ public class Synchro extends ListActivity {
 	                .setMessage(R.string.alert_dialog_upload_matches)
 	                .setPositiveButton(R.string.alert_dialog_confirm, new DialogInterface.OnClickListener() {
 	                    public void onClick(DialogInterface dialog, int whichButton) {
-	                    	//        				
+	                    	processUploadingMatches();
 	                    }
 	                })
-	                /*.setNegativeButton(R.string.alert_dialog_cancel, new DialogInterface.OnClickListener() {
+	                .setNegativeButton(R.string.alert_dialog_cancel, new DialogInterface.OnClickListener() {
 	                    public void onClick(DialogInterface dialog, int whichButton) {
-	                        
+	                    	/* User clicked Cancel so do some stuff */
 	                    }
-	                })*/
+	                })
 	                .create();
+	        	
+	        case DIALOG_SYNCHRO_PROGRESS:
+        	
         }
         return null;
+	}
+	
+	private void processUploadingMatches()
+	{
+		dismissDialog(DIALOG_SYNCHRO_UPLOAD);
+
+		task = new InitTask();
+		task.execute(); 
+    	
+    	//finish();		
 	}
 	
 	private void getMatches() {
 		String sql;
 		
 		course_name = "";
+		course_id	= "";
 		match_id	= "";
 		date_hour	= "";
+		n_holes		= "";
 		
 		//fillMaps = new ArrayList<HashMap<String, String>>();
 		
@@ -149,23 +192,32 @@ public class Synchro extends ListActivity {
 		 	Cursor c = db.rawQuery(sql, null);
 		 	int colMatchId		= c.getColumnIndex("ID");
 		    int colCourseName	= c.getColumnIndex("course_name");
+		    int colCourseId		= c.getColumnIndex("course_id");
 		    int colDateHour		= c.getColumnIndex("date_hour_match");
 		    int colHoles		= c.getColumnIndex("holes");
 		    int colPlayer1		= c.getColumnIndex("player1_id");
 		    int colPlayer2		= c.getColumnIndex("player2_id");
 		    int colPlayer3		= c.getColumnIndex("player3_id");
 		    int colPlayer4		= c.getColumnIndex("player4_id");
+		    int colTee1			= c.getColumnIndex("tee1");
+		    int colTee2			= c.getColumnIndex("tee2");
+		    int colTee3			= c.getColumnIndex("tee3");
+		    int colTee4			= c.getColumnIndex("tee4");
 		 	
 		    c.moveToLast();
-		    matches_field1 = new String[c.getCount()];
-		    matches_field2 = new String[c.getCount()];
-		    matches_field3 = new String[c.getCount()];
+		    matches_field1 	= new String[c.getCount()];
+		    matches_field2 	= new String[c.getCount()];
+		    matches_field3 	= new String[c.getCount()];
+		    matches_field4 	= new String[c.getCount()];
+		    matches_field5 	= new String[c.getCount()];
+		    holes			= new int[c.getCount()][19];
 		 	c.moveToFirst();
 		 	
 		 	if (c != null) {
 		 		int i = 0;
 		 		do {
 		 			course_name 	= c.getString(colCourseName);
+		 			course_id		= c.getString(colCourseId);
 		 			match_id 		= c.getString(colMatchId);
 		 			date_hour		= c.getString(colDateHour);
 		 			n_holes			= c.getString(colHoles);
@@ -173,10 +225,29 @@ public class Synchro extends ListActivity {
 		 			player_id[1]	= c.getString(colPlayer2);
 		 			player_id[2]	= c.getString(colPlayer3);
 		 			player_id[3]	= c.getString(colPlayer4);
+		 			tee_id[0]		= c.getString(colTee1);
+		 			tee_id[1]		= c.getString(colTee2);
+		 			tee_id[2]		= c.getString(colTee3);
+		 			tee_id[3]		= c.getString(colTee4);
 		 			
 		 			matches_field1[i]	= match_id;
 		 			matches_field2[i]	= course_name;
 		 			matches_field3[i] 	= date_hour;
+		 			matches_field4[i] 	= course_id;
+		 			matches_field5[i] 	= n_holes;
+		 			
+		 			sql = "select * from strokes where match_id=" + match_id +  " and player_id=" + player_id[0] + " order by hole";
+		 			Cursor s = db.rawQuery(sql, null);
+		 			s.moveToFirst();
+		 			
+		 			if (s != null) {
+		 				int number = s.getInt(s.getColumnIndex("hole"));
+		 				int j = 0;
+		 				do {
+		 					holes[i][number] = s.getInt(s.getColumnIndex("strokes"));
+		 				} while (s.moveToNext());
+		 			}
+		 			s.close();
 		 			
 		 			++i;
 		 							
@@ -197,11 +268,6 @@ public class Synchro extends ListActivity {
 	
 	private void setInfo() {
 		// Muestra la lista
-		//SimpleAdapter adapter = new SimpleAdapter(this, fillMaps, R.layout.main_item_two_line_row_multiple_choice, new String[] { "course_name", "date_hour" }, new int[] { R.id.field1,  R.id.field2});
-		
-		//setListAdapter(adapter);
-		//getListView().setTextFilterEnabled(true);
-		
 		cbla = new CheckBoxifiedTextListAdapter(this);
         for(int k=0; k<matches_field1.length; k++)
         {
@@ -214,20 +280,20 @@ public class Synchro extends ListActivity {
 	private void getItemsChecked() {
 		selectedMatches = new String[cbla.getCount()];
 		
+		totalSelected = 0;
 		for (int i=0; i< cbla.getCount(); i++) {
 			CheckBoxifiedText obj = (CheckBoxifiedText) cbla.getItem(i);
 			
 			if (obj.getChecked()) {
 				selectedMatches[i] = matches_field1[i];
+				totalSelected++;
 			}
 			else {
 				selectedMatches[i] = "0";
 			}
 		}
 		
-/*		Toast.makeText(Synchro.this, res,
-                Toast.LENGTH_SHORT).show();
-*/	}
+	}
 	
 	private void deleteItems() {
 		String sql = "";
@@ -270,4 +336,208 @@ public class Synchro extends ListActivity {
     			db.close();
     	}
 	}
+	
+	private void uploadItems() {
+		String sql = "";
+		String file = "";
+		int processed = 1;
+		int value;
+		
+		for (int i=0; i<selectedMatches.length;i++) {			
+			if (!selectedMatches[i].equals("0"))
+			{
+				sql = "update matches set status = 1 where ID=" + selectedMatches[i];
+				
+				try {
+					Log.i("Info", "UPLOADING matches : " + sql);
+					file = createFile(selectedMatches[i],i);
+					uploadFile(file);
+					
+					++processed;
+					value = (int)((double)processed/(double)totalSelected*(double)MAX_PROGRESS);
+					
+					task.setProgress(value);
+				}
+				catch(Exception e) {
+		    		Log.e("Error", "Error UPLOADING matches", e);
+		    	} 
+		    	finally {
+		    		if (db != null)
+		    			db.close();
+		    	}
+			}
+		}
+	}
+	
+	private String createFile(String match_id, int index) {
+		String fileName = "match_0001_00002.xml";
+		
+		String header 	= "";
+		String match 	= "";
+		String players 	= "";
+		String footer 	= "";
+		String xmlFile 	= "";
+
+		String m = String.format("%04d", Integer.parseInt(match_id));
+		String u = String.format("%05d", Integer.parseInt(auth_user_id));
+		fileName	= "match_" + m + "_" + u + ".xml";
+		
+		header 		= getXMLHeader(fileName,"");
+		match		= getXMLMatch(match_id,matches_field4[index],matches_field3[index],matches_field5[index]);
+		players		= getXMLPlayers(player_id,tee_id,holes);
+		footer		= getXMLFooter();
+		
+		xmlFile = header + match + players + footer;
+		Authentication.saveFile(Synchro.this,fileName,xmlFile);
+		
+		return fileName;
+	}
+	
+	private void uploadFile(String fileName) {
+		String response;
+		String dataFile;
+    	
+		dataFile = Authentication.readFile(Synchro.this, fileName);
+
+	    RestClient client = new RestClient(URL_UPLOAD);
+	    client.AddParam("filename", fileName);
+	    client.AddParam("data", dataFile);
+	    
+	    response = "";
+	    try {
+	        client.Execute(RequestMethod.POST);
+	        response = client.getResponse();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }	    
+	}
+
+	private String getXMLHeader(String fileName, String createdAt) {
+		String res;
+		
+		res = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!-- \nDocument   : ##filename##\nCreated on : ##created##\n\nDescription: Document generated by android application to upload a new match to web application\n-->";
+		
+		res = res.replace("##filename##", fileName);
+		res = res.replace("##created##", createdAt);
+		
+		return res;
+	}
+	
+	private String getXMLFooter() {
+		String res;
+		
+		res = "</match>";
+		
+		return res;
+	}
+	
+	private String getXMLMatch(String match_id, String course_id, String dateHour, String nHoles) {
+		String res;
+		
+		res = "<match id=\"##match_id##\">\n<course_id>##course_id##</course_id>\n<date_hour>##datehour##</date_hour><holes>##holes##</holes>";
+		res = res.replace("##match_id##", match_id);
+		res = res.replace("##course_id##", course_id);
+		res = res.replace("##datehour##", dateHour);
+		res = res.replace("##holes##", nHoles);
+		
+		return res;
+	}
+	
+	private String getXMLPlayers(String players[], String tee_id[], int holes[][]) {
+		String res;
+		
+		res = "<players>\n";
+		for (int i=0; i<players.length; i++) {
+			if (players[i]!="0") {
+				res += "<player user_id=\"" + players[i] + "\" tee_id=\"" + tee_id[i] + "\">";
+				for (int j=1; j<holes[i].length;j++) {
+					res += "<hole number=\"" + j + "\">" + holes[i][j] + "</hole>";
+				}
+				res += "</player>";
+			}
+		}
+		res += "</players>\n";
+		
+		return res;
+	}
+	
+	/**
+	 * sub-class of AsyncTask
+	 */
+	protected class InitTask extends AsyncTask<Context, Integer, String>
+	{
+		private ProgressDialog dialog;
+		
+		public InitTask () {
+			
+		}
+		
+		// -- run intensive processes here
+		// -- notice that the datatype of the first param in the class definition matches the param passed to this method 
+		// -- and that the datatype of the last param in the class definition matches the return type of this mehtod
+		@Override
+		protected String doInBackground( Context... params ) 
+		{
+			// Muestra el progress bar
+			// Dentro de el hay un hilo que se encarga de generar y subir cada uno de los ... 
+			// ... ficheros al mismo tiempo que actualiza la progress bar
+			int value = 1;
+			
+			getItemsChecked(); // Recupera los partidos seleccionados
+			
+			value = (int)((double)value/(double)totalSelected*(double)MAX_PROGRESS);
+			publishProgress(value);
+
+			uploadItems();
+			publishProgress(MAX_PROGRESS);
+			
+			return "";
+		}
+		
+		public void setProgress(int value) {
+			publishProgress(value);
+		}
+
+		// -- gets called just before thread begins
+		@Override
+		protected void onPreExecute() 
+		{
+			
+			Log.i( "makemachine", "onPreExecute()" );
+			super.onPreExecute();
+			
+			this.dialog = new ProgressDialog(Synchro.this);
+			this.dialog.setIcon(R.drawable.info_dialog_icon_tra);
+			this.dialog.setTitle("Sincronizando partidos pendientes");
+			this.dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			this.dialog.setMax(MAX_PROGRESS);
+			this.dialog.show();
+		}
+
+		// -- called from the publish progress 
+		// -- notice that the datatype of the second param gets passed to this method
+		@Override
+		protected void onProgressUpdate(Integer... values) 
+		{
+			int value = 0;
+			
+			value = values[0];
+			
+			super.onProgressUpdate(values);
+			Log.i( "makemachine", "onProgressUpdate(): " +  String.valueOf( value ) );
+			
+			this.dialog.setProgress(value);
+		}
+
+		// -- called as soon as doInBackground method completes
+		// -- notice that the third param gets passed to this method
+		@Override
+		protected void onPostExecute( String result ) 
+		{
+			super.onPostExecute(result);
+			Log.i( "makemachine", "onPostExecute(): " + result );
+			this.dialog.cancel();
+		}
+	}   
+	
 }

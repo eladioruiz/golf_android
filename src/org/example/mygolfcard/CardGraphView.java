@@ -65,8 +65,8 @@ public class CardGraphView extends View {
 	
 	private int colPlayer[] = new int[4];
 
-	private String course_name;
-	private String date_hour_match;
+	private String course_name = "-- CAMPO --";
+	private String date_hour_match = "-- FECHA/HORA --";
 	private int aux_player_id[] = new int[4]; 
 	private int aux_playerweb_id[] = new int[4];
 	private int arrStrokes[][] = new int[4][19];
@@ -200,8 +200,8 @@ public class CardGraphView extends View {
 		canvas.drawCircle((float)(2.5 * width), (float)(1.5 * height), (float)(1 * width), dark);
 		canvas.drawText(mitad==1 ? "2P" : "1P", (float)(1.75 * width + x), (float)(1 * height + y), players);
 		
-		canvas.drawText("RACE", (TITLE_COL * width + x), (float)(0.75 * height + y), players);
-		canvas.drawText("10/02/2010 12:00", (TITLE_COL * width + x), (float)(1.5 * height + y), players);
+		canvas.drawText(course_name, (TITLE_COL * width + x), (float)(0.75 * height + y), players);
+		canvas.drawText(date_hour_match, (TITLE_COL * width + x), (float)(1.5 * height + y), players);
 		
 		/////////////////////////////////////////////////////////////////////////
 		Paint nHoles = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -556,8 +556,6 @@ public class CardGraphView extends View {
 		JSONArray  jsonArr;
 		String aux_players;
 
-		course_name = "";
-		date_hour_match = "";
 		try {
 			jsonObj = new JSONObject(result);
 			
@@ -589,8 +587,6 @@ public class CardGraphView extends View {
 		int hole_number;
 		int strokes;
 
-		course_name = "";
-		date_hour_match = "";
 		try {
 			jsonArr = new JSONArray(result);
 			

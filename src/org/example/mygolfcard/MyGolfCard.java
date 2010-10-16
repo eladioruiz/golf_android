@@ -25,6 +25,7 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	private String auth_user_id;
 	private String auth_error_code;
 	private boolean connectionOK = true;
+	private static Context ctx = null;
 	
 	static public String resWebService;
 	
@@ -33,6 +34,8 @@ public class MyGolfCard extends Activity  implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
+        ctx = MyGolfCard.this;
         
         URL = getString(R.string.URL_APIS) + getString(R.string.ACTION_AUTH);
         
@@ -116,12 +119,6 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	    		break;
 
 	    	case R.id.exit_button:
-	    		Intent i = new Intent(this, CardGraph.class);
-	    		i.putExtra("match_id", "45");
-	    		i.putExtra("mitad", 1);
-	    		i.putExtra("type_match", 2);
-        		startActivity(i);
-
 	    		finish();
 	    		break;
 	    		
@@ -140,7 +137,12 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	        client.Execute(RequestMethod.POST);
 	        response = client.getResponse();
 	    } catch (Exception e) {
-	        e.printStackTrace();
+			new AlertDialog.Builder(ctx)
+				.setIcon(R.drawable.alert_dialog_icon)
+				.setTitle(R.string.title_file_connection)
+				.setMessage(R.string.file_connection)
+				.setPositiveButton(R.string.alert_button_default, null)
+				.show();
 	    }
 	    	 
 	    resWebService = response;

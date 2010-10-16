@@ -163,7 +163,7 @@ public class Authentication {
 		return readFile(ctx,"holes.txt");
 	}
 	
-	private static String readFile(Context ctx, String fileName) {
+	public static String readFile(Context ctx, String fileName) {
 		try {
 			InputStream in = ctx.openFileInput(fileName);
 			if (in!=null) {
@@ -190,7 +190,7 @@ public class Authentication {
 		}
 	}
 	
-	private static boolean saveFile(Context ctx, String fileName, String result) {
+	public static boolean saveFile(Context ctx, String fileName, String result) {
 		try {
 			OutputStreamWriter out=new OutputStreamWriter(ctx.openFileOutput(fileName,0));
 			
