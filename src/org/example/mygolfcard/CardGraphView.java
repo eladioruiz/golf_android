@@ -1,10 +1,5 @@
 package org.example.mygolfcard;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.example.mygolfcard.Matches.InitTask;
 import org.example.mygolfcard.RestClient.RequestMethod;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,7 +19,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.SimpleAdapter;
 
 public class CardGraphView extends View {
 	private static final String TAG = "MyGolfCard" ;
@@ -64,6 +58,9 @@ public class CardGraphView extends View {
 	private String DATABASE_NAME = "";
 	
 	private int colPlayer[] = new int[4];
+	private int colCourseName;
+	private int colDateHour;
+	private int colnHoles;
 
 	private String course_name = "-- CAMPO --";
 	private String date_hour_match = "-- FECHA/HORA --";
@@ -374,16 +371,20 @@ public class CardGraphView extends View {
 		String sql = "";
 		int i = 0;
 		
-		sql = "SELECT player1_id, player2_id, player3_id, player4_id FROM matches where id=" + match_id;
+		sql = "SELECT course_name, date_hour_match, holes, player1_id, player2_id, player3_id, player4_id FROM matches where id=" + match_id;
 
 		try {
 			db = ctxCardGraph.openOrCreateDatabase(DATABASE_NAME, 0, null);
 		 	
 			Cursor c = db.rawQuery(sql, null);
-		 	colPlayer[0]		= c.getColumnIndex("player1_id");
-		 	colPlayer[1]		= c.getColumnIndex("player2_id");
-		 	colPlayer[2]		= c.getColumnIndex("player3_id");
-		 	colPlayer[3]		= c.getColumnIndex("player4_id");
+		 	colPlayer[0]	= c.getColumnIndex("player1_id");
+		 	colPlayer[1]	= c.getColumnIndex("player2_id");
+		 	colPlayer[2]	= c.getColumnIndex("player3_id");
+		 	colPlayer[3]	= c.getColumnIndex("player4_id");
+		 	
+		 	colCourseName	= c.getColumnIndex("course_name");
+		 	colDateHour		= c.getColumnIndex("date_hour_match");
+		 	colnHoles		= c.getColumnIndex("holes");
 		 	
 		 	c.moveToLast();
 		 	c.moveToFirst();
@@ -391,33 +392,36 @@ public class CardGraphView extends View {
 		 		i = 0;
 		 		
 		 		// recupera los ids de lo jugadores que participan en el partido
-		 		do {
-		 			aux_player_id[0] = c.getInt(colPlayer[0]);
-		 			aux_player_id[1] = c.getInt(colPlayer[1]);
-		 			aux_player_id[2] = c.getInt(colPlayer[2]);
-		 			aux_player_id[3] = c.getInt(colPlayer[3]);
-		 		}
-		 		while (c.moveToNext());
+	 			aux_player_id[0] = c.getInt(colPlayer[0]);
+	 			aux_player_id[1] = c.getInt(colPlayer[1]);
+	 			aux_player_id[2] = c.getInt(colPlayer[2]);
+	 			aux_player_id[3] = c.getInt(colPlayer[3]);
+	 			
+	 			// y los datos del partido
+	 			course_name 	= c.getString(colCourseName);
+	 			date_hour_match = c.getString(colDateHour);
 		 		
 		 		for (i=0;i<4;i++) {
-		 			sql = "SELECT * FROM strokes WHERE match_id=" + match_id + " AND player_id=" + aux_player_id[i];
-		 			
-		 			Cursor c2 = db.rawQuery(sql, null);
-		 			int colHoleNumber	= c2.getColumnIndex("hole");
-		 			int colStrokes		= c2.getColumnIndex("strokes");
-		 			
-		 			c2.moveToLast();
-				 	c2.moveToFirst();
-				 	if (c2 != null) {
-				 		do {
-				 			int holeNumber 	= c2.getInt(colHoleNumber);
-				 			int strokes		= c2.getInt(colStrokes);
-				 		
-				 			arrStrokes[i][holeNumber] = strokes;
-				 		}
-				 		while (c2.moveToNext());
-				 	}		 			
-		 			c2.close();
+		 			if (aux_player_id[i]!=0) { 
+			 			sql = "SELECT * FROM strokes WHERE match_id=" + match_id + " AND player_id=" + aux_player_id[i];
+			 			
+			 			Cursor c2 = db.rawQuery(sql, null);
+			 			int colHoleNumber	= c2.getColumnIndex("hole");
+			 			int colStrokes		= c2.getColumnIndex("strokes");
+			 			
+			 			c2.moveToLast();
+					 	c2.moveToFirst();
+					 	if (c2 != null) {
+					 		do {
+					 			int holeNumber 	= c2.getInt(colHoleNumber);
+					 			int strokes		= c2.getInt(colStrokes);
+					 		
+					 			arrStrokes[i][holeNumber] = strokes;
+					 		}
+					 		while (c2.moveToNext());
+					 	}		 			
+			 			c2.close();
+		 			}
 		 		}
 		 	}
 	 		c.close();
