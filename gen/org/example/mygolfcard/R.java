@@ -181,7 +181,8 @@ public final class R {
         public static final int menu_synchro=0x7f090005;
     }
     public static final class string {
-        /**     <string name="URL_APIS">http://dev.mygolfcard.es/api/</string> 
+        /**   <string name="URL_APIS">http://192.168.2.12:3000/api/</string>  
+    <string name="URL_APIS">http://dev.mygolfcard.es/api/</string> 
          */
         public static final int ACTION_AUTH=0x7f070036;
         public static final int ACTION_COURSE=0x7f07003c;
@@ -193,8 +194,6 @@ public final class R {
         public static final int ACTION_STROKES=0x7f07003b;
         public static final int ACTION_UPLOAD=0x7f07003e;
         public static final int DB_NAME=0x7f07003f;
-        /**   <string name="URL_APIS">http://dev.mygolfcard.es/api/</string>  
-         */
         public static final int URL_APIS=0x7f070035;
         public static final int about_label=0x7f070005;
         public static final int about_shortcut=0x7f070012;
