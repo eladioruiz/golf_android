@@ -1,6 +1,18 @@
+/**
+ * Package: org.example.mygolfcard
+ * File: Authentication.java
+ * Description:
+ * Create At: ---
+ * Created By: ERL
+ * Last Modifications:
+ * 		20/10/2010 - ERL - POO
+ */
 package org.example.mygolfcard;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -8,7 +20,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 public class Authentication {
-	
+
 	private static String auth_token; 
 	private static String auth_user_id;
 	
@@ -42,11 +54,12 @@ public class Authentication {
 		
 		try {
 			OutputStreamWriter out=new OutputStreamWriter(ctx.openFileOutput("user.txt",0));
+
 			auth_token 	 = token;
 			auth_user_id = user_id;
-			
 			out.write(auth_token  + '\n');
 			out.write(auth_user_id  + '\n');
+			
 			out.close();
 			
 			return true;

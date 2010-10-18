@@ -1,3 +1,12 @@
+/**
+ * Package: org.example.mygolfcard
+ * File: MenuApp.java
+ * Description:
+ * Create At: ---
+ * Created By: ERL
+ * Last Modifications:
+ * 		20/10/2010 - ERL - POO
+ */
 package org.example.mygolfcard;
 
 import android.app.Activity;
@@ -7,14 +16,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-//import android.widget.TextView;
 import android.view.View.OnClickListener;
-//import android.util.Log;
-//import java.io.*;
 
 public class MenuApp extends Activity  implements OnClickListener {
-	@SuppressWarnings("unused")
-	private String auth_token;
+	
+	//private String auth_token;
+	//private CurrentUser cUser = new CurrentUser();
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -38,8 +45,11 @@ public class MenuApp extends Activity  implements OnClickListener {
 		View coursesButton = findViewById(R.id.courses_button);
 		coursesButton.setOnClickListener(this);
 		
-		Authentication.readDataUser(MenuApp.this);
-		auth_token = Authentication.getToken();
+		//ERL Authentication.readDataUser(MenuApp.this);
+		
+		//ERL auth_token = Authentication.getToken();
+		
+		//ERL cUser.setAuthToken(Authentication.getToken());
 		
 	} 
 	

@@ -1,5 +1,15 @@
+/**
+ * Package: org.example.mygolfcard
+ * File: MyGolfCard.java
+ * Description:
+ * Create At: ---
+ * Created By: ERL
+ * Last Modifications:
+ * 		20/10/2010 - ERL - POO
+ */
 package org.example.mygolfcard;
 
+import org.classes.mygolfcard.CurrentUser;
 import org.example.mygolfcard.RestClient.RequestMethod;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,8 +31,9 @@ import android.widget.Toast;
 public class MyGolfCard extends Activity  implements OnClickListener {
 
 	private static String URL;
+	private CurrentUser cUser = new CurrentUser();
 	private String auth_token;
-	private String auth_user_id;
+	//ERL private String auth_user_id;
 	private String auth_error_code;
 	private boolean connectionOK = true;
 	private static Context ctx = null;
@@ -39,11 +50,10 @@ public class MyGolfCard extends Activity  implements OnClickListener {
         
         URL = getString(R.string.URL_APIS) + getString(R.string.ACTION_AUTH);
         
+        // Chequeo de la conexión a Internet
         connectionOK = Authentication.checkConnection(MyGolfCard.this);
-        if (connectionOK) {
-        	//Authentication.deleteAuth(MyGolfCard.this);
-        }
-        
+
+        // Inicializamos las preferencias que se hayan podido quedar guardadas
         SharedPreferences.Editor editor = getPreferences(0).edit();
         editor.remove("course");
         editor.remove("date");
@@ -54,8 +64,6 @@ public class MyGolfCard extends Activity  implements OnClickListener {
         editor.clear();
         editor.commit();
         
-        Authentication.deleteMatches(MyGolfCard.this);
-        
         // Set up click listeners for all the buttons
 		View continueButton = findViewById(R.id.continue_button);
 		continueButton.setOnClickListener(this);
@@ -65,40 +73,56 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 		exitButton.setOnClickListener(this);
     }
     
-    // ...
+    // Callback de pulsación sobre los botones
     public void onClick(View v) {
     	String user_login;
     	String user_password;
     	
     	switch (v.getId()) {
 	    	case R.id.continue_button:
-	    		EditText user = (EditText) findViewById(R.id.login_user);
-	    		EditText password = (EditText) findViewById(R.id.login_password);
+	    		// ** Botón de Continuar (ENTRAR en la aplicación)
 	    		
-	    		user_login = user.getText().toString();
-	    		user_password = password.getText().toString();
+	    		// Recuperamos los valores de usuario y password...
+	    		EditText user 		= (EditText) findViewById(R.id.login_user);
+	    		EditText password 	= (EditText) findViewById(R.id.login_password);
 	    		
+	    		user_login 		= user.getText().toString();
+	    		user_password 	= password.getText().toString();
+	    		
+	    		// ... y si hay conexión a Internet ...
 	    		if (connectionOK) {
-	    			// Si tenemos conexion a Internet, validamos contra el servidor...
+	    			// ... los validamos contra el servidor ...
+	    			// (las conexiones remotas se lanzan siempre en un hilo separado para ...
+	    			// ... no entorpecer el resto de funciones del teléfono)
 	    			InitTask task = new InitTask(user_login, user_password);
 	    			task.execute();
 	    		}
 	    		else {
-	    			// ... en caso contrario, pasamos a la sigueinte Activity (que ya se encargará ...
-	    			// ... de mirar si el fichero con el usuario existe y puede continuar
+	    			// ... en caso contrario, pasamos intentamos recuperar el usuario y password...
+	    			// ... de alguna conexión anterior
 	    			
+	    			// Mensaje advirtiendo que no hay conexión a Internet
 	    			Toast.makeText(MyGolfCard.this, R.string.no_internet,
 		                    Toast.LENGTH_SHORT).show();
 	    			
+	    			// Leemos el posibles fichero de conexiones anteriores, para recuperar el token...
+	    			// ... que nos sirve de validación
 	    			Authentication.readDataUser(MyGolfCard.this);
 	    			String auth_token = Authentication.getToken();
 	    			
+	    			// Si dicho token existe, damos el login por correcto y continuamos la ejecución...
+	    			// ... a la siguiente pantalla: el menú de la aplicación
 	    			if (auth_token.length() > 0) {
 		    			Intent i = new Intent(this, MenuApp.class);
 		        		startActivity(i);
+		        		
+		        		// Cerramos la Activity del Login para que no se pueda volver mediante pulsaciones...
+		        		// ... del botón ATRAS del móvil
 		        		finish();
 	    			}
 	    			else {
+	    				// No se ha podido recuperar el token y entonces no dejamos continuar hasta ...
+	    				// ... que no hay aconexión a internet
 	    				new AlertDialog.Builder(this)
 		    				.setIcon(R.drawable.alert_dialog_icon)
 		    				.setTitle(R.string.title_file_connection)
@@ -108,20 +132,11 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	    			}
 	    		}
 	    		
-	    		//String res = callAuthentication(user_login, user_password);
-	    		//parseJSONResponse(resWebService);
-	    		//manageAuthentication();
-	    		
-/*	    		Toast.makeText(MyGolfCard.this, user_login.concat(" // ").concat(user_password).concat(" // ").concat(auth_token),
-	                    Toast.LENGTH_SHORT).show();
-	    		
-*/	    		
 	    		break;
 
 	    	case R.id.exit_button:
 	    		finish();
-	    		break;
-	    		
+	    		break;	    		
     	}
     }
     
@@ -152,14 +167,18 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	private void parseJSONResponse(String jsonResponse) {
 		JSONObject json;
 		
-		auth_token = "";
-		auth_user_id = "";
-		auth_error_code = "";
+		//ERL auth_token = "";
+		//ERL auth_user_id = "";
+		//ERL auth_error_code = "";
 		
 		try {
 			json = new JSONObject(jsonResponse);
+			
+			//cUser.setAuthToken(json.get("token").toString());
+			cUser.setUser_id(json.get("user_id").toString());
+			
 			auth_token = json.get("token").toString();
-			auth_user_id = json.get("user_id").toString();
+			//ERL auth_user_id = json.get("user_id").toString();
 			auth_error_code = json.get("error_code").toString();
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -185,7 +204,7 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	}
 	
 	private void saveDataUser() {
-		if (!Authentication.saveDataUser(MyGolfCard.this,auth_token,auth_user_id))
+		if (!Authentication.saveDataUser(MyGolfCard.this,auth_token,cUser.getUser_id()))
 			finish();
 	}
 	
@@ -228,8 +247,6 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 		{
 			super.onProgressUpdate(values);
 			Log.i( "makemachine", "onProgressUpdate(): " +  String.valueOf( values[0] ) );
-			//_percentField.setText( ( values[0] * 2 ) + "%");
-			//_percentField.setTextSize( values[0] );
 		}
 
 		// -- called as soon as doInBackground method completes
@@ -239,6 +256,7 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 		{
 			super.onPostExecute(result);
 			Log.i( "makemachine", "onPostExecute(): " + result );
+
 			parseJSONResponse(result);
 			this.dialog.cancel();
     		manageAuthentication();

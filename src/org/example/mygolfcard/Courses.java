@@ -1,13 +1,17 @@
+/**
+ * Package: org.example.mygolfcard
+ * File: Courses.java
+ * Description:
+ * Create At: ---
+ * Created By: ERL
+ * Last Modifications:
+ * 		20/10/2010 - ERL - POO
+ */
 package org.example.mygolfcard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import org.example.mygolfcard.RestClient.RequestMethod;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -24,12 +28,10 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 public class Courses extends ListActivity {
-	private String[] courses_field1;
-	private String[] courses_field2;
-	private String[] courses_field3;
+	private org.classes.mygolfcard.Course coursesList[];
 	private String auth_token;
 	private boolean connectionOK;
-	private String URL;
+	//ERL private String URL;
 	
 	/** Called with the activity is first created. */
 	@Override
@@ -37,7 +39,7 @@ public class Courses extends ListActivity {
 		super.onCreate(icicle);
 		setContentView(R.layout.courses);
 		
-		URL = getString(R.string.URL_APIS) + getString(R.string.ACTION_COURSES);
+		//ERL URL = getString(R.string.URL_APIS) + getString(R.string.ACTION_COURSES);
 		
 		connectionOK = Authentication.checkConnection(Courses.this);
 		if (connectionOK) {
@@ -51,8 +53,8 @@ public class Courses extends ListActivity {
 			Toast.makeText(Courses.this, R.string.no_internet,
                     Toast.LENGTH_SHORT).show();
 			
-			String result = Authentication.readCourses(Courses.this);
-			setInfo(result);
+			coursesList = org.classes.mygolfcard.Course.getCoursesFromLocal(Courses.this);
+			loadList();
 		}
 	}
 
@@ -66,7 +68,7 @@ public class Courses extends ListActivity {
 		//
 		if (connectionOK) {
 			Intent intent = new Intent(this, Course.class);
-	        intent.putExtra("course_id",courses_field3[position]);
+	        intent.putExtra("course_id",coursesList[position].getCourse_id());
 	        startActivity(intent);
 		}
 		else {
@@ -78,51 +80,17 @@ public class Courses extends ListActivity {
 				.show();
 		}
 	}
-	
-	public String getCourses() {
-		String response;
-    	
-	    RestClient client = new RestClient(URL);
-	    client.AddParam("token", auth_token);
-	    
-	    response = "";
-	    try {
-	        client.Execute(RequestMethod.POST);
-	        response = client.getResponse();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    
-	    Authentication.saveCourses(Courses.this, response);
-	    return response;
-	}
-	
-	public void setInfo(String result) {
-		JSONObject jsonObj;
-		JSONArray  jsonArr;
-		
+
+	public void loadList() {
 		List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
 		try {
-			jsonArr = new JSONArray(result);
-			
-			courses_field1 = new String[jsonArr.length()];
-			courses_field2 = new String[jsonArr.length()];
-			courses_field3 = new String[jsonArr.length()];
-			
-			for (int i=0; i<jsonArr.length(); i++) {
-				jsonObj = new JSONObject(jsonArr.get(i).toString());
-				
-				courses_field1[i] = jsonObj.getString("name");
-				courses_field2[i] = jsonObj.getString("address");
-				courses_field3[i] = jsonObj.getString("id");
-				Log.i("JSON", "" + i);
-				
+			for (int i=0; i<coursesList.length; i++) {
 				HashMap<String, String> map = new HashMap<String, String>();
-				map.put("name", courses_field1[i]);
-				map.put("address", courses_field2[i]);
+				map.put("name", coursesList[i].getCourseName());
+				map.put("address", coursesList[i].getCourseAddress());
 				fillMaps.add(map);
 			}			
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
@@ -132,7 +100,7 @@ public class Courses extends ListActivity {
 		setListAdapter(adapter);
 		getListView().setTextFilterEnabled(true);
 	}
-
+	
 	/**
 	 * sub-class of AsyncTask
 	 */
@@ -150,7 +118,8 @@ public class Courses extends ListActivity {
 		@Override
 		protected String doInBackground( Context... params ) 
 		{
-			return getCourses();
+			coursesList = org.classes.mygolfcard.Course.getCoursesFromRemote(auth_token,Courses.this);
+			return "";
 		}
 
 		// -- gets called just before thread begins
@@ -169,8 +138,6 @@ public class Courses extends ListActivity {
 		{
 			super.onProgressUpdate(values);
 			Log.i( "makemachine", "onProgressUpdate(): " +  String.valueOf( values[0] ) );
-			//_percentField.setText( ( values[0] * 2 ) + "%");
-			//_percentField.setTextSize( values[0] );
 		}
 
 		// -- called as soon as doInBackground method completes
@@ -181,8 +148,7 @@ public class Courses extends ListActivity {
 			super.onPostExecute(result);
 			Log.i( "makemachine", "onPostExecute(): " + result );
 			this.dialog.cancel();
-			setInfo(result);
-			//setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, courses));
+			loadList();
 		}
 	}   
 

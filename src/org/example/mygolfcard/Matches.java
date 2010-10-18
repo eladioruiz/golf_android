@@ -1,13 +1,19 @@
+/**
+ * Package: org.example.mygolfcard
+ * File: Matches.java
+ * Description:
+ * Create At: ---
+ * Created By: ERL
+ * Last Modifications:
+ * 		20/10/2010 - ERL - POO
+ */
 package org.example.mygolfcard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.example.mygolfcard.RestClient.RequestMethod;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.classes.mygolfcard.CurrentUser;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -24,14 +30,10 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 public class Matches extends ListActivity {
-	private String[] matches;
-	private String[] matches_field1;
-	private String[] matches_field2;
-	private String[] matches_field3;
+	private org.classes.mygolfcard.Match matchesList[];
 	private String auth_token;
-	private String auth_user_id;
+	private CurrentUser cUser = new CurrentUser();
 	private boolean connectionOK;
-	private String URL_MATCHES;
 	
 	/** Called with the activity is first created. */
 	@Override
@@ -39,13 +41,11 @@ public class Matches extends ListActivity {
 		super.onCreate(icicle);
 		setContentView(R.layout.matches);
 		
-		URL_MATCHES = getString(R.string.URL_APIS) + getString(R.string.ACTION_MATCHES);
-		
 		connectionOK = Authentication.checkConnection(Matches.this);
 		if (connectionOK) {
 			Authentication.readDataUser(Matches.this);
 			auth_token = Authentication.getToken();
-			auth_user_id = Authentication.getUserId();
+			cUser.setUser_id(Authentication.getUserId());
 		
 			InitTask task = new InitTask();
 			task.execute();
@@ -54,8 +54,8 @@ public class Matches extends ListActivity {
 			Toast.makeText(Matches.this, R.string.no_internet,
                     Toast.LENGTH_SHORT).show();
 			
-			String result = Authentication.readMatches(Matches.this);
-			setInfo(result);
+			matchesList = org.classes.mygolfcard.Match.getMatchesFromLocal(Matches.this);
+			loadList();
 		}
 		
 	}
@@ -70,7 +70,7 @@ public class Matches extends ListActivity {
 		//
 		if (connectionOK) {
 			Intent intent = new Intent(this, Match.class);
-	        intent.putExtra("match_id", matches_field3[position]);
+			intent.putExtra("match_id", matchesList[position].getMatch_id());
 	        startActivity(intent);
 		}
 		else {
@@ -82,67 +82,20 @@ public class Matches extends ListActivity {
 				.show();
 		}
 	}
-
-	public String getMatches() {
-		String response;
-    	
-	    RestClient client = new RestClient(URL_MATCHES);
-	    client.AddParam("token", auth_token);
-	    client.AddParam("user_id", auth_user_id);
-	    
-	    Log.i("RESPONSE", "" + auth_user_id);
-	        
-	    response = "";
-	    try {
-	        client.Execute(RequestMethod.POST);
-	        response = client.getResponse();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    
-	    Log.i("RESPONSE", "" + response);
-	    
-	    Authentication.saveMatches(Matches.this, response);
-	    return response;
-	}
 	
-	public void setInfo(String result) {
-		JSONObject jsonObj;
-		JSONArray  jsonArr;
-
+	public void loadList() {
 		List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
 		try {
-			jsonArr = new JSONArray(result);
-			
-			matches = new String[jsonArr.length()];
-			
-			matches_field1 = new String[jsonArr.length()];
-			matches_field2 = new String[jsonArr.length()];
-			matches_field3 = new String[jsonArr.length()];
-			
-			for (int i=0; i<jsonArr.length(); i++) {
-				jsonObj = new JSONObject(jsonArr.get(i).toString());
-				
-				//matches[i] = jsonObj.getString("players") ;
-				
-				matches_field1[i] = jsonObj.getString("course_name");
-				matches_field2[i] = jsonObj.getString("date_hour");
-				matches_field3[i] = jsonObj.getString("match_id");
-				
-				//Log.i("JSON", "" + matches[i]);
-				
+			for (int i=0; i<matchesList.length; i++) {
 				HashMap<String, String> map = new HashMap<String, String>();
-				map.put("course_name", matches_field1[i]);
-				map.put("date_hour", matches_field2[i]);
+				map.put("course_name", matchesList[i].getCourseName());
+				map.put("date_hour", matchesList[i].getDateHour());
 				fillMaps.add(map);
-			}
+			}			
 			
-			
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		//setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, matches));
 		
 		// Muestra la lista
 		SimpleAdapter adapter = new SimpleAdapter(this, fillMaps, R.layout.main_item_two_line_row, new String[] { "course_name", "date_hour" }, new int[] { R.id.field1,  R.id.field2});
@@ -168,7 +121,8 @@ public class Matches extends ListActivity {
 		@Override
 		protected String doInBackground( Context... params ) 
 		{
-			return getMatches();
+			matchesList = org.classes.mygolfcard.Match.getMatchesFromRemote(auth_token,Integer.parseInt(cUser.getUser_id()),Matches.this);
+			return "";
 		}
 
 		// -- gets called just before thread begins
@@ -189,8 +143,6 @@ public class Matches extends ListActivity {
 		{
 			super.onProgressUpdate(values);
 			Log.i( "makemachine", "onProgressUpdate(): " +  String.valueOf( values[0] ) );
-			//_percentField.setText( ( values[0] * 2 ) + "%");
-			//_percentField.setTextSize( values[0] );
 		}
 
 		// -- called as soon as doInBackground method completes
@@ -201,8 +153,7 @@ public class Matches extends ListActivity {
 			super.onPostExecute(result);
 			Log.i( "makemachine", "onPostExecute(): " + result );
 			this.dialog.cancel();
-			setInfo(result);
-			//setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, courses));
+			loadList();
 		}
 	}   
 	

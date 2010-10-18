@@ -1,8 +1,15 @@
+/**
+ * Package: org.example.mygolfcard
+ * File: Course.java
+ * Description:
+ * Create At: ---
+ * Created By: ERL
+ * Last Modifications:
+ * 		20/10/2010 - ERL - POO
+ */
 package org.example.mygolfcard;
 
-import org.example.mygolfcard.RestClient.RequestMethod;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.classes.mygolfcard.CurrentUser;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,16 +26,11 @@ import android.widget.TextView;
 
 public class Course extends Activity {
 	private String auth_token;
-	private String auth_user_id;
+	//private String auth_user_id;
+	private CurrentUser cUser = new CurrentUser();
 	
-	private String course_id;
-	private String course_name;
-	private String course_address;
-	private String course_description;
-	private String course_config;
-	private String course_details;
-	
-	private String URL;
+	private int localCourseId;
+	private org.classes.mygolfcard.Course currentCourse;
 	
 	private TextView txtCourseName;
 	private TextView txtCourseAddress;
@@ -40,17 +42,17 @@ public class Course extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.course);
 		
-		URL = getString(R.string.URL_APIS) + getString(R.string.ACTION_COURSE);
+		currentCourse = new org.classes.mygolfcard.Course(this);
 		
-		course_id = getIntent().getCharSequenceExtra("course_id").toString();
+		localCourseId = getIntent().getIntExtra("course_id", 0);
+		currentCourse.setCourse_id(localCourseId);
 
 		Authentication.readDataUser(Course.this);
 		auth_token = Authentication.getToken();
-		auth_user_id = Authentication.getUserId();
+		
+		cUser.setUser_id(Authentication.getUserId());
 		
 		findViews();
-		//initViews();
-		//setListeners();
 		
 		InitTask task = new InitTask();
 		task.execute();
@@ -68,11 +70,10 @@ public class Course extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.course_details:
-				//startActivity(new Intent(this, Resume.class));
 				new AlertDialog.Builder(this)
 					.setIcon(R.drawable.info_dialog_icon_tra)
 					.setTitle(R.string.course_details_label)
-					.setMessage(course_details)
+					.setMessage(currentCourse.getCourseDetails())
 					.setPositiveButton(R.string.alert_button_default, null)
 					.show();
 				return true;
@@ -97,75 +98,10 @@ public class Course extends Activity {
 	}
 
 	private void initViews() {
-		txtCourseName.setText(course_name);
-		txtCourseAddress.setText(course_address);
-		txtCourseDescription.setText(course_description);
-		txtCourseConfig.setText(course_config);
-	}
-	
-	public String getCourse() {
-		String response;
-    	
-	    RestClient client = new RestClient(URL);
-	    client.AddParam("token", auth_token);
-	    client.AddParam("user_id", auth_user_id);
-	    client.AddParam("course_id", course_id);
-	    
-	    Log.i("RESPONSE", "" + course_id);
-	        
-	    response = "";
-	    try {
-	        client.Execute(RequestMethod.POST);
-	        response = client.getResponse();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    
-	    Log.i("RESPONSE", "" + response);
-	    return response;
-	}
-
-	public void setInfo(String result) {
-		JSONObject json;
-		String aux;
-		
-		course_name 		= "";
-		course_address 		= "";
-		course_description 	= "";
-		course_config		= "";
-		try {
-			json = new JSONObject(result);
-			course_name			= json.get("name").toString();
-			course_address		= json.get("address").toString();
-			course_description	= json.get("long_description").toString();
-					
-			aux					=	"Par : " + json.get("handicap").toString() + "\n" +
-									"Nº Hoyos : " + json.get("n_holes").toString() + "\n" +
-									"Long Amarillas : " + json.get("length_yellow").toString() + "\n" +
-									"Long Rojas : " + json.get("length_red").toString() + "\n" +
-									"Long Blancas : " + json.get("length_white").toString();
-			
-			course_config		= aux;
-			
-			course_details 		= "";
-			
-			aux					=	"Año Fundación : " + json.get("founded").toString() + "\n" +
-									"Diseñador : " + json.get("designer").toString() + "\n" +
-									"Año Fundación : " + json.get("founded").toString() + "\n" +
-									"Habilidad : " + json.get("ability_recommended").toString() + "/10\n" +
-									"Mantenimiento : " + json.get("maintance").toString() + "/10\n" +
-									"Relieve : " + json.get("relief").toString() + "/10\n" +
-									"Viento : " + json.get("wind").toString() + "/10\n" +
-									"Agua : " + json.get("water_in_play").toString() + "/10\n" +
-									"Árboles : " + json.get("trees_in_play").toString() + "/10\n";
-			
-			course_details 		= aux;
-			
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		
-		initViews();
+		txtCourseName.setText(currentCourse.getCourseName());
+		txtCourseAddress.setText(currentCourse.getCourseAddress());
+		txtCourseDescription.setText(currentCourse.getCourseDescription());
+		txtCourseConfig.setText(currentCourse.getCourseConfig());
 	}
 	
 	/**
@@ -185,7 +121,8 @@ public class Course extends Activity {
 		@Override
 		protected String doInBackground( Context... params ) 
 		{
-			return getCourse();
+			currentCourse = currentCourse.setDataFromRemote(localCourseId, Integer.parseInt(cUser.getUser_id()), auth_token);
+			return "";
 		}
 
 		// -- gets called just before thread begins
@@ -218,7 +155,8 @@ public class Course extends Activity {
 			super.onPostExecute(result);
 			Log.i( "makemachine", "onPostExecute(): " + result );
 			this.dialog.cancel();
-			setInfo(result);
+			//setInfo(result);
+			initViews();
 		}
 	}   	
 }

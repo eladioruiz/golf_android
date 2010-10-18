@@ -1,18 +1,18 @@
 package org.example.mygolfcard;
 
+import org.classes.mygolfcard.CurrentUser;
+import org.classes.mygolfcard.Player;
 import org.example.mygolfcard.RestClient.RequestMethod;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,21 +21,26 @@ import android.widget.TextView;
 
 public class Match extends Activity {
 	private String auth_token;
-	private String auth_user_id;
+	//private String auth_user_id;
+	private CurrentUser cUser = new CurrentUser();
 	
-	private String match_id;
+/*	private String match_id;
 	private String match_course_name;
 	private String match_date_hour;
 	private String match_holes;
 	private String match_players[] 				= new String[4];
 	private String match_players_HCP[] 			= new String[4];
 	private String match_players_strokes[][] 	= new String[4][3];
+*/	
+	private int localMatchId;
+	private org.classes.mygolfcard.Match currentMatch;
 	
-	private int aux_player_id[] 	= new int[4]; 
+	private Player auxPlayer[] = new Player[4];
+/*	private int aux_player_id[] 	= new int[4]; 
 	private int aux_playerweb_id[] 	= new int[4];
 	
 	private String URL;
-	
+*/	
 	private TextView txtCourseName;
 	private TextView txtDateHour;
 	private TextView txtHoles;
@@ -49,17 +54,19 @@ public class Match extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.match);
 		
-		URL = getString(R.string.URL_APIS) + getString(R.string.ACTION_MATCH);
+		//ERL URL = getString(R.string.URL_APIS) + getString(R.string.ACTION_MATCH);
 		
-		match_id = getIntent().getCharSequenceExtra("match_id").toString();
+		currentMatch = new org.classes.mygolfcard.Match(this);
+		
+		localMatchId = getIntent().getIntExtra("match_id",0);
+		currentMatch.setMatch_id(localMatchId);
 
 		Authentication.readDataUser(Match.this);
 		auth_token = Authentication.getToken();
-		auth_user_id = Authentication.getUserId();
+		//ERL auth_user_id = Authentication.getUserId();
+		cUser.setUser_id(Authentication.getUserId());
 		
 		findViews();
-		//initViews();
-		//setListeners();
 		
 		InitTask task = new InitTask();
 		task.execute();
@@ -78,7 +85,7 @@ public class Match extends Activity {
 		switch (item.getItemId()) {
 			case R.id.card_graph:
 	    		Intent i = new Intent(this, CardGraph.class);
-	    		i.putExtra("match_id", match_id);
+	    		i.putExtra("match_id", localMatchId);
 	    		i.putExtra("mitad", 1);
 	    		i.putExtra("type_match", 2);
 	    		startActivity(i);
@@ -89,13 +96,13 @@ public class Match extends Activity {
 	}
 	
 	private void findViews() {
-		txtCourseName 	= (TextView) findViewById(R.id.match_course_name);
-		txtDateHour		= (TextView) findViewById(R.id.match_date_hour);
-		txtHoles		= (TextView) findViewById(R.id.match_holes);
-		txtPlayers[0]	= (TextView) findViewById(R.id.match_player_1);
-		txtPlayers[1]	= (TextView) findViewById(R.id.match_player_2);
-		txtPlayers[2]	= (TextView) findViewById(R.id.match_player_3);
-		txtPlayers[3]	= (TextView) findViewById(R.id.match_player_4);
+		txtCourseName 		= (TextView) findViewById(R.id.match_course_name);
+		txtDateHour			= (TextView) findViewById(R.id.match_date_hour);
+		txtHoles			= (TextView) findViewById(R.id.match_holes);
+		txtPlayers[0]		= (TextView) findViewById(R.id.match_player_1);
+		txtPlayers[1]		= (TextView) findViewById(R.id.match_player_2);
+		txtPlayers[2]		= (TextView) findViewById(R.id.match_player_3);
+		txtPlayers[3]		= (TextView) findViewById(R.id.match_player_4);
 		txtPlayers_1P[0]	= (TextView) findViewById(R.id.match_player_1_1P);
 		txtPlayers_1P[1]	= (TextView) findViewById(R.id.match_player_2_1P);
 		txtPlayers_1P[2]	= (TextView) findViewById(R.id.match_player_3_1P);
@@ -111,82 +118,32 @@ public class Match extends Activity {
 	}
 
 	private void initViews() {
-		txtCourseName.setText(match_course_name);
+/*		txtCourseName.setText(match_course_name);
 		txtDateHour.setText(match_date_hour);
 		txtHoles.setText(match_holes + " hoyos");
+*/
+		txtCourseName.setText(currentMatch.getCourseName());
+		txtDateHour.setText(currentMatch.getDateHour());
+		txtHoles.setText(currentMatch.getHoles() + " hoyos");
 		
 		for (int i=0;i<4;i++) {
-			txtPlayers[i].setText(match_players[i] + " (HCP:" + match_players_HCP[i] + ")");
+/*			txtPlayers[i].setText(match_players[i] + " (HCP:" + match_players_HCP[i] + ")");
 			txtPlayers_1P[i].setText(match_players_strokes[i][0]);
 			txtPlayers_2P[i].setText(match_players_strokes[i][1]);
 			txtPlayers_TO[i].setText(match_players_strokes[i][2]);
-			if (match_players[i]==null) {
+*/
+		
+			txtPlayers[i].setText(auxPlayer[i].getPlayerName() + " (HCP:" + auxPlayer[i].getHCP() + ")");
+			txtPlayers_1P[i].setText("" + auxPlayer[i].getStrokesFirst());
+			txtPlayers_2P[i].setText("" + auxPlayer[i].getStrokesSecond());
+			txtPlayers_TO[i].setText("" + auxPlayer[i].getStrokesTotal());
+
+			if (auxPlayer[i]==null) {
 				txtPlayers[i].setVisibility(4);
 				txtPlayers_1P[i].setVisibility(4);
 				txtPlayers_2P[i].setVisibility(4);
 				txtPlayers_TO[i].setVisibility(4);
 			}	
-		}
-	}
-	
-	public String getMatch() {
-		String response;
-    	
-	    RestClient client = new RestClient(URL);
-	    client.AddParam("token", auth_token);
-	    client.AddParam("user_id", auth_user_id);
-	    client.AddParam("match_id", "" + match_id);
-	    
-	    Log.i("RESPONSE", "" + match_id);
-	        
-	    response = "";
-	    try {
-	        client.Execute(RequestMethod.POST);
-	        response = client.getResponse();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    
-	    Log.i("RESPONSE", "" + response);
-	    return response;
-	}
-
-	public void setInfoMatch(String result) {
-		JSONObject jsonObj;
-		JSONArray  jsonArr;
-		String aux_players;
-
-		match_course_name = "";
-		match_date_hour = "";
-		try {
-			jsonObj = new JSONObject(result);
-			
-			aux_players 		= jsonObj.getString("players");
-			match_course_name 	= jsonObj.getString("course_name");
-			match_date_hour		= jsonObj.getString("date_hour_match");
-			match_holes			= jsonObj.getString("holes");
-			
-			jsonArr = new JSONArray(aux_players);
-			
-			for (int i=0; i<jsonArr.length(); i++) {
-				jsonObj = new JSONObject(jsonArr.get(i).toString());
-				
-				aux_player_id[i] 	= Integer.parseInt(jsonObj.getString("user_id"));
-				aux_playerweb_id[i] = Integer.parseInt(jsonObj.getString("player_id"));
-				
-				match_players[i] 			= jsonObj.getString("user_name");
-				match_players_HCP[i] 		= jsonObj.getString("handicap");
-				match_players_strokes[i][0] = jsonObj.getString("card_1");
-				match_players_strokes[i][1] = jsonObj.getString("card_2");
-				match_players_strokes[i][2] = jsonObj.getString("card_total");
-				
-				Log.i("JSON", "" + aux_player_id[i]);
-				
-			}
-			Log.i("JSON", "" + aux_players);
-					
-		} catch (JSONException e) {
-			e.printStackTrace();
 		}
 	}
 	
@@ -207,7 +164,8 @@ public class Match extends Activity {
 		@Override
 		protected String doInBackground( Context... params ) 
 		{
-			return getMatch();
+			currentMatch = currentMatch.setDataFromRemote(localMatchId, Integer.parseInt(cUser.getUser_id()), auth_token);
+			return "";
 		}
 
 		// -- gets called just before thread begins
@@ -240,7 +198,7 @@ public class Match extends Activity {
 			super.onPostExecute(result);
 			Log.i( "makemachine", "onPostExecute(): " + result );
 			this.dialog.cancel();
-			setInfoMatch(result);
+			//setInfoMatch(result);
 			initViews();
 		}
 	}   	
