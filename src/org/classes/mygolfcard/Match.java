@@ -18,16 +18,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.util.Log;
 
 public class Match {
 	private int match_id;
 	private int course_id;
 	private String courseName;
 	private String dateHour;
-	private Player players[];
+	private Player players[] = new Player[4];
 	private static Context ctxMatch;
 	private int nHoles;
+	private int indexPlayer = 0;
 
 	public Match(Context ctx) {
 		super();
@@ -35,8 +35,8 @@ public class Match {
 		
 		course_id	= 0;
 		courseName	= "";
-		dateHour	= "";	
-		players		= null;
+		dateHour	= "";
+		//players		= null;
 		
 		// TODO Auto-generated constructor stub
 	}
@@ -89,12 +89,22 @@ public class Match {
 		this.players = players;
 	}
 	
+	public void addPlayer(Player pl) {
+		if (indexPlayer<4) {
+			this.players[indexPlayer++] = pl;
+		}
+	}
+	
+	public void setPlayerNull(int index) {
+		this.players[index] = null;
+	}
+	
 	public Match setDataFromRemote(int match_id, int user_id, String token) {
 		String result;
 		Match aux = new Match(ctxMatch);
 		
 		result = getMatch(match_id, user_id, token);
-		//aux = setInfoMatch(result);
+		aux = setInfoMatch(result);
 		
 		return aux;
 	}
@@ -185,7 +195,7 @@ public class Match {
 		}
 	}
 
-	private void setInfoMatch(String result) {
+	private Match setInfoMatch(String result) {
 		JSONObject jsonObj;
 		JSONArray  jsonArr;
 		String aux_players;
@@ -194,9 +204,9 @@ public class Match {
 		try {
 			jsonObj = new JSONObject(result);
 			
-			aux_players 		= jsonObj.getString("players");
+			aux_players = jsonObj.getString("players");
 			res.setCourseName(jsonObj.getString("course_name"));
-			res.setCourse_id(Integer.parseInt(jsonObj.getString("course_id")));
+			//res.setCourse_id(Integer.parseInt(jsonObj.getString("course_id")));
 			res.setDateHour(jsonObj.getString("date_hour_match"));
 			res.setHoles(Integer.parseInt(jsonObj.getString("holes")));
 			
@@ -208,20 +218,22 @@ public class Match {
 				Player aux_player = new Player();
 				aux_player.setPlayer_id(Integer.parseInt(jsonObj.getString("user_id")));
 				aux_player.setUserWeb_id(Integer.parseInt(jsonObj.getString("player_id")));
-				
-				match_players[i] 			= jsonObj.getString("user_name");
-				match_players_HCP[i] 		= jsonObj.getString("handicap");
-				match_players_strokes[i][0] = jsonObj.getString("card_1");
-				match_players_strokes[i][1] = jsonObj.getString("card_2");
-				match_players_strokes[i][2] = jsonObj.getString("card_total");
-				
-				Log.i("JSON", "" + aux_player_id[i]);
-				
+				aux_player.setPlayerName(jsonObj.getString("user_name"));
+				aux_player.setHCP(Float.parseFloat(jsonObj.getString("handicap")));
+				aux_player.setStrokesFirst(Integer.parseInt(jsonObj.getString("card_1")));
+				aux_player.setStrokesSecond(Integer.parseInt(jsonObj.getString("card_2")));
+				aux_player.setStrokesTotal(Integer.parseInt(jsonObj.getString("card_total")));
+				res.addPlayer(aux_player);				
 			}
-			Log.i("JSON", "" + aux_players);
+			
+			for (int i=jsonArr.length();i<4;i++) {
+				res.setPlayerNull(i);
+			}
+			return res;
 					
 		} catch (JSONException e) {
 			e.printStackTrace();
+			return null;
 		}
 	}
 	

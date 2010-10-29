@@ -2,10 +2,6 @@ package org.example.mygolfcard;
 
 import org.classes.mygolfcard.CurrentUser;
 import org.classes.mygolfcard.Player;
-import org.example.mygolfcard.RestClient.RequestMethod;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -125,20 +121,16 @@ public class Match extends Activity {
 		txtCourseName.setText(currentMatch.getCourseName());
 		txtDateHour.setText(currentMatch.getDateHour());
 		txtHoles.setText(currentMatch.getHoles() + " hoyos");
+		auxPlayer = currentMatch.getPlayers();
 		
 		for (int i=0;i<4;i++) {
-/*			txtPlayers[i].setText(match_players[i] + " (HCP:" + match_players_HCP[i] + ")");
-			txtPlayers_1P[i].setText(match_players_strokes[i][0]);
-			txtPlayers_2P[i].setText(match_players_strokes[i][1]);
-			txtPlayers_TO[i].setText(match_players_strokes[i][2]);
-*/
-		
-			txtPlayers[i].setText(auxPlayer[i].getPlayerName() + " (HCP:" + auxPlayer[i].getHCP() + ")");
-			txtPlayers_1P[i].setText("" + auxPlayer[i].getStrokesFirst());
-			txtPlayers_2P[i].setText("" + auxPlayer[i].getStrokesSecond());
-			txtPlayers_TO[i].setText("" + auxPlayer[i].getStrokesTotal());
-
-			if (auxPlayer[i]==null) {
+			if (auxPlayer[i]!=null) {
+				txtPlayers[i].setText(auxPlayer[i].getPlayerName() + " (HCP:" + auxPlayer[i].getHCP() + ")");
+				txtPlayers_1P[i].setText("" + auxPlayer[i].getStrokesFirst());
+				txtPlayers_2P[i].setText("" + auxPlayer[i].getStrokesSecond());
+				txtPlayers_TO[i].setText("" + auxPlayer[i].getStrokesTotal());
+			}
+			else {
 				txtPlayers[i].setVisibility(4);
 				txtPlayers_1P[i].setVisibility(4);
 				txtPlayers_2P[i].setVisibility(4);

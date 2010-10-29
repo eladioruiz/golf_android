@@ -47,8 +47,8 @@ public class CardGraphView extends View {
 	private static int TOTAL_COL= 6;
 	private static int TITLE_COL= 5;
 
-	private static int TYPEMATCH_INTERNAL 	= 1;
-	private static int TYPEMATCH_REMOTE		= 2;
+	private static final int TYPEMATCH_INTERNAL 	= 1;
+	private static final int TYPEMATCH_REMOTE		= 2;
 	
 	private int match_id;
 	private int mitad;
@@ -357,10 +357,10 @@ public class CardGraphView extends View {
 		}
 		
 		switch (typeMatch) {
-			case 1 : // TYPEMATCH_INTERNAL:
+			case TYPEMATCH_INTERNAL : // TYPEMATCH_INTERNAL:
 				getInfoCardInternal();
 				break;
-			case 2 : // TYPEMATCH_REMOTE:
+			case TYPEMATCH_REMOTE : // TYPEMATCH_REMOTE:
 				getInfoCardRemote();
 				break;
 		}
