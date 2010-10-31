@@ -9,10 +9,10 @@
  */
 package org.classes.mygolfcard;
 
-import org.example.mygolfcard.Authentication;
-import org.example.mygolfcard.R;
-import org.example.mygolfcard.RestClient;
-import org.example.mygolfcard.RestClient.RequestMethod;
+import org.activities.mygolfcard.Authentication;
+import org.activities.mygolfcard.R;
+import org.activities.mygolfcard.RestClient;
+import org.activities.mygolfcard.RestClient.RequestMethod;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -206,7 +206,7 @@ public class Course {
 	    return response;
 	}
 	
-	public static Course[] setInfoCourses(String result) {
+	private static Course[] setInfoCourses(String result) {
 		JSONObject jsonObj;
 		JSONArray  jsonArr;
 		Course coursesList[];

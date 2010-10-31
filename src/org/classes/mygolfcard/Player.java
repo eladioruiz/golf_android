@@ -9,6 +9,16 @@
  */
 package org.classes.mygolfcard;
 
+import org.activities.mygolfcard.Authentication;
+import org.activities.mygolfcard.R;
+import org.activities.mygolfcard.RestClient;
+import org.activities.mygolfcard.RestClient.RequestMethod;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.content.Context;
+
 public class Player {
 	private int player_id;
 	private String playerName;
@@ -19,10 +29,14 @@ public class Player {
 	private int strokesFirst;
 	private int strokesSecond;
 	private int strokesTotal;
+
+	private static Context ctxPlayer;
 	
-	public Player() {
+	public Player(Context ctx) {
 		super();
 		// TODO Auto-generated constructor stub
+		
+		ctxPlayer = ctx;
 	}
 
 	public int getUserWeb_id() {
@@ -95,6 +109,70 @@ public class Player {
 
 	public void setStrokesTotal(int strokesTotal) {
 		this.strokesTotal = strokesTotal;
+	}
+
+	public static Player[] getFriendsFromRemote(String auth_token, String auth_user_id, Context ctx) {
+		String result;
+
+		ctxPlayer = ctx;
+		result = getPlayers(auth_token, auth_user_id);
+		return setInfoPlayers(result);
+	}
+
+	public static Player[] getPlayersFromLocal(Context ctx) {
+		String result;
+
+		ctxPlayer = ctx;
+		result = Authentication.readFriends(ctxPlayer);
+		return setInfoPlayers(result);
+	}
+		
+	private static String getPlayers(String auth_token, String auth_user_id) {
+		String response;
+		String URL_COURSES = ctxPlayer.getString(R.string.URL_APIS) + ctxPlayer.getString(R.string.ACTION_FRIENDS);
+		
+	    RestClient client = new RestClient(URL_COURSES);
+	    client.AddParam("token", auth_token);
+	    client.AddParam("user_id", auth_user_id);
+	    
+	    response = "";
+	    try {
+	        client.Execute(RequestMethod.POST);
+	        response = client.getResponse();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    
+	    Authentication.saveFriends(ctxPlayer, response);
+	    return response;
+	}
+	
+	private static Player[] setInfoPlayers(String result) {
+		JSONObject jsonObj;
+		JSONArray  jsonArr;
+		Player playersList[];
+		
+		try {
+			jsonArr = new JSONArray(result);
+			
+			playersList = new org.classes.mygolfcard.Player[jsonArr.length()];
+			
+			for (int i=0; i<jsonArr.length(); i++) {
+				jsonObj = new JSONObject(jsonArr.get(i).toString());
+				playersList[i] = new Player(ctxPlayer);
+				
+				playersList[i].setPlayerName(jsonObj.getString("name"));
+				playersList[i].setPlayer_id(Integer.parseInt(jsonObj.getString("id")));
+				//playersList[i].setCourse_id(Integer.parseInt(jsonObj.getString("id")));				
+			}
+			
+			return playersList;
+			
+		} catch (JSONException e) {
+			e.printStackTrace();
+			
+			return null;
+		}
 	}
 
 	

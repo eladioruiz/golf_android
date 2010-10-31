@@ -14,7 +14,8 @@
 	<item android:id="@+id/settings"
 	   android:title="@string/settings_label"
 	   android:alphabeticShortcut="@string/settings_shortcut" />
-	<item android:id="@+id/synchro"
+<!--	<item android:id="@+id/synchro"
       android:title="@string/synchro_label"
-      android:alphabeticShortcut="@string/synchro_shortcut" />	   
+      android:alphabeticShortcut="@string/synchro_shortcut" />
+-->      	   
 </menu>

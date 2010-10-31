@@ -39,6 +39,11 @@
                android:id="@+id/courses_button"
                android:text="@string/courses_label" />
             <Button
+               android:id="@+id/synchro_button"
+               android:text="@string/synchro_label" />
+         </TableRow>
+         <TableRow android:gravity="center">
+            <Button
                android:id="@+id/exit_button"
                android:text="@string/exit_label" />
          </TableRow>

@@ -9,10 +9,10 @@
  */
 package org.classes.mygolfcard;
 
-import org.example.mygolfcard.Authentication;
-import org.example.mygolfcard.R;
-import org.example.mygolfcard.RestClient;
-import org.example.mygolfcard.RestClient.RequestMethod;
+import org.activities.mygolfcard.Authentication;
+import org.activities.mygolfcard.R;
+import org.activities.mygolfcard.RestClient;
+import org.activities.mygolfcard.RestClient.RequestMethod;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -215,7 +215,7 @@ public class Match {
 			for (int i=0; i<jsonArr.length(); i++) {
 				jsonObj = new JSONObject(jsonArr.get(i).toString());
 				
-				Player aux_player = new Player();
+				Player aux_player = new Player(ctxMatch);
 				aux_player.setPlayer_id(Integer.parseInt(jsonObj.getString("user_id")));
 				aux_player.setUserWeb_id(Integer.parseInt(jsonObj.getString("player_id")));
 				aux_player.setPlayerName(jsonObj.getString("user_name"));
