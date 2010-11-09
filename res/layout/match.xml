@@ -18,13 +18,18 @@
 			android:layout_width="fill_parent"
 			android:textColor="@color/colortext_title"
 			android:textSize="14.5sp"
-			android:background="@color/background_title"
+			android:background="@drawable/rounded_edges"
 			android:text="-- Campo --" />
+		<TextView
+			android:layout_height="2dip"
+			android:layout_width="fill_parent"
+			android:text=" " />
 		<LinearLayout
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
 			android:orientation="horizontal"
-			android:background="@color/background_title">
+			android:padding="2dip"
+			android:background="@drawable/rounded_edges">
 			<TextView
 				android:id="@+id/match_date_hour"
 				android:padding="7dip"
@@ -32,7 +37,7 @@
 				android:layout_width="wrap_content"
 				android:textColor="@color/colortext_title"
 				android:textSize="14.5sp"
-				android:background="@color/background_title"
+				android:background="@drawable/rounded_top"
 				android:text="-- Fecha/Hora --" />
 			<TextView
 				android:id="@+id/match_holes"
@@ -41,46 +46,49 @@
 				android:layout_width="wrap_content"
 				android:textColor="@color/colortext_title"
 				android:textSize="14.5sp"
-				android:background="@color/background_title"
+				android:background="@drawable/rounded_top"
 				android:text="-- Hoyos --" />
 		</LinearLayout>
 		<TextView
-			android:layout_height="5dip"
+			android:layout_height="7dip"
 			android:layout_width="fill_parent"
 			android:text=" " />
 		<TableLayout
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
 			android:stretchColumns="0">
-			<TableRow
-				android:background="@color/background_title">
+			<TableRow>
 				<TextView
-					android:padding="7dip"
+					android:padding="2dip"
 					android:layout_height="wrap_content"
 					android:layout_width="wrap_content"
 					android:textColor="@color/colortext_title"
 					android:textSize="14.5sp"
-					android:text="----     Jugadores     ----" />
+					android:background="@color/background_title"
+					android:text=" ----     Jugadores     ---- " />
 				<TextView
-					android:padding="7dip"
+					android:padding="2dip"
 					android:layout_height="wrap_content"
 					android:layout_width="wrap_content"
 					android:textColor="@color/colortext_title"
 					android:textSize="14.5sp"
+					android:background="@color/background_title"
 					android:text="1ªP" />
 				<TextView
-					android:padding="7dip"
+					android:padding="2dip"
 					android:layout_height="wrap_content"
 					android:layout_width="wrap_content"
 					android:textColor="@color/colortext_title"
 					android:textSize="14.5sp"
+					android:background="@color/background_title"
 					android:text="2ªP" />
 				<TextView
-					android:padding="7dip"
+					android:padding="2dip"
 					android:layout_height="wrap_content"
 					android:layout_width="wrap_content"
 					android:textColor="@color/colortext_title"
 					android:textSize="14.5sp"
+					android:background="@color/background_title"
 					android:text="TO" />
 			</TableRow>
 			<TableRow

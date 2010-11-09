@@ -19,7 +19,7 @@
 			android:layout_width="fill_parent"
 			android:textColor="@color/colortext_title"
 			android:textSize="14.5sp"
-			android:background="@color/background_title" 
+			android:background="@drawable/rounded_edges"
 			android:hint="Nombre del Campo" />
 		<TextView
 			android:layout_height="5dip"
