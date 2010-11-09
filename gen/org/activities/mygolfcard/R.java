@@ -41,6 +41,7 @@ public final class R {
         public static final int info_dialog_icon_tr=0x7f020003;
         public static final int info_dialog_icon_tra=0x7f020004;
         public static final int loading_dialog_icon=0x7f020005;
+        public static final int rounded_edges=0x7f020006;
     }
     public static final class id {
         public static final int UpdateCheckBox=0x7f0a002d;
@@ -149,6 +150,7 @@ public final class R {
         public static final int synchro=0x7f0a0064;
         public static final int synchro_button=0x7f0a0044;
         public static final int synchro_delete=0x7f0a006a;
+        public static final int synchro_delete_all=0x7f0a006b;
         public static final int synchro_upload=0x7f0a0069;
     }
     public static final class layout {
@@ -183,19 +185,18 @@ public final class R {
     }
     public static final class string {
         /**   <string name="URL_APIS">http://192.168.2.12:3000/api/</string>  
-    <string name="URL_APIS">http://dev.mygolfcard.es/api/</string> 
          */
-        public static final int ACTION_AUTH=0x7f070036;
-        public static final int ACTION_COURSE=0x7f07003c;
-        public static final int ACTION_COURSES=0x7f070038;
-        public static final int ACTION_FRIENDS=0x7f070039;
-        public static final int ACTION_INFO_HOLES=0x7f07003d;
-        public static final int ACTION_MATCH=0x7f07003a;
-        public static final int ACTION_MATCHES=0x7f070037;
-        public static final int ACTION_STROKES=0x7f07003b;
-        public static final int ACTION_UPLOAD=0x7f07003e;
-        public static final int DB_NAME=0x7f07003f;
-        public static final int URL_APIS=0x7f070035;
+        public static final int ACTION_AUTH=0x7f070037;
+        public static final int ACTION_COURSE=0x7f07003d;
+        public static final int ACTION_COURSES=0x7f070039;
+        public static final int ACTION_FRIENDS=0x7f07003a;
+        public static final int ACTION_INFO_HOLES=0x7f07003e;
+        public static final int ACTION_MATCH=0x7f07003b;
+        public static final int ACTION_MATCHES=0x7f070038;
+        public static final int ACTION_STROKES=0x7f07003c;
+        public static final int ACTION_UPLOAD=0x7f07003f;
+        public static final int DB_NAME=0x7f070040;
+        public static final int URL_APIS=0x7f070036;
         public static final int about_label=0x7f070005;
         public static final int about_shortcut=0x7f070012;
         public static final int about_text=0x7f070011;
@@ -203,11 +204,12 @@ public final class R {
         public static final int alert_button_default=0x7f070024;
         public static final int alert_dialog_cancel=0x7f070026;
         public static final int alert_dialog_confirm=0x7f070025;
+        public static final int alert_dialog_delete_all_matches=0x7f070029;
         public static final int alert_dialog_delete_matches=0x7f070028;
         public static final int alert_dialog_title_delete_matches=0x7f070027;
-        public static final int alert_dialog_title_upload_matches=0x7f070029;
-        public static final int alert_dialog_upload_matches=0x7f07002a;
-        public static final int alert_title_no_save=0x7f07002b;
+        public static final int alert_dialog_title_upload_matches=0x7f07002a;
+        public static final int alert_dialog_upload_matches=0x7f07002b;
+        public static final int alert_title_no_save=0x7f07002c;
         public static final int app_name=0x7f070001;
         public static final int card_graph_label=0x7f07001e;
         public static final int card_graph_shortcut=0x7f070020;
@@ -220,11 +222,11 @@ public final class R {
         public static final int courses_label=0x7f070008;
         public static final int courses_title=0x7f07000e;
         public static final int exit_label=0x7f070004;
-        public static final int file_connection=0x7f070033;
-        public static final int form_validation=0x7f070043;
+        public static final int file_connection=0x7f070034;
+        public static final int form_validation=0x7f070044;
         public static final int hello=0x7f070000;
         public static final int keypad_title=0x7f07000f;
-        public static final int main_no_items=0x7f070041;
+        public static final int main_no_items=0x7f070042;
         public static final int matches_label=0x7f070007;
         public static final int matches_title=0x7f07000d;
         public static final int menuapp_label=0x7f070019;
@@ -232,29 +234,30 @@ public final class R {
         public static final int menuapp_title=0x7f070009;
         public static final int new_match_label=0x7f070006;
         public static final int newmatch_title=0x7f07000a;
-        public static final int no_holes=0x7f070034;
-        public static final int no_implemented=0x7f07002f;
-        public static final int no_internet=0x7f07002c;
-        public static final int no_internet_connect=0x7f07002d;
-        public static final int no_save=0x7f07002e;
+        public static final int no_holes=0x7f070035;
+        public static final int no_implemented=0x7f070030;
+        public static final int no_internet=0x7f07002d;
+        public static final int no_internet_connect=0x7f07002e;
+        public static final int no_save=0x7f07002f;
         public static final int presentation=0x7f070002;
-        public static final int remote_connection=0x7f070032;
+        public static final int remote_connection=0x7f070033;
         public static final int resume_label=0x7f07001b;
-        public static final int resume_match=0x7f070040;
+        public static final int resume_match=0x7f070041;
         public static final int resume_shortcut=0x7f07001d;
         public static final int resume_title=0x7f07001c;
         public static final int settings_label=0x7f070013;
         public static final int settings_shortcut=0x7f070015;
         public static final int settings_title=0x7f070014;
         public static final int strokes_title=0x7f07000c;
-        public static final int synchro_delete=0x7f070044;
+        public static final int synchro_delete=0x7f070045;
+        public static final int synchro_delete_all=0x7f070046;
         public static final int synchro_label=0x7f070016;
         public static final int synchro_shortcut=0x7f070018;
         public static final int synchro_title=0x7f070017;
-        public static final int synchro_upload=0x7f070045;
-        public static final int title_file_connection=0x7f070031;
-        public static final int title_form_validation=0x7f070042;
-        public static final int title_remote_connection=0x7f070030;
+        public static final int synchro_upload=0x7f070047;
+        public static final int title_file_connection=0x7f070032;
+        public static final int title_form_validation=0x7f070043;
+        public static final int title_remote_connection=0x7f070031;
     }
     public static final class style {
         public static final int Theme=0x7f080000;

@@ -1,9 +1,17 @@
+/**
+ * Package: org.activities.mygolfcard
+ * File: Card.java
+ * Description:
+ * Create At: ---
+ * Created By: ERL
+ * Last Modifications:
+ * 		05/11/2010 - ERL - POO
+ */
 package org.activities.mygolfcard;
 
 import org.activities.mygolfcard.RestClient.RequestMethod;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.classes.mygolfcard.CurrentUser;
+import org.classes.mygolfcard.Player;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,20 +35,17 @@ import android.widget.Toast;
 
 public class Card extends Activity implements OnClickListener {
 	private final View holeButton[] = new View[18];
+	private TextView cardMatch;
+	
 	private SQLiteDatabase db = null;
 	private String DATABASE_NAME;
-	private String course_id;
-	private String course_name;
-	private String date_hour;
-	private String n_holes;
+	
 	private String match_info;
-	private String match_id;
-	private String players_id[] = new String[4];
+	private int match_id;
+	private org.classes.mygolfcard.Match currentMatch;
+	private int players_id[] = new int[4];
 	
-	private String[] players_field1;
-	private String[] players_field2;
-	
-	private TextView cardMatch;
+	private Player[] players;
 	
 	private boolean connectionOK;
 	private String auth_token;
@@ -48,6 +53,8 @@ public class Card extends Activity implements OnClickListener {
 	private String aux_holes;
 	
 	private String URL_HOLES;
+	
+	private CurrentUser cUser = new CurrentUser();
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -57,8 +64,11 @@ public class Card extends Activity implements OnClickListener {
 		
 		DATABASE_NAME = getString(R.string.DB_NAME);
 		
-		String result = Authentication.readFriends(Card.this);
-		setInfoPlayers(result);
+		match_id = getIntent().getIntExtra("match_id",0);
+		
+		Authentication.readDataUser(Card.this);
+		auth_token 		= Authentication.getToken();
+		cUser.setUser_id(Authentication.getUserId());
 		
 		getMatchinDB();
 		findViews();
@@ -69,12 +79,16 @@ public class Card extends Activity implements OnClickListener {
 		
 		connectionOK = Authentication.checkConnection(Card.this);
 		if (connectionOK) {
-			Authentication.readDataUser(Card.this);
-			auth_token    = Authentication.getToken();
+			
+			
+			players = Player.getFriendsFromRemote(auth_token, cUser.getUser_id(), Card.this);
+			
 			InitTask task = new InitTask();
 			task.execute();
 		}
 		else {
+			players = Player.getPlayersFromLocal(Card.this);
+			
 			Toast.makeText(Card.this, R.string.no_internet,
                     Toast.LENGTH_SHORT).show();
 		}
@@ -166,10 +180,14 @@ public class Card extends Activity implements OnClickListener {
 		
 		Intent i = new Intent(this, Strokes.class);
 		i.putExtra("hole_number", hole_number);
-		i.putExtra("total_holes", n_holes);
-		i.putExtra("course_id", course_id);
+		i.putExtra("total_holes", currentMatch.getHoles());
+		i.putExtra("course_id", currentMatch.getCourse_id());
 		i.putExtra("match_info", match_info);
 		i.putExtra("match_id", match_id);
+		Player[] pls = currentMatch.getPlayers();
+		for (int t=0;t<4;t++) {
+			players_id[t] = pls[t].getUserWeb_id();
+		}
 		i.putExtra("players_id", players_id);
 		startActivity(i); 
 	}
@@ -242,70 +260,26 @@ public class Card extends Activity implements OnClickListener {
 	}
 
 	private void initViews() {
-		//match_info = "Campo : " + course_name + "\n" + "Fecha/Hora : " + date_hour;
-		match_info = course_name + "\n" + date_hour;
+		match_info = currentMatch.getCourseName() + "\n" + currentMatch.getDateHour();
+		//match_info = course_name + "\n" + date_hour;
 		cardMatch.setText(match_info);
-		for (int i = Integer.parseInt(n_holes); i < holeButton.length; i++) {
-			//
+		for (int i = currentMatch.getHoles(); i < holeButton.length; i++) {
 			holeButton[i].setVisibility(4);
 		}
 	}
 
 	private void getMatchinDB() {
-		String sql;
-		
-		course_name = "";
-		course_id	= "";
-		date_hour	= "";
-		
-		try {
-			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
-			match_id = getIntent().getCharSequenceExtra("match_id").toString();
-			sql = "select * from matches where ID=" + match_id + ";";
-		 	Cursor c = db.rawQuery(sql, null);
-		 	int colCourseId		= c.getColumnIndex("course_id");
-		    int colCourseName	= c.getColumnIndex("course_name");
-		    int colDateHour		= c.getColumnIndex("date_hour_match");
-		    int colHoles		= c.getColumnIndex("holes");
-		    int colPlayer1		= c.getColumnIndex("player1_id");
-		    int colPlayer2		= c.getColumnIndex("player2_id");
-		    int colPlayer3		= c.getColumnIndex("player3_id");
-		    int colPlayer4		= c.getColumnIndex("player4_id");
-		 	
-		 	c.moveToFirst();
-		 	
-		 	if (c != null) {
-		 		do {
-		 			course_name 	= c.getString(colCourseName);
-		 			course_id 		= c.getString(colCourseId);
-		 			date_hour		= c.getString(colDateHour);
-		 			n_holes			= c.getString(colHoles);
-		 			players_id[0]	= c.getString(colPlayer1);
-		 			players_id[1]	= c.getString(colPlayer2);
-		 			players_id[2]	= c.getString(colPlayer3);
-		 			players_id[3]	= c.getString(colPlayer4);
-		 		} while (c.moveToNext());
-		 	}
-		 	
-		 	c.close();
-		}
-		catch(Exception e) {
-    		Log.e("Error", "Error reading DB", e);
-    	} 
-    	finally {
-    		if (db != null)
-    			db.close();
-    	}
+		currentMatch = org.classes.mygolfcard.Match.getMatchFromDB(Card.this, match_id);
 	}
 	
 	private String getInfoHoles() {
 		String response;
     	
-		Log.i( "card", "getting info holes");
+		Log.i( "card", "getting info holes : " + URL_HOLES); 
 		
 	    RestClient client = new RestClient(URL_HOLES);
 	    client.AddParam("token", auth_token);
-	    client.AddParam("course_id", course_id);
+	    client.AddParam("course_id", "" + currentMatch.getCourse_id());
 	    
 	    response = "";
 	    try {
@@ -327,7 +301,7 @@ public class Card extends Activity implements OnClickListener {
 		//	
 	}
 
-	private String getResumeInfo(String match_id) {
+	private String getResumeInfo(int match_id) {
 		String res = "";
 		String sql = "";
 		
@@ -336,15 +310,16 @@ public class Card extends Activity implements OnClickListener {
 		try {
 			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
 		 	Cursor c = db.rawQuery(sql, null);
-		 	int colPlayerId		= c.getColumnIndex("player_id");
-		 	int colSumStrokes	= c.getColumnIndex("sum_strokes");
-		 	
-		 	c.moveToLast();
-		 	c.moveToFirst();
 		 	if (c != null) {
+			 	int colPlayerId		= c.getColumnIndex("player_id");
+			 	int colSumStrokes	= c.getColumnIndex("sum_strokes");
+			 	
+			 	c.moveToLast();
+			 	c.moveToFirst();
+		 	
 		 		if (c.getCount()>0) {
 			 		do {
-			 			res += "<b>" + getPlayerName(c.getString(colPlayerId)) + "</b> : " + c.getInt(colSumStrokes) + "<br>";
+			 			res += "<b>" + getPlayerName(Integer.parseInt(c.getString(colPlayerId))) + "</b> : " + c.getInt(colSumStrokes) + "<br>";
 			 		}
 			 		while (c.moveToNext());
 		 		}
@@ -370,34 +345,12 @@ public class Card extends Activity implements OnClickListener {
 		return res;
 	}
 
-	private void setInfoPlayers(String result) {
-		JSONObject jsonObj;
-		JSONArray  jsonArr;
-
-		try {
-			jsonArr = new JSONArray(result);
-			
-			players_field1 = new String[jsonArr.length()];
-			players_field2 = new String[jsonArr.length()];
-			
-			for (int i=0; i<jsonArr.length(); i++) {
-				jsonObj = new JSONObject(jsonArr.get(i).toString());
-				
-				players_field1[i] = jsonObj.getString("id");
-				players_field2[i] = jsonObj.getString("name");
-				Log.i("JSON", "" + i);				
-			}			
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}		
-	}
-
-	private String getPlayerName(String playerId) {
+	private String getPlayerName(int playerId) {
 		String res = "0";
 		
-		for (int i=0; i<players_field1.length; i++) {
-			if (playerId.equals(players_field1[i])) {
-				res = players_field2[i];
+		for (int i=0; i<players.length; i++) {
+			if (players[i].getPlayer_id() == playerId) {
+				res = players[i].getPlayerName();
 			}
 		}
 		
@@ -441,8 +394,6 @@ public class Card extends Activity implements OnClickListener {
 		{
 			super.onProgressUpdate(values);
 			Log.i( "makemachine", "onProgressUpdate(): " +  String.valueOf( values[0] ) );
-			//_percentField.setText( ( values[0] * 2 ) + "%");
-			//_percentField.setTextSize( values[0] );
 		}
 
 		// -- called as soon as doInBackground method completes

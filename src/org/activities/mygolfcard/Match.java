@@ -145,7 +145,7 @@ public class Match extends Activity {
 		@Override
 		protected String doInBackground( Context... params ) 
 		{
-			currentMatch = currentMatch.setDataFromRemote(localMatchId, Integer.parseInt(cUser.getUser_id()), auth_token);
+			currentMatch = org.classes.mygolfcard.Match.setDataFromRemote(localMatchId, Integer.parseInt(cUser.getUser_id()), auth_token, Match.this);
 			return "";
 		}
 

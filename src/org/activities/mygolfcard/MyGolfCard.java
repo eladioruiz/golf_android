@@ -20,6 +20,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -71,8 +73,9 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 		// Set up click listeners for all the buttons
 		View exitButton = findViewById(R.id.exit_button);
 		exitButton.setOnClickListener(this);
+		
     }
-    
+      
     // Callback de pulsación sobre los botones
     public void onClick(View v) {
     	String user_login;

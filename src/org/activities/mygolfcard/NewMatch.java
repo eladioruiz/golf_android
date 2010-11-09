@@ -47,7 +47,7 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	private TextView newmatch_n_holes;
 	private Spinner newmatch_tee[] = new Spinner[4];
 	
-	private String newmatch_id;
+	private int newmatch_id;
 	private String[] tees={"Amarillas", "Rojas", "Blancas"};
 	
 	private String[] courses; 
@@ -372,7 +372,7 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 		 	
 		 	if (c != null) {
 		 		do {
-		 			newmatch_id	= c.getString(colMatchId);
+		 			newmatch_id	= c.getInt(colMatchId);
 		 		} while (c.moveToNext());
 		 	}
 		 	

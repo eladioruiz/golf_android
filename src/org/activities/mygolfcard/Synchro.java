@@ -1,3 +1,12 @@
+/**
+ * Package: org.activities.mygolfcard
+ * File: Synchro.java
+ * Description:
+ * Create At: ---
+ * Created By: ERL
+ * Last Modifications:
+ * 		05/11/2010 - ERL - POO
+ */
 package org.activities.mygolfcard;
 
 import java.util.HashMap;
@@ -28,6 +37,7 @@ public class Synchro extends ListActivity {
 	private static final int DIALOG_SYNCHRO_DELETE 		= 1;
     private static final int DIALOG_SYNCHRO_UPLOAD 		= 2;
     private static final int DIALOG_SYNCHRO_PROGRESS	= 3;
+    private static final int DIALOG_SYNCHRO_DELETE_ALL	= 4;
     
     private static final int MATCH_PENDING_UPLOAD	= 0;
     private static final int MATCH_PROCESSING 		= 1;
@@ -91,7 +101,7 @@ public class Synchro extends ListActivity {
 	public void onListItemClick(ListView parent, View v, int position,long id) {
 		//
 		Intent i = new Intent(this, Card.class);
-		i.putExtra("match_id", matches_field1[position]);
+		i.putExtra("match_id", Integer.parseInt(matches_field1[position]));
 		startActivity(i);
 		finish();
 	}
@@ -109,6 +119,10 @@ public class Synchro extends ListActivity {
 		switch (item.getItemId()) {
 			case R.id.synchro_delete:
 				showDialog(DIALOG_SYNCHRO_DELETE);
+				return true;
+				
+			case R.id.synchro_delete_all:
+				showDialog(DIALOG_SYNCHRO_DELETE_ALL);
 				return true;
 				
 			case R.id.synchro_upload:
@@ -135,6 +149,24 @@ public class Synchro extends ListActivity {
 			            public void onClick(DialogInterface dialog, int whichButton) {
 			            	getItemsChecked();
 							deleteItems();
+							finish();
+			            }
+			        })
+			        .setNegativeButton(R.string.alert_dialog_cancel, new DialogInterface.OnClickListener() {
+			            public void onClick(DialogInterface dialog, int whichButton) {
+			                /* User clicked Cancel so do some stuff */
+			            }
+			        })
+			        .create();
+				
+	        case DIALOG_SYNCHRO_DELETE_ALL:
+				return new AlertDialog.Builder(Synchro.this)
+			        .setIcon(R.drawable.alert_dialog_icon)
+			        .setTitle(R.string.alert_dialog_title_delete_matches)
+			        .setMessage(R.string.alert_dialog_delete_all_matches)
+			        .setPositiveButton(R.string.alert_dialog_confirm, new DialogInterface.OnClickListener() {
+			            public void onClick(DialogInterface dialog, int whichButton) {
+							deleteAllItems();
 							finish();
 			            }
 			        })
@@ -352,6 +384,30 @@ public class Synchro extends ListActivity {
     	}
 	}
 	
+	private void deleteAllItems() {
+		String sql = "";
+
+		try {
+			Log.i("Info", "DELETING ALL matches : " + sql);
+			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
+
+			sql = "delete from matches";
+			db.execSQL(sql);
+			
+			// Limpieza para mantener la integridad referencial entre matches y strokes
+			sql = "delete from strokes";
+			db.execSQL(sql);
+			
+		}
+		catch(Exception e) {
+    		Log.e("Error", "Error DELETING ALL matches", e);
+    	} 
+    	finally {
+    		if (db != null)
+    			db.close();
+    	}
+	}
+	
 	private void uploadItems() {
 		String sql = "";
 		String file = "";
@@ -430,7 +486,7 @@ public class Synchro extends ListActivity {
 	}
 	
 	private void uploadFile(String fileName) {
-		String response;
+		String response = "";
 		String dataFile;
     	
 		dataFile = Authentication.readFile(Synchro.this, fileName);

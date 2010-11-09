@@ -62,6 +62,7 @@
 	<string name="alert_dialog_cancel">Cancelar</string>
 	<string name="alert_dialog_title_delete_matches">Borrado Partidos</string>
 	<string name="alert_dialog_delete_matches">¿Desea realmente borrar los partidos pendientes seleccionados?</string>
+	<string name="alert_dialog_delete_all_matches">¿Desea realmente borrar todos los partidos pendientes seleccionados?</string>
 	<string name="alert_dialog_title_upload_matches">Sincronización Partidos</string>
 	<string name="alert_dialog_upload_matches">¿Desea realmente sincronizar los partidos pendientes seleccionados?</string>
 	<string name="alert_title_no_save">Error guardando datos</string>
@@ -95,6 +96,7 @@
     <string name="form_validation">Los datos del formulario no son correctos:\n</string>
     
     <string name="synchro_delete">Borrado</string>
+    <string name="synchro_delete_all">Borrar Todos</string>
     <string name="synchro_upload">Sincronización con MyGolfCard</string>
 </resources>
 

@@ -13,6 +13,9 @@
 	   
 	<item android:id="@+id/synchro_delete"
       android:title="@string/synchro_delete" />
+      
+    <item android:id="@+id/synchro_delete_all"
+      android:title="@string/synchro_delete_all" />
 	   
 	<item android:id="@+id/menuapp"
       android:title="@string/menuapp_label"
