@@ -1,4 +1,13 @@
-package org.example.mygolfcard;
+/**
+ * Package: org.activities.mygolfcard
+ * File: Match.java
+ * Description:
+ * Create At: ---
+ * Created By: ERL
+ * Last Modifications:
+ * 		20/10/2010 - ERL - POO
+ */
+package org.activities.mygolfcard;
 
 import org.classes.mygolfcard.CurrentUser;
 import org.classes.mygolfcard.Player;
@@ -17,26 +26,13 @@ import android.widget.TextView;
 
 public class Match extends Activity {
 	private String auth_token;
-	//private String auth_user_id;
 	private CurrentUser cUser = new CurrentUser();
 	
-/*	private String match_id;
-	private String match_course_name;
-	private String match_date_hour;
-	private String match_holes;
-	private String match_players[] 				= new String[4];
-	private String match_players_HCP[] 			= new String[4];
-	private String match_players_strokes[][] 	= new String[4][3];
-*/	
 	private int localMatchId;
 	private org.classes.mygolfcard.Match currentMatch;
 	
 	private Player auxPlayer[] = new Player[4];
-/*	private int aux_player_id[] 	= new int[4]; 
-	private int aux_playerweb_id[] 	= new int[4];
-	
-	private String URL;
-*/	
+
 	private TextView txtCourseName;
 	private TextView txtDateHour;
 	private TextView txtHoles;
@@ -50,8 +46,6 @@ public class Match extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.match);
 		
-		//ERL URL = getString(R.string.URL_APIS) + getString(R.string.ACTION_MATCH);
-		
 		currentMatch = new org.classes.mygolfcard.Match(this);
 		
 		localMatchId = getIntent().getIntExtra("match_id",0);
@@ -59,7 +53,6 @@ public class Match extends Activity {
 
 		Authentication.readDataUser(Match.this);
 		auth_token = Authentication.getToken();
-		//ERL auth_user_id = Authentication.getUserId();
 		cUser.setUser_id(Authentication.getUserId());
 		
 		findViews();
@@ -114,10 +107,6 @@ public class Match extends Activity {
 	}
 
 	private void initViews() {
-/*		txtCourseName.setText(match_course_name);
-		txtDateHour.setText(match_date_hour);
-		txtHoles.setText(match_holes + " hoyos");
-*/
 		txtCourseName.setText(currentMatch.getCourseName());
 		txtDateHour.setText(currentMatch.getDateHour());
 		txtHoles.setText(currentMatch.getHoles() + " hoyos");
@@ -156,7 +145,7 @@ public class Match extends Activity {
 		@Override
 		protected String doInBackground( Context... params ) 
 		{
-			currentMatch = currentMatch.setDataFromRemote(localMatchId, Integer.parseInt(cUser.getUser_id()), auth_token);
+			currentMatch = org.classes.mygolfcard.Match.setDataFromRemote(localMatchId, Integer.parseInt(cUser.getUser_id()), auth_token, Match.this);
 			return "";
 		}
 
@@ -178,8 +167,6 @@ public class Match extends Activity {
 		{
 			super.onProgressUpdate(values);
 			Log.i( "makemachine", "onProgressUpdate(): " +  String.valueOf( values[0] ) );
-			//_percentField.setText( ( values[0] * 2 ) + "%");
-			//_percentField.setTextSize( values[0] );
 		}
 
 		// -- called as soon as doInBackground method completes
@@ -190,7 +177,6 @@ public class Match extends Activity {
 			super.onPostExecute(result);
 			Log.i( "makemachine", "onPostExecute(): " + result );
 			this.dialog.cancel();
-			//setInfoMatch(result);
 			initViews();
 		}
 	}   	

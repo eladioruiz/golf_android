@@ -1,4 +1,4 @@
-package org.example.mygolfcard;
+package org.activities.mygolfcard;
 
 import java.io.DataOutputStream;
 import java.io.FileInputStream;

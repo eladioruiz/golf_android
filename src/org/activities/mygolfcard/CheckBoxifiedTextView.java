@@ -21,7 +21,7 @@
  * 
  * Copyright 2008 Daniel Ricciotti
  */
-package org.example.mygolfcard;
+package org.activities.mygolfcard;
 
 import android.content.Context;
 import android.graphics.Typeface;

@@ -21,7 +21,7 @@
  * 
  * Copyright 2008 Daniel Ricciotti
  */
-package org.example.mygolfcard;
+package org.activities.mygolfcard;
 
 import java.util.ArrayList;
 import android.util.Log;

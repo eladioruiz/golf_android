@@ -7,7 +7,7 @@
  * Visit http://www.pragmaticprogrammer.com/titles/eband2 for more book information.
 ***/
 
-package org.example.mygolfcard;
+package org.activities.mygolfcard;
 
 import android.app.Dialog;
 import android.content.Context;

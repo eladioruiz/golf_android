@@ -1,11 +1,15 @@
-package org.example.mygolfcard;
+/**
+ * Package: org.activities.mygolfcard
+ * File: NewMatch.java
+ * Description:
+ * Create At: ---
+ * Created By: ERL
+ * Last Modifications:
+ * 		31/10/2010 - ERL - POO
+ */
+package org.activities.mygolfcard;
 
 import java.util.Calendar;
-
-import org.example.mygolfcard.RestClient.RequestMethod;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,20 +41,20 @@ import android.widget.Toast;
 
 public class NewMatch extends Activity implements TextWatcher, AdapterView.OnItemSelectedListener, OnClickListener {
 	private AutoCompleteTextView newmatch_course;
+	private AutoCompleteTextView newmatch_player[] = new AutoCompleteTextView[4];
 	private TextView newmatch_date;
 	private TextView newmatch_hour;
 	private TextView newmatch_n_holes;
-	private String newmatch_id;
-	
-	private AutoCompleteTextView newmatch_player[] = new AutoCompleteTextView[4];
 	private Spinner newmatch_tee[] = new Spinner[4];
+	
+	private int newmatch_id;
+	private String[] tees={"Amarillas", "Rojas", "Blancas"};
+	
 	private String[] courses; 
 	private String[] players; 
-	private String[] tees={"Amarillas", "Rojas", "Blancas"};
-	private String[] courses_field1;
-	private String[] courses_field2;
-	private String[] players_field1;
-	private String[] players_field2;
+
+	private org.classes.mygolfcard.Course coursesList[];
+	private org.classes.mygolfcard.Player friendsList[];
 	
 	private Button pickDate;
 	private Button pickTime;
@@ -60,12 +64,6 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	private boolean connectionOK;
 	private String auth_token;
 	private String auth_user_id;
-	
-	private String aux_courses;
-	private String aux_friends;
-	
-	private String URL_COURSES;
-	private String URL_FRIENDS;
 	
     // date and time
     private int mYear;
@@ -96,9 +94,6 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 		findViews();
 		setListeners();
 		
-		URL_COURSES = getString(R.string.URL_APIS) + getString(R.string.ACTION_COURSES);
-		URL_FRIENDS = getString(R.string.URL_APIS) + getString(R.string.ACTION_FRIENDS);
-		
 		connectionOK = Authentication.checkConnection(NewMatch.this);
 		if (connectionOK) {
 			Authentication.readDataUser(NewMatch.this);
@@ -111,19 +106,17 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 			Toast.makeText(NewMatch.this, R.string.no_internet,
                     Toast.LENGTH_SHORT).show();
 			
-			String result = Authentication.readCourses(NewMatch.this);
-			setInfoCourses(result);
-			
-			result = Authentication.readFriends(NewMatch.this);
-			setInfoPlayers(result);
+			coursesList = org.classes.mygolfcard.Course.getCoursesFromLocal(NewMatch.this);
+			friendsList = org.classes.mygolfcard.Player.getPlayersFromLocal(NewMatch.this);
+
 		}
 		
         final Calendar c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
-        mHour = c.get(Calendar.HOUR_OF_DAY);
-        mMinute = c.get(Calendar.MINUTE);
+        mYear	= c.get(Calendar.YEAR);
+        mMonth 	= c.get(Calendar.MONTH);
+        mDay 	= c.get(Calendar.DAY_OF_MONTH);
+        mHour 	= c.get(Calendar.HOUR_OF_DAY);
+        mMinute	= c.get(Calendar.MINUTE);
 
         updateDisplay();
         
@@ -185,9 +178,9 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 		new DatePickerDialog.OnDateSetListener() {
 
 		public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-			mYear = year;
-			mMonth = monthOfYear;
-			mDay = dayOfMonth;
+			mYear 	= year;
+			mMonth 	= monthOfYear;
+			mDay 	= dayOfMonth;
 			updateDisplay();
 		}
 	};
@@ -196,8 +189,8 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 		new TimePickerDialog.OnTimeSetListener() {
 
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-			mHour = hourOfDay;
-			mMinute = minute;
+			mHour	= hourOfDay;
+			mMinute	= minute;
 			updateDisplay();
 		}
 	};
@@ -284,12 +277,12 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 
     @SuppressWarnings("rawtypes")
     public void onItemSelected(AdapterView parent, View v, int position, long id) {
-    
+    	// needed for interface, but not used
     }
     
     @SuppressWarnings("rawtypes")
 	public void onNothingSelected(AdapterView parent) {
-    		
+    	// needed for interface, but not used
     }
     
 	public void onClick(View v) {
@@ -370,16 +363,16 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 		 	db.execSQL(sql);
 			
 		 	// Recupera el último partido introducido, para pasarlo a la siguiente página como param
-			sql = "select * from matches order by id desc limit 1;";
-			// REVISAR sql = "select last_insert_rowid;";
-			Cursor c = db.rawQuery(sql, null);
-			int colMatchId		= c.getColumnIndex("ID");
+			sql = "select ID from matches order by id desc limit 1;";
+			sql = "select last_insert_rowid() as ID;";
+			Cursor c 		= db.rawQuery(sql, null);
+			int colMatchId	= c.getColumnIndex("ID");
 			
 			c.moveToFirst();
 		 	
 		 	if (c != null) {
 		 		do {
-		 			newmatch_id	= c.getString(colMatchId);
+		 			newmatch_id	= c.getInt(colMatchId);
 		 		} while (c.moveToNext());
 		 	}
 		 	
@@ -476,72 +469,32 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	}
 
 	private void getRemoteData() {
-		aux_courses = getCourses();
-		aux_friends = getFriends();
+		coursesList = org.classes.mygolfcard.Course.getCoursesFromRemote(auth_token,NewMatch.this);
+		friendsList = org.classes.mygolfcard.Player.getFriendsFromRemote(auth_token,auth_user_id,NewMatch.this);
 	}
 	
-	private void setInfoCourses(String result) {
-		JSONObject jsonObj;
-		JSONArray  jsonArr;
-
-		try {
-			jsonArr = new JSONArray(result);
-			
-			courses_field1 = new String[jsonArr.length()];
-			courses_field2 = new String[jsonArr.length()];
-			
-			courses = new String[jsonArr.length()];
-			
-			for (int i=0; i<jsonArr.length(); i++) {
-				jsonObj = new JSONObject(jsonArr.get(i).toString());
-				
-				courses_field1[i] = jsonObj.getString("id");
-				courses_field2[i] = jsonObj.getString("name");
-				Log.i("JSON", "" + i);
-				
-				courses[i] = jsonObj.getString("name");
-				
-			}			
-		} catch (JSONException e) {
-			e.printStackTrace();
+	private void setInfoCourses() {
+		courses = new String[coursesList.length];
+		for (int i=0;i<coursesList.length;i++) {
+			courses[i] = coursesList[i].getCourseName();
 		}
 		
-		// fill in the grid_item layout
 		newmatch_course.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, courses));
 	}
 
-	private void setInfoPlayers(String result) {
-		JSONObject jsonObj;
-		JSONArray  jsonArr;
-
-		try {
-			jsonArr = new JSONArray(result);
-			
-			players_field1 = new String[jsonArr.length()];
-			players_field2 = new String[jsonArr.length()];
-			
-			players = new String[jsonArr.length()];
-			
-			for (int i=0; i<jsonArr.length(); i++) {
-				jsonObj = new JSONObject(jsonArr.get(i).toString());
-				
-				players_field1[i] = jsonObj.getString("id");
-				players_field2[i] = jsonObj.getString("name");
-				Log.i("JSON", "" + i);
-				
-				players[i] = jsonObj.getString("name");
-				
-			}			
-		} catch (JSONException e) {
-			e.printStackTrace();
+	private void setInfoPlayers() {
+		players = new String[friendsList.length];
+		for (int i=0;i<friendsList.length;i++) {
+			players[i] = friendsList[i].getPlayerName();
 		}
-		
-		for (int i=0; i<newmatch_player.length; i++) {
+			
+		for (int i=0; i<friendsList.length; i++) {
 			newmatch_player[i].setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, players));
 		}
 	}
 
-	private String getCourses() {
+/*	
+ 	private String getCourses() {
 		String response;
     	
 		Log.i( "newmatch", "getting courses ");
@@ -590,6 +543,7 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	    return response;
 	}
 	
+*/	
 	private void getScreenData() {
 		SharedPreferences prefs = getPreferences(0); 
         String restoredText;
@@ -627,10 +581,10 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	private int getCourseID(String find) {
 		int res = 0;
 		
-		for (int i=0; i<courses_field1.length; i++)
+		for (int i=0; i<coursesList.length; i++)
 		{
-			if (courses_field2[i].equals(find)) {
-				res = Integer.parseInt(courses_field1[i]);
+			if (coursesList[i].getCourseName().equals(find)) {
+				res = coursesList[i].getCourse_id();
 			}
 		}
 		
@@ -640,10 +594,10 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	private int getPlayerID(String find) {
 		int res = 0;
 		
-		for (int i=0; i<players_field1.length; i++)
+		for (int i=0; i<friendsList.length; i++)
 		{
-			if (players_field2[i].equals(find)) {
-				res = Integer.parseInt(players_field1[i]);
+			if (friendsList[i].getPlayerName().equals(find)) {
+				res = friendsList[i].getPlayer_id();
 			}
 		}
 		
@@ -719,8 +673,8 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 			super.onPostExecute(result);
 			Log.i( "makemachine", "onPostExecute(): " + result );
 			this.dialog.cancel();
-			setInfoCourses(aux_courses);
-			setInfoPlayers(aux_friends);
+			setInfoCourses();
+			setInfoPlayers();
 			//setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, courses));
 		}
 	}   

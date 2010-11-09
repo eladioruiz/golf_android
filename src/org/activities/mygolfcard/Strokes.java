@@ -1,9 +1,4 @@
-package org.example.mygolfcard;
-
-import org.example.mygolfcard.RestClient.RequestMethod;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+package org.activities.mygolfcard;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -31,36 +26,22 @@ public class Strokes extends Activity implements OnClickListener {
 	private final Button playerButton[] = new Button[4];
 	private Button previousButton;
 	private Button nextButton;
+	private org.classes.mygolfcard.Match currentMatch;
 	private int holeNumber;
-	private int totalHoles;
-	private String course_id;
 	private String match_info;
-	private String match_id;
-	private String players_id[] = new String[4];
+	private int match_id; 
+	private int players_id[] = new int[4];
+	private org.classes.mygolfcard.Player[] pls = new org.classes.mygolfcard.Player[4];
 	private TextView tx1;
 	private TextView tx2;
-	
-	private String[] players_field1;
-	private String[] players_field2;
-	
-	private String[] holes_field1;
-	private String[] holes_field2;
-	private String[] holes_field3;
-	private String[] holes_field4;
-	private String[] holes_field5;
-	private String[] holes_field6;
-	private String[] holes_field7;
-	private String[] info_holes;
 	
 	private boolean connectionOK;
 	private String auth_token;
 	
-	private String aux_holes;
+	private org.classes.mygolfcard.Hole[] holes;
 	
-	private String URL_HOLES;
-
 	private SQLiteDatabase db = null;
-	private String DATABASE_NAME;
+	private String DATABASE_NAME; 
 	
 	
 	/** Called when the activity is first created. */
@@ -69,16 +50,13 @@ public class Strokes extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.strokes);
 		
-		DATABASE_NAME = getString(R.string.DB_NAME);
-		
+		DATABASE_NAME = getString(R.string.DB_NAME); 
+		match_id = getIntent().getIntExtra("match_id",0);
+		currentMatch = new org.classes.mygolfcard.Match(Strokes.this);
+		currentMatch = org.classes.mygolfcard.Match.getMatchFromDB(Strokes.this, match_id);
 		holeNumber 	= Integer.parseInt(getIntent().getCharSequenceExtra("hole_number").toString());
-		totalHoles	= Integer.parseInt(getIntent().getCharSequenceExtra("total_holes").toString());
-		course_id 	= getIntent().getCharSequenceExtra("course_id").toString();
-		players_id	= getIntent().getStringArrayExtra("players_id");
-		match_id	= getIntent().getCharSequenceExtra("match_id").toString();
+		players_id	= getIntent().getIntArrayExtra("players_id");
 		match_info 	= getIntent().getCharSequenceExtra("match_info").toString();
-		
-		URL_HOLES = getString(R.string.URL_APIS) + getString(R.string.ACTION_INFO_HOLES);
 		
 		String result = Authentication.readFriends(Strokes.this);
 		setInfoPlayers(result);
@@ -87,26 +65,16 @@ public class Strokes extends Activity implements OnClickListener {
 		initViews();
 		setListeners();
 		
-		result = Authentication.readInfoHoles(Strokes.this);
-		
-		if (result != "") {
-			setInfoHoles(result);
+		connectionOK = Authentication.checkConnection(Strokes.this);
+		if (connectionOK) {
+			Authentication.readDataUser(Strokes.this);
+			auth_token    = Authentication.getToken();
+			InitTask task = new InitTask();
+			task.execute();
 		}
 		else {
-			Toast.makeText(Strokes.this, R.string.no_holes,
+			Toast.makeText(Strokes.this, R.string.no_internet,
                     Toast.LENGTH_SHORT).show();
-			
-			connectionOK = Authentication.checkConnection(Strokes.this);
-			if (connectionOK) {
-				Authentication.readDataUser(Strokes.this);
-				auth_token    = Authentication.getToken();
-				InitTask task = new InitTask();
-				task.execute();
-			}
-			else {
-				Toast.makeText(Strokes.this, R.string.no_internet,
-	                    Toast.LENGTH_SHORT).show();
-			}
 		}
 	}
 	
@@ -128,7 +96,7 @@ public class Strokes extends Activity implements OnClickListener {
 				break;
 			
 			case R.id.strokes_next:
-				if (holeNumber < totalHoles) {
+				if (holeNumber < currentMatch.getHoles()) {
 					++holeNumber;
 					bRes = true;
 				}
@@ -139,10 +107,10 @@ public class Strokes extends Activity implements OnClickListener {
 			
 			Intent i = new Intent(this, Strokes.class);
 			i.putExtra("hole_number", "" + holeNumber);
-			i.putExtra("total_holes", "" + totalHoles);
-			i.putExtra("course_id", course_id);
+			i.putExtra("total_holes",currentMatch.getHoles());
+			i.putExtra("course_id", currentMatch.getCourse_id());
 			i.putExtra("match_info", match_info);
-			i.putExtra("match_id", match_id);
+			i.putExtra("match_id", currentMatch.getMatch_id());
 			i.putExtra("players_id", players_id);
 			startActivity(i);
 			finish();
@@ -175,7 +143,7 @@ public class Strokes extends Activity implements OnClickListener {
 				new AlertDialog.Builder(this)
 					.setIcon(R.drawable.info_dialog_icon_tra)
 					.setTitle(R.string.resume_match)
-					.setMessage(Html.fromHtml(getResumeInfo(match_id)))
+					.setMessage(Html.fromHtml(getResumeInfo(currentMatch.getMatch_id())))
 					.setPositiveButton(R.string.alert_button_default, null)
 					.show();
 				return true;
@@ -192,7 +160,7 @@ public class Strokes extends Activity implements OnClickListener {
 				
 			case R.id.card_graph:
 	    		Intent i = new Intent(this, CardGraph.class);
-	    		i.putExtra("match_id", match_id);
+	    		i.putExtra("match_id", currentMatch.getMatch_id());
 	    		i.putExtra("mitad", 1);
 	    		i.putExtra("type_match", 1);
         		startActivity(i);
@@ -206,8 +174,8 @@ public class Strokes extends Activity implements OnClickListener {
 	void setKey(int targetView, String value) {
 		String res;
 		int iPos;
-		String aux_match_id;
-		String aux_player_id;
+		int aux_match_id;
+		int aux_player_id;
 		int aux_hole;
 		String aux_strokes;
 		String aux_putts = "0"; // Por defecto, no se utiliza todavia
@@ -221,7 +189,7 @@ public class Strokes extends Activity implements OnClickListener {
 		
 		b.setText(res + " : " + value);
 		
-		aux_match_id = match_id;
+		aux_match_id = currentMatch.getMatch_id();
 		aux_player_id = getPlayerIdFromView(targetView);
 		aux_hole = holeNumber;
 		aux_strokes = value;
@@ -250,8 +218,8 @@ public class Strokes extends Activity implements OnClickListener {
     	}
 	}
 
-	private String getPlayerIdFromView(int v) {
-		String res = "";
+	private int getPlayerIdFromView(int v) {
+		int res = 0;
 		
 		switch (v) {
 			case R.id.strokesButton_1:
@@ -297,14 +265,15 @@ public class Strokes extends Activity implements OnClickListener {
 
 	private void initViews() {
 		String strokes = "0";
+		
 		tx1.setText(match_info);		
 		
 		for (int i = 0; i < playerButton.length; i++) {
-			strokes = getStrokesHole(match_id,players_id[i],holeNumber);
+			strokes = getStrokesHole(currentMatch.getMatch_id(),players_id[i],holeNumber);
 			playerButton[i].setText(getPlayerName(players_id[i]) + " : " + strokes);
 			//setKey(playerButton[i].getId(), "0");
 			
-			if (players_id[i].equals("0")) {
+			if (players_id[i] == 0) {
 				playerButton[i].setVisibility(4);
 			}
 		}
@@ -314,24 +283,25 @@ public class Strokes extends Activity implements OnClickListener {
 		
 		previousButton.setEnabled(true);
 		nextButton.setEnabled(true);
-		if (holeNumber==1) {
+		if (holeNumber == 1) {
 			previousButton.setEnabled(false);
 			previousButton.setText("--");
 		}
 		
-		if (holeNumber==totalHoles) {
+		if (holeNumber == currentMatch.getHoles()) {
 			nextButton.setEnabled(false);
 			nextButton.setText("--");
 		}
 	}
 
 	private void setInfoPlayers(String result) {
-		JSONObject jsonObj;
+		pls = org.classes.mygolfcard.Player.getPlayersFromLocal(Strokes.this);
+/*		JSONObject jsonObj;
 		JSONArray  jsonArr;
 
 		try {
 			jsonArr = new JSONArray(result);
-			
+
 			players_field1 = new String[jsonArr.length()];
 			players_field2 = new String[jsonArr.length()];
 			
@@ -344,11 +314,14 @@ public class Strokes extends Activity implements OnClickListener {
 			}			
 		} catch (JSONException e) {
 			e.printStackTrace();
-		}		
+		}
+*/
 	}
+	
 
-	private void setInfoHoles(String result) {
-		JSONObject jsonObj;
+	private void setInfoHoles() {
+		tx2.setText(org.classes.mygolfcard.Hole.getTextInfo_hole(holes,holeNumber));
+/*		JSONObject jsonObj;
 		JSONArray  jsonArr;
 
 		try {
@@ -384,8 +357,8 @@ public class Strokes extends Activity implements OnClickListener {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
-	}
+		*/
+	}	
 	
 	/** Open the keypad if there are any valid moves */
 	protected void showKeypad(int playerPush) {
@@ -394,19 +367,19 @@ public class Strokes extends Activity implements OnClickListener {
 		v.show();
 	}
 	
-	private String getPlayerName(String playerId) {
+	private String getPlayerName(int playerId) {
 		String res = "0";
 		
-		for (int i=0; i<players_field1.length; i++) {
-			if (playerId.equals(players_field1[i])) {
-				res = players_field2[i];
+		for (int i=0; i<pls.length; i++) {
+			if (playerId == pls[i].getPlayer_id()) {
+				res = pls[i].getPlayerName();
 			}
 		}
 		
 		return res;
 	}
 	
-	private String getStrokesHole(String match_id, String player_id, int hole){
+	private String getStrokesHole(int match_id, int player_id, int hole){
 		String res = "0";
 		String sql = "";
 		
@@ -432,7 +405,7 @@ public class Strokes extends Activity implements OnClickListener {
 		return res;
 	}
 
-	private String getResumeInfo(String match_id) {
+	private String getResumeInfo(int match_id) {
 		String res = "";
 		String sql = "";
 		
@@ -441,15 +414,17 @@ public class Strokes extends Activity implements OnClickListener {
 		try {
 			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
 		 	Cursor c = db.rawQuery(sql, null);
-		 	int colPlayerId		= c.getColumnIndex("player_id");
-		 	int colSumStrokes	= c.getColumnIndex("sum_strokes");
 		 	
-		 	c.moveToLast();
-		 	c.moveToFirst();
 		 	if (c != null) {
+		 		int colPlayerId		= c.getColumnIndex("player_id");
+			 	int colSumStrokes	= c.getColumnIndex("sum_strokes");
+			 	
+			 	c.moveToLast();
+			 	c.moveToFirst();
+		 	
 		 		if (c.getCount()>0) {
 			 		do {
-			 			res += "<b>" + getPlayerName(c.getString(colPlayerId)) + "</b> : " + c.getInt(colSumStrokes) + "<br>";
+			 			res += "<b>" + getPlayerName(c.getInt(colPlayerId)) + "</b> : " + c.getInt(colSumStrokes) + "<br>";
 			 		}
 			 		while (c.moveToNext());
 		 		}
@@ -496,7 +471,7 @@ public class Strokes extends Activity implements OnClickListener {
 			return "" + hole;
 		}
 	}
-	
+/*	
 	private String getInfoHoles() {
 		String response;
     	
@@ -504,7 +479,7 @@ public class Strokes extends Activity implements OnClickListener {
 		
 	    RestClient client = new RestClient(URL_HOLES);
 	    client.AddParam("token", auth_token);
-	    client.AddParam("course_id", course_id);
+	    client.AddParam("course_id", "" + course_id);
 	    
 	    response = "";
 	    try {
@@ -521,6 +496,7 @@ public class Strokes extends Activity implements OnClickListener {
 	    
 	    return response;
 	}
+*/
 	
 	/**
 	 * sub-class of AsyncTask
@@ -539,7 +515,8 @@ public class Strokes extends Activity implements OnClickListener {
 		@Override
 		protected String doInBackground( Context... params ) 
 		{
-			getInfoHoles();
+			//getInfoHoles();
+			holes = org.classes.mygolfcard.Hole.getInfoHoles(currentMatch.getCourse_id(),auth_token, Strokes.this);
 			return "";
 		}
 
@@ -571,7 +548,7 @@ public class Strokes extends Activity implements OnClickListener {
 			super.onPostExecute(result);
 			Log.i( "makemachine", "onPostExecute(): " + result );
 			this.dialog.cancel();
-			setInfoHoles(aux_holes);
+			setInfoHoles();
 		}
 	}   	
 

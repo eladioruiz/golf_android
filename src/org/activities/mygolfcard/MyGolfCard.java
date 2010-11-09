@@ -1,5 +1,5 @@
 /**
- * Package: org.example.mygolfcard
+ * Package: org.activities.mygolfcard
  * File: MyGolfCard.java
  * Description:
  * Create At: ---
@@ -7,10 +7,10 @@
  * Last Modifications:
  * 		20/10/2010 - ERL - POO
  */
-package org.example.mygolfcard;
+package org.activities.mygolfcard;
 
 import org.classes.mygolfcard.CurrentUser;
-import org.example.mygolfcard.RestClient.RequestMethod;
+import org.activities.mygolfcard.RestClient.RequestMethod;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,6 +20,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -71,8 +73,9 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 		// Set up click listeners for all the buttons
 		View exitButton = findViewById(R.id.exit_button);
 		exitButton.setOnClickListener(this);
+		
     }
-    
+      
     // Callback de pulsación sobre los botones
     public void onClick(View v) {
     	String user_login;
@@ -167,18 +170,12 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	private void parseJSONResponse(String jsonResponse) {
 		JSONObject json;
 		
-		//ERL auth_token = "";
-		//ERL auth_user_id = "";
-		//ERL auth_error_code = "";
-		
 		try {
 			json = new JSONObject(jsonResponse);
 			
-			//cUser.setAuthToken(json.get("token").toString());
 			cUser.setUser_id(json.get("user_id").toString());
 			
 			auth_token = json.get("token").toString();
-			//ERL auth_user_id = json.get("user_id").toString();
 			auth_error_code = json.get("error_code").toString();
 		} catch (JSONException e) {
 			e.printStackTrace();

@@ -1,5 +1,5 @@
 /**
- * Package: org.example.mygolfcard
+ * Package: org.activities.mygolfcard
  * File: Course.java
  * Description:
  * Create At: ---
@@ -7,7 +7,7 @@
  * Last Modifications:
  * 		20/10/2010 - ERL - POO
  */
-package org.example.mygolfcard;
+package org.activities.mygolfcard;
 
 import org.classes.mygolfcard.CurrentUser;
 

@@ -1,19 +1,17 @@
 /**
- * Package: org.example.mygolfcard
- * File: Matches.java
+ * Package: org.activities.mygolfcard
+ * File: Courses.java
  * Description:
  * Create At: ---
  * Created By: ERL
  * Last Modifications:
  * 		20/10/2010 - ERL - POO
  */
-package org.example.mygolfcard;
+package org.activities.mygolfcard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import org.classes.mygolfcard.CurrentUser;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -29,35 +27,35 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-public class Matches extends ListActivity {
-	private org.classes.mygolfcard.Match matchesList[];
+public class Courses extends ListActivity {
+	private org.classes.mygolfcard.Course coursesList[];
 	private String auth_token;
-	private CurrentUser cUser = new CurrentUser();
 	private boolean connectionOK;
+	//ERL private String URL;
 	
 	/** Called with the activity is first created. */
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		setContentView(R.layout.matches);
+		setContentView(R.layout.courses);
 		
-		connectionOK = Authentication.checkConnection(Matches.this);
+		//ERL URL = getString(R.string.URL_APIS) + getString(R.string.ACTION_COURSES);
+		
+		connectionOK = Authentication.checkConnection(Courses.this);
 		if (connectionOK) {
-			Authentication.readDataUser(Matches.this);
+			Authentication.readDataUser(Courses.this);
 			auth_token = Authentication.getToken();
-			cUser.setUser_id(Authentication.getUserId());
-		
+			
 			InitTask task = new InitTask();
 			task.execute();
 		}
 		else {
-			Toast.makeText(Matches.this, R.string.no_internet,
+			Toast.makeText(Courses.this, R.string.no_internet,
                     Toast.LENGTH_SHORT).show();
 			
-			matchesList = org.classes.mygolfcard.Match.getMatchesFromLocal(Matches.this);
+			coursesList = org.classes.mygolfcard.Course.getCoursesFromLocal(Courses.this);
 			loadList();
 		}
-		
 	}
 
 	@Override
@@ -69,41 +67,40 @@ public class Matches extends ListActivity {
 	public void onListItemClick(ListView parent, View v, int position,long id) {
 		//
 		if (connectionOK) {
-			Intent intent = new Intent(this, Match.class);
-			intent.putExtra("match_id", matchesList[position].getMatch_id());
+			Intent intent = new Intent(this, Course.class);
+	        intent.putExtra("course_id",coursesList[position].getCourse_id());
 	        startActivity(intent);
 		}
 		else {
-			new AlertDialog.Builder(Matches.this)
+			new AlertDialog.Builder(Courses.this)
 				.setIcon(R.drawable.alert_dialog_icon)
-				.setTitle(R.string.remote_connection)
+				.setTitle(R.string.title_remote_connection)
 				.setMessage(R.string.no_internet_connect)
 				.setPositiveButton(R.string.alert_button_default, null)
 				.show();
 		}
 	}
-	
+
 	public void loadList() {
 		List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
 		try {
-			for (int i=0; i<matchesList.length; i++) {
+			for (int i=0; i<coursesList.length; i++) {
 				HashMap<String, String> map = new HashMap<String, String>();
-				map.put("course_name", matchesList[i].getCourseName());
-				map.put("date_hour", matchesList[i].getDateHour());
+				map.put("name", coursesList[i].getCourseName());
+				map.put("address", coursesList[i].getCourseAddress());
 				fillMaps.add(map);
 			}			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		// Muestra la lista
-		SimpleAdapter adapter = new SimpleAdapter(this, fillMaps, R.layout.main_item_two_line_row, new String[] { "course_name", "date_hour" }, new int[] { R.id.field1,  R.id.field2});
+		// fill in the grid_item layout
+		SimpleAdapter adapter = new SimpleAdapter(this, fillMaps, R.layout.main_item_two_line_row, new String[] { "name", "address" }, new int[] { R.id.field1,  R.id.field2});
 		
 		setListAdapter(adapter);
 		getListView().setTextFilterEnabled(true);
 	}
-
+	
 	/**
 	 * sub-class of AsyncTask
 	 */
@@ -121,7 +118,7 @@ public class Matches extends ListActivity {
 		@Override
 		protected String doInBackground( Context... params ) 
 		{
-			matchesList = org.classes.mygolfcard.Match.getMatchesFromRemote(auth_token,Integer.parseInt(cUser.getUser_id()),Matches.this);
+			coursesList = org.classes.mygolfcard.Course.getCoursesFromRemote(auth_token,Courses.this);
 			return "";
 		}
 
@@ -131,9 +128,7 @@ public class Matches extends ListActivity {
 		{
 			Log.i( "makemachine", "onPreExecute()" );
 			super.onPreExecute();
-			CharSequence title_remote = getString(R.string.title_remote_connection);
-			CharSequence remote = getString(R.string.remote_connection);
-			this.dialog = ProgressDialog.show(Matches.this, title_remote, remote, true);
+			this.dialog = ProgressDialog.show(Courses.this, "Conexión Remota", "Recuperando datos de servidor remoto de My Golf Card.", true);
 		}
 
 		// -- called from the publish progress 
@@ -156,5 +151,5 @@ public class Matches extends ListActivity {
 			loadList();
 		}
 	}   
-	
+
 }

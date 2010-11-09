@@ -1,5 +1,5 @@
 /**
- * Package: org.example.mygolfcard
+ * Package: org.activities.mygolfcard
  * File: Authentication.java
  * Description:
  * Create At: ---
@@ -7,7 +7,7 @@
  * Last Modifications:
  * 		20/10/2010 - ERL - POO
  */
-package org.example.mygolfcard;
+package org.activities.mygolfcard;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

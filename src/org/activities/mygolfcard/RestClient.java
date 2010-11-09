@@ -1,4 +1,4 @@
-package org.example.mygolfcard;
+package org.activities.mygolfcard;
 
 import org.apache.http.*;
 import org.apache.http.impl.client.*;

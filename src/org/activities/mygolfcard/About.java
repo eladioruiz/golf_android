@@ -1,5 +1,5 @@
 /**
- * Package: org.example.mygolfcard
+ * Package: org.activities.mygolfcard
  * File: About.java
  * Description:
  * Create At: ---
@@ -7,7 +7,7 @@
  * Last Modifications:
  * 		20/10/2010 - ERL - POO
  */
-package org.example.mygolfcard;
+package org.activities.mygolfcard;
 
 import android.app.Activity;
 import android.os.Bundle;

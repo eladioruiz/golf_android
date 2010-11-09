@@ -1,5 +1,5 @@
 /**
- * Package: org.example.mygolfcard
+ * Package: org.activities.mygolfcard
  * File: MenuApp.java
  * Description:
  * Create At: ---
@@ -7,7 +7,7 @@
  * Last Modifications:
  * 		20/10/2010 - ERL - POO
  */
-package org.example.mygolfcard;
+package org.activities.mygolfcard;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -45,6 +45,10 @@ public class MenuApp extends Activity  implements OnClickListener {
 		View coursesButton = findViewById(R.id.courses_button);
 		coursesButton.setOnClickListener(this);
 		
+		// Set up click listeners for all the buttons
+		View synchroButton = findViewById(R.id.synchro_button);
+		synchroButton.setOnClickListener(this);
+
 		//ERL Authentication.readDataUser(MenuApp.this);
 		
 		//ERL auth_token = Authentication.getToken();
@@ -72,6 +76,11 @@ public class MenuApp extends Activity  implements OnClickListener {
 			case R.id.courses_button:
 				Intent i_courses = new Intent(this, Courses.class);
 				startActivity(i_courses);
+				break;
+				
+			case R.id.synchro_button:
+				Intent i_synchro = new Intent(this, Synchro.class);
+				startActivity(i_synchro);
 				break;
 		}
 	}

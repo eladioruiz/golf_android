@@ -1,6 +1,6 @@
-package org.example.mygolfcard;
+package org.activities.mygolfcard;
 
-import org.example.mygolfcard.RestClient.RequestMethod;
+import org.activities.mygolfcard.RestClient.RequestMethod;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

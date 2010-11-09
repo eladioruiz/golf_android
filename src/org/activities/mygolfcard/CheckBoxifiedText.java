@@ -20,7 +20,7 @@
  * 
  * Copyright 2008 Daniel Ricciotti
  */
-package org.example.mygolfcard;
+package org.activities.mygolfcard;
 
 import android.view.KeyEvent;
 import android.widget.CheckBox;

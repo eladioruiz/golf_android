@@ -1,4 +1,4 @@
-package org.example.mygolfcard;
+package org.activities.mygolfcard;
 
 import android.app.Activity;
 import android.os.Bundle;
