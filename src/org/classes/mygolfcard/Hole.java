@@ -133,27 +133,32 @@ public class Hole {
 	
 	public static Hole[] getHoles(int course_id, String auth_token, Context ctx) {
 		String response;
-    	
+		boolean connectionOK;
 		
-		Log.i( "strokes", "getting info holes");
-		
-	    RestClient client = new RestClient(URL_HOLES);
-	    client.AddParam("token", auth_token);
-	    client.AddParam("course_id", "" + course_id);
-	    
-	    response = "";
-	    try {
-	        client.Execute(RequestMethod.POST);
-	        response = client.getResponse();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    
-	    Authentication.saveInfoHoles(ctx, response);
-	    
-	    Log.i( "strokes", "getting holes " + response.toString());
-	    
-	    return setInfoHoles(response, ctx);
+		connectionOK = Authentication.checkConnection(ctx);
+		if (connectionOK) {
+			Log.i( "strokes", "getting info holes");		
+		    RestClient client = new RestClient(URL_HOLES);
+		    client.AddParam("token", auth_token);
+		    client.AddParam("course_id", "" + course_id);
+		    
+		    response = "";
+		    try {
+		        client.Execute(RequestMethod.POST);
+		        response = client.getResponse();
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		    
+		    Authentication.saveInfoHoles(ctx, response);
+		    
+		    Log.i( "strokes", "getting holes " + response.toString());
+		    
+		    return setInfoHoles(response, ctx);
+		}
+		else {
+			return null;
+		}
 	}
 
 	private static Hole[] setInfoHoles(String result, Context ctx) {

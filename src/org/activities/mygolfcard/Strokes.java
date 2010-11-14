@@ -35,13 +35,15 @@ public class Strokes extends Activity implements OnClickListener {
 	private TextView tx1;
 	private TextView tx2;
 	
-	private boolean connectionOK;
+	//private boolean connectionOK;
 	private String auth_token;
 	
 	private org.classes.mygolfcard.Hole[] holes;
 	
 	private SQLiteDatabase db = null;
 	private String DATABASE_NAME; 
+	
+	private String result;
 	
 	
 	/** Called when the activity is first created. */
@@ -65,7 +67,7 @@ public class Strokes extends Activity implements OnClickListener {
 		initViews();
 		setListeners();
 		
-		connectionOK = Authentication.checkConnection(Strokes.this);
+/*		connectionOK = Authentication.checkConnection(Strokes.this);
 		if (connectionOK) {
 			Authentication.readDataUser(Strokes.this);
 			auth_token    = Authentication.getToken();
@@ -76,6 +78,11 @@ public class Strokes extends Activity implements OnClickListener {
 			Toast.makeText(Strokes.this, R.string.no_internet,
                     Toast.LENGTH_SHORT).show();
 		}
+*/
+		Authentication.readDataUser(Strokes.this);
+		auth_token    = Authentication.getToken();
+		InitTask task = new InitTask();
+		task.execute();
 	}
 	
 	@Override
@@ -391,7 +398,9 @@ public class Strokes extends Activity implements OnClickListener {
 		 	
 		 	c.moveToFirst();
 		 	if (c != null) {
-		 		res = "" + c.getInt(colStrokes);
+		 		if (c.getCount() > 0) {
+		 			res = "" + c.getInt(colStrokes);
+		 		}
 		 	}
 		}
 		catch(Exception e) {
@@ -526,7 +535,7 @@ public class Strokes extends Activity implements OnClickListener {
 		{
 			Log.i( "makemachine", "onPreExecute()" );
 			super.onPreExecute();
-			this.dialog = ProgressDialog.show(Strokes.this, "Conexión Remota", "Recuperando datos de servidor remoto de My Golf Card.", true);
+			//this.dialog = ProgressDialog.show(Strokes.this, "Conexión Remota", "Recuperando datos de servidor remoto de My Golf Card.", true);
 		}
 
 		// -- called from the publish progress 
@@ -547,7 +556,7 @@ public class Strokes extends Activity implements OnClickListener {
 		{
 			super.onPostExecute(result);
 			Log.i( "makemachine", "onPostExecute(): " + result );
-			this.dialog.cancel();
+			//this.dialog.cancel();
 			setInfoHoles();
 		}
 	}   	

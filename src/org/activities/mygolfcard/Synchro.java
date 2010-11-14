@@ -257,48 +257,52 @@ public class Synchro extends ListActivity {
 		 	c.moveToFirst();
 		 	
 		 	if (c != null) {
-		 		int i = 0;
-		 		do {
-		 			course_name 	= c.getString(colCourseName);
-		 			course_id		= c.getString(colCourseId);
-		 			match_id 		= c.getString(colMatchId);
-		 			date_hour		= c.getString(colDateHour);
-		 			n_holes			= c.getString(colHoles);
-		 			player_id[i][0]	= c.getString(colPlayer1);
-		 			player_id[i][1]	= c.getString(colPlayer2);
-		 			player_id[i][2]	= c.getString(colPlayer3);
-		 			player_id[i][3]	= c.getString(colPlayer4);
-		 			tee_id[i][0]	= c.getString(colTee1);
-		 			tee_id[i][1]	= c.getString(colTee2);
-		 			tee_id[i][2]	= c.getString(colTee3);
-		 			tee_id[i][3]	= c.getString(colTee4);
-		 			
-		 			matches_field1[i]	= match_id;
-		 			matches_field2[i]	= course_name;
-		 			matches_field3[i] 	= date_hour;
-		 			matches_field4[i] 	= course_id;
-		 			matches_field5[i] 	= n_holes;
-		 			
-		 			// Saca los golpes para cada jugador del partido 'i'
-		 			for (int j=0;j<player_id[i].length;j++) {
-		 				if (!player_id[i][j].equals("0")) {
-			 				sql = "select * from strokes where match_id=" + match_id +  " and player_id=" + player_id[i][j] + " order by hole";
-				 			Cursor s = db.rawQuery(sql, null);
-				 			
-				 			if (s != null) {
-				 				s.moveToFirst();
-				 				do {
-				 					int number = s.getInt(s.getColumnIndex("hole"));
-				 					holes[i][j][number] = s.getInt(s.getColumnIndex("strokes"));
-				 				} while (s.moveToNext());
-				 			}
-				 			s.close();
-		 				}
-		 			}
-		 			
-		 			++i;
-		 							
-		 		} while (c.moveToNext());
+		 		if (c.getCount() > 0) {
+			 		int i = 0;
+			 		do {
+			 			course_name 	= c.getString(colCourseName);
+			 			course_id		= c.getString(colCourseId);
+			 			match_id 		= c.getString(colMatchId);
+			 			date_hour		= c.getString(colDateHour);
+			 			n_holes			= c.getString(colHoles);
+			 			player_id[i][0]	= c.getString(colPlayer1);
+			 			player_id[i][1]	= c.getString(colPlayer2);
+			 			player_id[i][2]	= c.getString(colPlayer3);
+			 			player_id[i][3]	= c.getString(colPlayer4);
+			 			tee_id[i][0]	= c.getString(colTee1);
+			 			tee_id[i][1]	= c.getString(colTee2);
+			 			tee_id[i][2]	= c.getString(colTee3);
+			 			tee_id[i][3]	= c.getString(colTee4);
+			 			
+			 			matches_field1[i]	= match_id;
+			 			matches_field2[i]	= course_name;
+			 			matches_field3[i] 	= date_hour;
+			 			matches_field4[i] 	= course_id;
+			 			matches_field5[i] 	= n_holes;
+			 			
+			 			// Saca los golpes para cada jugador del partido 'i'
+			 			for (int j=0;j<player_id[i].length;j++) {
+			 				if (!player_id[i][j].equals("0")) {
+				 				sql = "select * from strokes where match_id=" + match_id +  " and player_id=" + player_id[i][j] + " order by hole";
+					 			Cursor s = db.rawQuery(sql, null);
+					 			
+					 			if (s != null) {
+					 				if (s.getCount() > 0) {
+						 				s.moveToFirst();
+						 				do {
+						 					int number = s.getInt(s.getColumnIndex("hole"));
+						 					holes[i][j][number] = s.getInt(s.getColumnIndex("strokes"));
+						 				} while (s.moveToNext());
+					 				}
+					 			}
+					 			s.close();
+			 				}
+			 			}
+			 			
+			 			++i;
+			 							
+			 		} while (c.moveToNext());
+		 		}
 		 	}
 		 	
 		 	c.close();
