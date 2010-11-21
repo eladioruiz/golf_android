@@ -29,10 +29,10 @@ public class MenuApp extends Activity  implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.menu);
 
-		// Set up click listeners for all the buttons
+/*		// Set up click listeners for all the buttons
 		View exitButton = findViewById(R.id.exit_button);
 		exitButton.setOnClickListener(this);
-		
+*/		
 		// Set up click listeners for all the buttons
 		View newButton = findViewById(R.id.new_button);
 		newButton.setOnClickListener(this);
@@ -59,10 +59,10 @@ public class MenuApp extends Activity  implements OnClickListener {
 	
 	public void onClick(View v) {
 		switch (v.getId()) {
-			case R.id.exit_button:
+/*			case R.id.exit_button:
 				finish();
 				break;
-			
+*/			
 			case R.id.new_button:
 				Intent i_new = new Intent(this, NewMatch.class);
 				startActivity(i_new);

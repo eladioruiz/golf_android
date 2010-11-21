@@ -7,46 +7,144 @@
  ! We make no guarantees that this code is fit for any purpose. 
  ! Visit http://www.pragmaticprogrammer.com/titles/eband2 for more book information.
 -->
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-   	android:background="@color/background"
-   	android:layout_height="fill_parent"
-   	android:layout_width="fill_parent"
-   	android:padding="15dip"
-   	android:orientation="horizontal">
-	<LinearLayout
-		android:orientation="vertical"
-		android:layout_height="wrap_content"
-		android:layout_width="fill_parent"
-		android:layout_gravity="center"
-		android:paddingLeft="20dip"
-		android:paddingRight="20dip">
-      <TableLayout
-         android:layout_height="wrap_content"
-         android:layout_width="wrap_content"
-         android:layout_gravity="center"
-         android:stretchColumns="*">
-         <TableRow>
-            <Button
-               android:id="@+id/new_button"
-               android:text="@string/new_match_label" />
-            <Button
-               android:id="@+id/matches_button"
-               android:text="@string/matches_label" />
-         </TableRow>
-         <TableRow>
-            <Button
-               android:id="@+id/courses_button"
-               android:text="@string/courses_label" />
-            <Button
-               android:id="@+id/synchro_button"
-               android:text="@string/synchro_label" />
-         </TableRow>
-         <TableRow android:gravity="center">
-            <Button
-               android:id="@+id/exit_button"
-               android:text="@string/exit_label" />
-         </TableRow>
-      </TableLayout>
-   </LinearLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:layout_weight="3"
+	    android:gravity="center">
+    	<TextView  
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content"
+		    android:gravity="center" 
+		    android:textSize="18dip"
+		    android:text="" />
+    </LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:layout_weight="1"
+	    android:gravity="center">
+	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:orientation="vertical"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_weight="1"
+		    android:gravity="top">
+		    <TableLayout
+		    	android:layout_width="fill_parent" 
+			    android:layout_height="fill_parent"
+			    android:stretchColumns="0,1"
+			    android:gravity="center_vertical">
+			    <TableRow
+			    	android:gravity="center_vertical">
+			    	<LinearLayout
+				    	android:id="@+id/courses_button"
+			    		android:orientation="vertical"
+			    		android:layout_width="fill_parent"
+			    		android:layout_height="wrap_content">
+				    	<ImageView
+				    		android:src="@drawable/courses2"
+				    		android:padding="15dip"
+				    		android:layout_height="fill_parent"
+				    		android:layout_width="fill_parent" />
+				    	<TextView  
+						    android:layout_width="fill_parent" 
+						    android:layout_height="wrap_content"
+						    android:gravity="center" 
+						    android:textSize="18dip"
+						    android:text="@string/courses_label" />
+					</LinearLayout>
+			    	<LinearLayout
+			    		android:id="@+id/matches_button"
+			    		android:orientation="vertical"
+			    		android:layout_width="fill_parent"
+			    		android:layout_height="wrap_content">
+				    	<ImageView
+				 			android:src="@drawable/matches5"
+				    		android:padding="15dip"
+				    		android:layout_height="fill_parent"
+				    		android:layout_width="fill_parent" />
+				    	<TextView  
+						    android:layout_width="fill_parent" 
+						    android:layout_height="wrap_content"
+						    android:gravity="center" 
+						    android:textSize="18dip"
+						    android:text="@string/matches_label" />
+					</LinearLayout>
+			    </TableRow>
+		    </TableLayout>
+		</LinearLayout>
+		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:orientation="vertical"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_weight="1"
+		    android:gravity="top">
+		    <TableLayout
+		    	android:layout_width="fill_parent" 
+			    android:layout_height="fill_parent"
+			    android:stretchColumns="0,1"
+			    android:gravity="center_vertical">
+			    <TableRow
+			    	android:gravity="center_vertical">
+			    	<LinearLayout
+			    		android:id="@+id/new_button"
+			    		android:orientation="vertical"
+			    		android:layout_width="fill_parent"
+			    		android:layout_height="wrap_content">
+				    	<ImageView
+				    		android:src="@drawable/new_match7"
+				    		android:padding="15dip"
+				    		android:layout_height="fill_parent"
+				    		android:layout_width="fill_parent" />
+				    	<TextView  
+						    android:layout_width="fill_parent" 
+						    android:layout_height="wrap_content"
+						    android:gravity="center" 
+						    android:textSize="18dip"
+						    android:text="@string/new_match_label" />
+					</LinearLayout>
+			    	<LinearLayout
+			    		android:id="@+id/synchro_button"
+			    		android:orientation="vertical"
+			    		android:layout_width="fill_parent"
+			    		android:layout_height="wrap_content">
+				    	<ImageView
+				    		android:src="@drawable/pdte3"
+				    		android:padding="15dip"
+				    		android:layout_height="fill_parent"
+				    		android:layout_width="fill_parent" />
+				    	<TextView  
+						    android:layout_width="fill_parent" 
+						    android:layout_height="wrap_content"
+						    android:gravity="center" 
+						    android:textSize="18dip"
+						    android:text="@string/synchro_label" />
+					</LinearLayout>
+			    </TableRow>
+		    </TableLayout>
+		</LinearLayout>
+	</LinearLayout>
+	<TextView  
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content"
+	    android:gravity="center" 
+	    android:textSize="10dip"
+	    android:textColor="#64c6d4ef"
+	    android:paddingTop="50dip"
+	    android:text="My Golf Card (c) 2010 Eladio Ruiz" />
+	<TextView  
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content"
+	    android:gravity="center"
+	    android:textColor="#64c6d4ef"
+	    android:textSize="10dip" 
+	    android:text="My Golf Card es un producto independiente y no asociado a nigún campo de golf o club de socios." />
 </LinearLayout>

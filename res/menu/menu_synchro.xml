@@ -9,15 +9,15 @@
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:id="@+id/synchro_upload"
-	   android:title="@string/synchro_upload" />
+	   android:title="@string/synchro_upload" 
+	   android:icon="@drawable/synchro" />
 	   
 	<item android:id="@+id/synchro_delete"
-      android:title="@string/synchro_delete" />
+      android:title="@string/synchro_delete"
+      android:icon="@drawable/delete" />
       
     <item android:id="@+id/synchro_delete_all"
-      android:title="@string/synchro_delete_all" />
+      android:title="@string/synchro_delete_all" 
+      android:icon="@drawable/delete_all" />
 	   
-	<item android:id="@+id/menuapp"
-      android:title="@string/menuapp_label"
-      android:alphabeticShortcut="@string/menuapp_shortcut" />
 </menu>

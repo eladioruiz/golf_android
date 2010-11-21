@@ -9,9 +9,11 @@
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:id="@+id/course_details"
-      android:title="@string/course_details_label"
-      android:alphabeticShortcut="@string/course_details_shortcut" />
+		android:icon="@drawable/detail"
+		android:title="@string/course_details_label"
+		android:alphabeticShortcut="@string/course_details_shortcut" />
     <item android:id="@+id/menuapp"
-      android:title="@string/menuapp_label"
-      android:alphabeticShortcut="@string/menuapp_shortcut" />
+    	android:icon="@drawable/menu"
+      	android:title="@string/menuapp_label"
+      	android:alphabeticShortcut="@string/menuapp_shortcut" />
 </menu>

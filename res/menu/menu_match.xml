@@ -8,8 +8,9 @@
  ! Visit http://www.pragmaticprogrammer.com/titles/eband2 for more book information.
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/card_graph"
-      android:title="@string/card_graph_label"
-      android:alphabeticShortcut="@string/card_graph_shortcut" />
-      
+    <item 
+    	android:id="@+id/card_graph"
+    	android:icon="@drawable/card"
+      	android:title="@string/card_graph_label"
+      	android:alphabeticShortcut="@string/card_graph_shortcut" />
 </menu>

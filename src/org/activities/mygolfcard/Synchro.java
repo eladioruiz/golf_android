@@ -126,14 +126,9 @@ public class Synchro extends ListActivity {
 				return true;
 				
 			case R.id.synchro_upload:
-				showDialog(DIALOG_SYNCHRO_UPLOAD);
-				
+				showDialog(DIALOG_SYNCHRO_UPLOAD);				
 				return true;
 				
-			case R.id.menuapp:
-				startActivity(new Intent(this, MenuApp.class));
-				finish();
-				return true;
 		}
 		return false;
 	}    

@@ -8,20 +8,28 @@
  ! Visit http://www.pragmaticprogrammer.com/titles/eband2 for more book information.
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:id="@+id/synchro"
-      android:title="@string/synchro_label"
-      android:alphabeticShortcut="@string/synchro_shortcut" />
+	<item 
+		android:id="@+id/synchro"
+		android:icon="@drawable/pdte2"
+      	android:title="@string/synchro_label"
+     	android:alphabeticShortcut="@string/synchro_shortcut" />
 
-	<item android:id="@+id/card_graph"
-      android:title="@string/card_graph_label"
-      android:alphabeticShortcut="@string/card_graph_shortcut" />
+	<item 
+		android:id="@+id/card_graph"
+		android:icon="@drawable/card"
+      	android:title="@string/card_graph_label"
+      	android:alphabeticShortcut="@string/card_graph_shortcut" />
             
-    <item android:id="@+id/resume"
-      android:title="@string/resume_label"
-      android:alphabeticShortcut="@string/resume_shortcut" />
+    <item 
+    	android:id="@+id/resume"
+    	android:icon="@drawable/resume"
+      	android:title="@string/resume_label"
+      	android:alphabeticShortcut="@string/resume_shortcut" />
       
-	<item android:id="@+id/menuapp"
-      android:title="@string/menuapp_label"
-      android:alphabeticShortcut="@string/menuapp_shortcut" />  
+	<item 
+		android:id="@+id/menuapp"
+		android:icon="@drawable/menu"
+      	android:title="@string/menuapp_label"
+      	android:alphabeticShortcut="@string/menuapp_shortcut" />  
       
 </menu>
