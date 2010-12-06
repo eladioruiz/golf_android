@@ -19,6 +19,7 @@
     <string name="menuapp_title">My Golf Card - Menú</string>
     <string name="newmatch_title">My Golf Card - Nuevo Partido</string>
     <string name="card_title">My Golf Card - Tarjeta</string>
+    
     <string name="strokes_title">My Golf Card - Golpes</string>
     <string name="matches_title">My Golf Card - Partidos</string>
     <string name="courses_title">My Golf Card - Campos</string>
@@ -76,7 +77,7 @@
 	<string name="no_holes">No hay información disponible sobre los hoyos de este campo.\nDisculpe las molestias.</string>
     
     <string name="URL_APIS">http://dev.mygolfcard.es/api/</string>
-    <!--  <string name="URL_APIS">http://192.168.2.12:3000/api/</string>  -->
+    <!-- <string name="URL_APIS">http://192.168.2.12:3000/api/</string> -->
     <string name="ACTION_AUTH">authentication</string>
     <string name="ACTION_MATCHES">getmatches</string>
     <string name="ACTION_COURSES">getcourses</string>

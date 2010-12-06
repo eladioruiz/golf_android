@@ -201,7 +201,7 @@ public class Hole {
 				holes_field6[i] = showNull(jsonObj.getString("length_white"),"---");
 				holes_field7[i] = showNull(jsonObj.getString("handicap"),"---");
 */				
-				aux_holes[i].setInfo_hole("Hoyo " + number + ":\nPar : " + aux_holes[i].getPar() + "     Handicap : " +  aux_holes[i].getHandicap() + "\nLong : (R) " +  aux_holes[i].getLength_red() + "  (A) " +  aux_holes[i].getLength_yellow() + "");
+				aux_holes[i].setInfo_hole("Hoyo " + number + "\nPar : " + aux_holes[i].getPar() + "     Handicap : " +  aux_holes[i].getHandicap() + "\nLong : (R) " +  aux_holes[i].getLength_red() + "  (A) " +  aux_holes[i].getLength_yellow() + "");
 				Log.i("JSON", "" + i);
 			}
 			

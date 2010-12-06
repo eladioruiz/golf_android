@@ -65,16 +65,19 @@ public final class R {
         public static final int pdte3=0x7f02001b;
         public static final int resume=0x7f02001c;
         public static final int rounded_edges=0x7f02001d;
-        public static final int rounded_top=0x7f02001e;
-        public static final int synchro=0x7f02001f;
-        public static final int upload=0x7f020020;
+        public static final int rounded_edges_strokes=0x7f02001e;
+        public static final int rounded_top=0x7f02001f;
+        public static final int synchro=0x7f020020;
+        public static final int tee=0x7f020021;
+        public static final int tee2=0x7f020022;
+        public static final int upload=0x7f020023;
     }
     public static final class id {
         public static final int UpdateCheckBox=0x7f0a002d;
         public static final int UpdateProgress=0x7f0a002c;
-        public static final int about=0x7f0a0062;
+        public static final int about=0x7f0a0063;
         public static final int about_content=0x7f0a0000;
-        public static final int card_graph=0x7f0a0066;
+        public static final int card_graph=0x7f0a0067;
         public static final int card_hole1=0x7f0a0002;
         public static final int card_hole10=0x7f0a000b;
         public static final int card_hole11=0x7f0a000c;
@@ -98,13 +101,14 @@ public final class R {
         public static final int course_address=0x7f0a0015;
         public static final int course_config=0x7f0a0017;
         public static final int course_description=0x7f0a0016;
-        public static final int course_details=0x7f0a0067;
+        public static final int course_details=0x7f0a0068;
         public static final int course_name=0x7f0a0014;
         public static final int courses_button=0x7f0a0041;
         public static final int exit_button=0x7f0a0029;
         public static final int field1=0x7f0a002a;
         public static final int field2=0x7f0a002b;
-        public static final int hole_info=0x7f0a005c;
+        public static final int hole_info_1=0x7f0a005c;
+        public static final int hole_info_2=0x7f0a005d;
         public static final int keypad=0x7f0a0019;
         public static final int keypad_1=0x7f0a001a;
         public static final int keypad_10=0x7f0a0023;
@@ -144,7 +148,7 @@ public final class R {
         public static final int match_player_4_2P=0x7f0a003f;
         public static final int match_player_4_TO=0x7f0a0040;
         public static final int matches_button=0x7f0a0042;
-        public static final int menuapp=0x7f0a0068;
+        public static final int menuapp=0x7f0a0069;
         public static final int new_button=0x7f0a0043;
         public static final int newmatch_button_date=0x7f0a0049;
         public static final int newmatch_button_hour=0x7f0a004b;
@@ -162,22 +166,22 @@ public final class R {
         public static final int newmatch_tee_4=0x7f0a0056;
         public static final int newmatch_text_date=0x7f0a0048;
         public static final int newmatch_text_hour=0x7f0a004a;
-        public static final int resume=0x7f0a0065;
+        public static final int resume=0x7f0a0066;
         public static final int resume_content=0x7f0a0059;
         public static final int selection=0x7f0a0018;
-        public static final int settings=0x7f0a0063;
+        public static final int settings=0x7f0a0064;
         public static final int spinner_item=0x7f0a005a;
-        public static final int strokesButton_1=0x7f0a005e;
-        public static final int strokesButton_2=0x7f0a005f;
-        public static final int strokesButton_3=0x7f0a0060;
-        public static final int strokesButton_4=0x7f0a0061;
-        public static final int strokes_next=0x7f0a005d;
+        public static final int strokesButton_1=0x7f0a005f;
+        public static final int strokesButton_2=0x7f0a0060;
+        public static final int strokesButton_3=0x7f0a0061;
+        public static final int strokesButton_4=0x7f0a0062;
+        public static final int strokes_next=0x7f0a005e;
         public static final int strokes_previous=0x7f0a005b;
-        public static final int synchro=0x7f0a0064;
+        public static final int synchro=0x7f0a0065;
         public static final int synchro_button=0x7f0a0044;
-        public static final int synchro_delete=0x7f0a006a;
-        public static final int synchro_delete_all=0x7f0a006b;
-        public static final int synchro_upload=0x7f0a0069;
+        public static final int synchro_delete=0x7f0a006b;
+        public static final int synchro_delete_all=0x7f0a006c;
+        public static final int synchro_upload=0x7f0a006a;
     }
     public static final class layout {
         public static final int about=0x7f030000;
@@ -210,7 +214,7 @@ public final class R {
         public static final int menu_synchro=0x7f090005;
     }
     public static final class string {
-        /**   <string name="URL_APIS">http://192.168.2.12:3000/api/</string>  
+        /**  <string name="URL_APIS">http://192.168.2.12:3000/api/</string> 
          */
         public static final int ACTION_AUTH=0x7f070036;
         public static final int ACTION_COURSE=0x7f07003c;

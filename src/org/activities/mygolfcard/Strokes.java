@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class Strokes extends Activity implements OnClickListener {
 	private final Button playerButton[] = new Button[4];
@@ -33,7 +32,8 @@ public class Strokes extends Activity implements OnClickListener {
 	private int players_id[] = new int[4];
 	private org.classes.mygolfcard.Player[] pls = new org.classes.mygolfcard.Player[4];
 	private TextView tx1;
-	private TextView tx2;
+	private TextView tx2_1;
+	private TextView tx2_2;
 	
 	//private boolean connectionOK;
 	private String auth_token;
@@ -255,7 +255,8 @@ public class Strokes extends Activity implements OnClickListener {
 		nextButton = (Button) findViewById(R.id.strokes_next);
 		
 		tx1 = (TextView) findViewById(R.id.card_match);
-		tx2 = (TextView) findViewById(R.id.hole_info);
+		tx2_1 = (TextView) findViewById(R.id.hole_info_1);
+		tx2_2 = (TextView) findViewById(R.id.hole_info_2);
 	}
 	
 	private void setListeners() {
@@ -327,7 +328,16 @@ public class Strokes extends Activity implements OnClickListener {
 	
 
 	private void setInfoHoles() {
-		tx2.setText(org.classes.mygolfcard.Hole.getTextInfo_hole(holes,holeNumber));
+		String info_hole = org.classes.mygolfcard.Hole.getTextInfo_hole(holes,holeNumber);
+		String info_hole_hole = "";
+		String info_hole_info = "";
+		
+		int pos1 = info_hole.indexOf("\n");
+		info_hole_hole = info_hole.substring(0,pos1);
+		info_hole_info = info_hole.substring(pos1+1);
+		
+		tx2_1.setText(info_hole_hole);
+		tx2_2.setText(info_hole_info);
 /*		JSONObject jsonObj;
 		JSONArray  jsonArr;
 

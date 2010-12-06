@@ -9,6 +9,7 @@
  */
 package org.activities.mygolfcard;
 
+import org.charts.mygolfcard.IChart;
 import org.classes.mygolfcard.CurrentUser;
 import org.classes.mygolfcard.Player;
 
@@ -36,10 +37,12 @@ public class Match extends Activity {
 	private TextView txtCourseName;
 	private TextView txtDateHour;
 	private TextView txtHoles;
-	private TextView txtPlayers[]		= new TextView[4];;
-	private TextView txtPlayers_1P[]	= new TextView[4];;
-	private TextView txtPlayers_2P[]	= new TextView[4];;
-	private TextView txtPlayers_TO[]	= new TextView[4];;
+	private TextView txtPlayers[]		= new TextView[4];
+	private TextView txtPlayers_1P[]	= new TextView[4];
+	private TextView txtPlayers_2P[]	= new TextView[4];
+	private TextView txtPlayers_TO[]	= new TextView[4];
+	
+	private IChart[] mCharts = new IChart[] {new ChartMatch()};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -80,6 +83,16 @@ public class Match extends Activity {
 	    		startActivity(i);
 	
 	    		return true;
+			
+			case R.id.menuapp:
+				finish();
+				startActivity(new Intent(this, MenuApp.class));
+				return true;
+				
+			/*case R.id.stats:
+				Intent intent = mCharts[0].execute(this, currentMatch);
+				startActivity(intent);
+				return true;*/
 		}
 		return false;
 	}

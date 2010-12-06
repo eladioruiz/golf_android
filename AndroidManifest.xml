@@ -81,6 +81,8 @@
 			android:configChanges="keyboard|keyboardHidden|orientation">
 		</activity>
 		
+		<activity android:name="org.achartengine.GraphicalActivity" />
+		
     </application>
 
 
