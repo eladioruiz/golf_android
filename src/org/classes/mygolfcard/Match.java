@@ -201,7 +201,6 @@ public class Match {
 		RestClient client = new RestClient(URL_MATCH);
 	    client.AddParam("token", token);
 	    client.AddParam("user_id", "" + user_id);
-	    //ERL client.AddParam("course_id", course_id);
 	    client.AddParam("match_id", "" + match_id);
 	    
 	    response = "";
@@ -306,5 +305,25 @@ public class Match {
 		}
 	}
 	
+	public static String deleteRemoteMatch(int match_id, int user_id, String auth_token) {
+		String response;
+		String URL_MATCHES = ctxMatch.getString(R.string.URL_APIS) + ctxMatch.getString(R.string.ACTION_DELETEMATCH);
+    	
+	    RestClient client = new RestClient(URL_MATCHES);
+	    client.AddParam("token", auth_token);
+	    client.AddParam("user_id", "" + user_id);
+	    client.AddParam("match_id", "" + match_id);
+	    
+	    response = "";
+	    try {
+	        client.Execute(RequestMethod.POST);
+	        response = client.getResponse();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    
+	    Authentication.saveMatches(ctxMatch, response);
+	    return response;
+	}
 
 }

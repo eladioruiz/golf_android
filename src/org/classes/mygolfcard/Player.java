@@ -29,6 +29,7 @@ public class Player {
 	private int strokesFirst;
 	private int strokesSecond;
 	private int strokesTotal;
+	private org.classes.mygolfcard.Card card;
 
 	private static Context ctxPlayer;
 	
@@ -111,7 +112,7 @@ public class Player {
 		this.strokesTotal = strokesTotal;
 	}
 
-	public static Player[] getFriendsFromRemote(String auth_token, String auth_user_id, Context ctx) {
+	public static Player[] getPlayersFromRemote(String auth_token, String auth_user_id, Context ctx) {
 		String result;
 
 		ctxPlayer = ctx;

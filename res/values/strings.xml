@@ -80,6 +80,8 @@
     <!-- <string name="URL_APIS">http://192.168.2.12:3000/api/</string> -->
     <string name="ACTION_AUTH">authentication</string>
     <string name="ACTION_MATCHES">getmatches</string>
+    <string name="ACTION_DELETEMATCH">deletematch</string>
+    <string name="ACTION_DELETEMATCHES">deletematches</string>
     <string name="ACTION_COURSES">getcourses</string>
     <string name="ACTION_FRIENDS">getfriends</string>
     <string name="ACTION_MATCH">getmatch</string>

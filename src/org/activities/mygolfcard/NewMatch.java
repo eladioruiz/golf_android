@@ -470,7 +470,7 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 
 	private void getRemoteData() {
 		coursesList = org.classes.mygolfcard.Course.getCoursesFromRemote(auth_token,NewMatch.this);
-		friendsList = org.classes.mygolfcard.Player.getFriendsFromRemote(auth_token,auth_user_id,NewMatch.this);
+		friendsList = org.classes.mygolfcard.Player.getPlayersFromRemote(auth_token,auth_user_id,NewMatch.this);
 	}
 	
 	private void setInfoCourses() {

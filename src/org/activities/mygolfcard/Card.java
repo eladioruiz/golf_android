@@ -81,7 +81,7 @@ public class Card extends Activity implements OnClickListener {
 		if (connectionOK) {
 			
 			
-			players = Player.getFriendsFromRemote(auth_token, cUser.getUser_id(), Card.this);
+			players = Player.getPlayersFromRemote(auth_token, cUser.getUser_id(), Card.this);
 			
 			InitTask task = new InitTask();
 			task.execute();
