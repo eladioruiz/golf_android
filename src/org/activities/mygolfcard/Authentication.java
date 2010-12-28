@@ -22,7 +22,7 @@ import android.net.NetworkInfo;
 public class Authentication {
 
 	private static String auth_token; 
-	private static String auth_user_id;
+	private static int auth_user_id;
 	
 	public static boolean checkConnection(Context ctx){
 		boolean bTieneConexion = false;
@@ -50,7 +50,7 @@ public class Authentication {
 		return bTieneConexion;
 	}
 
-	public static boolean saveDataUser(Context ctx, String token, String user_id) {
+	public static boolean saveDataUser(Context ctx, String token, int user_id) {
 		
 		try {
 			OutputStreamWriter out=new OutputStreamWriter(ctx.openFileOutput("user.txt",0));
@@ -58,7 +58,7 @@ public class Authentication {
 			auth_token 	 = token;
 			auth_user_id = user_id;
 			out.write(auth_token  + '\n');
-			out.write(auth_user_id  + '\n');
+			out.write("" + auth_user_id  + '\n');
 			
 			out.close();
 			
@@ -84,7 +84,7 @@ public class Authentication {
 		int i = 0;
 		
 		auth_token 		= "";
-		auth_user_id 	= "";
+		auth_user_id 	= 0;
 		try {
 			InputStream in = ctx.openFileInput("user.txt");
 			if (in!=null) {
@@ -97,7 +97,7 @@ public class Authentication {
 					if (i==0)
 						auth_token = str;
 					else if (i==1)
-						auth_user_id = str;
+						auth_user_id = Integer.parseInt(str);
 					
 					++i;
 				}
@@ -116,7 +116,7 @@ public class Authentication {
 		return auth_token;
 	}
 	
-	public static String getUserId() {
+	public static int getUserId() {
 		return auth_user_id;
 	}
 	

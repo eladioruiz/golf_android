@@ -11,12 +11,14 @@
     <string name="continue_label">Entrar</string>
     <string name="exit_label">Salir</string>
     <string name="about_label">About</string>
+    <string name="signup_label">Nuevo Usuario</string>
     
     <string name="new_match_label">Nuevo Partido</string>
     <string name="matches_label">Partidos</string>
     <string name="courses_label">Campos</string>
     
     <string name="menuapp_title">My Golf Card - Menú</string>
+    <string name="signup_title">My Golf Card - Nuevo Usuario</string>
     <string name="newmatch_title">My Golf Card - Nuevo Partido</string>
     <string name="card_title">My Golf Card - Tarjeta</string>
     
@@ -76,8 +78,8 @@
 	<string name="file_connection">La aplicación no ha encontrado datos de acceso previos a esta sesión. Deberá conectar su Wi-Fi o 3G para validar su acceso.\nDisculpe las molestias.\n</string>
 	<string name="no_holes">No hay información disponible sobre los hoyos de este campo.\nDisculpe las molestias.</string>
     
-    <string name="URL_APIS">http://dev.mygolfcard.es/api/</string>
-    <!-- <string name="URL_APIS">http://192.168.2.12:3000/api/</string> -->
+    <string name="URL_APIS">http://www.mygolfcard.es/api/</string>
+    <!-- <string name="URL_APIS">http://127.0.0.1:3000/api/</string> -->
     <string name="ACTION_AUTH">authentication</string>
     <string name="ACTION_MATCHES">getmatches</string>
     <string name="ACTION_DELETEMATCH">deletematch</string>
@@ -89,6 +91,7 @@
     <string name="ACTION_COURSE">getcourse</string>
     <string name="ACTION_INFO_HOLES">getinfoholes</string>
     <string name="ACTION_UPLOAD">uploadmatch</string>
+    <string name="ACTION_SIGNUP">newuser</string>
     
     <string name="DB_NAME">mygolfcard.db</string>
         

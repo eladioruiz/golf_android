@@ -112,7 +112,7 @@ public class Player {
 		this.strokesTotal = strokesTotal;
 	}
 
-	public static Player[] getPlayersFromRemote(String auth_token, String auth_user_id, Context ctx) {
+	public static Player[] getPlayersFromRemote(String auth_token, int auth_user_id, Context ctx) {
 		String result;
 
 		ctxPlayer = ctx;
@@ -128,13 +128,13 @@ public class Player {
 		return setInfoPlayers(result);
 	}
 		
-	private static String getPlayers(String auth_token, String auth_user_id) {
+	private static String getPlayers(String auth_token, int auth_user_id) {
 		String response;
 		String URL_COURSES = ctxPlayer.getString(R.string.URL_APIS) + ctxPlayer.getString(R.string.ACTION_FRIENDS);
 		
 	    RestClient client = new RestClient(URL_COURSES);
 	    client.AddParam("token", auth_token);
-	    client.AddParam("user_id", auth_user_id);
+	    client.AddParam("user_id", "" + auth_user_id);
 	    
 	    response = "";
 	    try {

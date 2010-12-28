@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+   	android:padding="5dip"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background">
+   	<TableLayout
+		android:layout_height="fill_parent"
+		android:layout_width="fill_parent"
+		android:stretchColumns="0,1">
+		<TableRow
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent" 
+			android:paddingBottom="5dip">
+			<EditText
+				android:id="@+id/user_name"
+				android:padding="7dip"
+				android:layout_height="wrap_content"
+				android:layout_width="fill_parent"
+				android:textColor="@color/colortext_title"
+				android:textSize="14.5sp"
+				android:singleLine="true"
+				android:layout_span="2" 
+				android:background="@drawable/rounded_edges"
+				android:hint="Nombre" />
+		</TableRow>
+		<TableRow
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:paddingBottom="5dip">
+			<EditText
+				android:id="@+id/user_email"
+				android:padding="7dip"
+				android:layout_height="wrap_content"
+				android:layout_width="fill_parent"
+				android:textColor="#000000"
+				android:textSize="14.5sp"
+				android:singleLine="true"
+				android:layout_span="2" 
+				android:background="#FFFFFF" 
+				android:hint="EMail" />
+		</TableRow>
+		<TableRow
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:paddingBottom="5dip">
+			<EditText
+				android:id="@+id/user_login"
+				android:padding="7dip"
+				android:layout_height="wrap_content"
+				android:layout_width="fill_parent"
+				android:textColor="#000000"
+				android:textSize="14.5sp"
+				android:singleLine="true"
+				android:layout_span="2" 
+				android:background="#FFFFFF" 
+				android:hint="Usuario de acceso" />
+		</TableRow>
+		<TableRow
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:paddingBottom="5dip">
+			<EditText
+				android:id="@+id/user_password"
+				android:padding="7dip"
+				android:layout_height="wrap_content"
+				android:layout_width="fill_parent"
+				android:textColor="#000000"
+				android:textSize="14.5sp"
+				android:singleLine="true"
+				android:layout_span="2" 
+				android:password="true"
+				android:background="#FFFFFF" 
+				android:hint="Contraseña de acceso" />
+		</TableRow>
+		<TableRow
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:paddingBottom="5dip">
+			<EditText
+				android:id="@+id/user_password_confirm"
+				android:padding="7dip"
+				android:layout_height="wrap_content"
+				android:layout_width="fill_parent"
+				android:textColor="#000000"
+				android:textSize="14.5sp"
+				android:singleLine="true"
+				android:layout_span="2" 
+				android:password="true"
+				android:background="#FFFFFF" 
+				android:hint="Confirmación de contraseña" />
+		</TableRow>
+		<TableRow
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:paddingBottom="5dip">
+			<EditText
+				android:id="@+id/user_handicap"
+				android:padding="7dip"
+				android:layout_height="wrap_content"
+				android:layout_width="fill_parent"
+				android:textColor="#000000"
+				android:textSize="14.5sp"
+				android:singleLine="true"
+				android:layout_span="2" 
+				android:background="#FFFFFF" 
+				android:hint="Handicap"
+				android:width="20px"
+				android:maxWidth="20sp"
+				android:numeric="decimal" />
+		</TableRow>
+		<TableRow
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:paddingBottom="5dip">
+			<Button android:id="@+id/continue_button"
+				android:layout_height="wrap_content"
+				android:layout_width="fill_parent"
+				android:text="@string/continue_label" />
+			<Button android:id="@+id/exit_button" 
+				android:layout_height="wrap_content"
+				android:layout_width="fill_parent" 
+				android:text="@string/exit_label" />
+		</TableRow>
+	</TableLayout>
+</ScrollView>

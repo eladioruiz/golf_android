@@ -10,8 +10,8 @@
 package org.activities.mygolfcard;
 
 import org.activities.mygolfcard.RestClient.RequestMethod;
-import org.classes.mygolfcard.CurrentUser;
 import org.classes.mygolfcard.Player;
+import org.classes.mygolfcard.User;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -54,7 +54,7 @@ public class Card extends Activity implements OnClickListener {
 	
 	private String URL_HOLES;
 	
-	private CurrentUser cUser = new CurrentUser();
+	private User cUser = new User();
 	
 	/** Called when the activity is first created. */
 	@Override

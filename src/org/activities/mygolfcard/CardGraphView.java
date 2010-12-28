@@ -25,7 +25,7 @@ public class CardGraphView extends View {
 	private Context ctxCardGraph;
 	
 	private String auth_token;
-	private String auth_user_id;
+	private int auth_user_id;
 	private boolean connectionOK;
 	private String URL_MATCH;
 	private String URL_STROKES;	
@@ -511,7 +511,7 @@ public class CardGraphView extends View {
 		
 	    RestClient client = new RestClient(URL_MATCH);
 	    client.AddParam("token", auth_token);
-	    client.AddParam("user_id", auth_user_id);
+	    client.AddParam("user_id", "" + auth_user_id);
 	    client.AddParam("match_id", "" + match_id);
 	    
 	    Log.i("RESPONSE", "" + auth_user_id);
@@ -536,7 +536,7 @@ public class CardGraphView extends View {
 
 	    RestClient client = new RestClient(URL_STROKES);
 	    client.AddParam("token", auth_token);
-	    client.AddParam("user_id", auth_user_id);
+	    client.AddParam("user_id", "" + auth_user_id);
 	    client.AddParam("match_id", "" + match_id);
 	    client.AddParam("player_id", "" + player_id);
 	    

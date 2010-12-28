@@ -10,8 +10,8 @@
 package org.activities.mygolfcard;
 
 import org.charts.mygolfcard.IChart;
-import org.classes.mygolfcard.CurrentUser;
 import org.classes.mygolfcard.Player;
+import org.classes.mygolfcard.User;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 public class Match extends Activity {
 	private String auth_token;
-	private CurrentUser cUser = new CurrentUser();
+	private User cUser = new User();
 	
 	private int localMatchId;
 	private org.classes.mygolfcard.Match currentMatch;
@@ -158,7 +158,7 @@ public class Match extends Activity {
 		@Override
 		protected String doInBackground( Context... params ) 
 		{
-			currentMatch = org.classes.mygolfcard.Match.setDataFromRemote(localMatchId, Integer.parseInt(cUser.getUser_id()), auth_token, Match.this);
+			currentMatch = org.classes.mygolfcard.Match.setDataFromRemote(localMatchId, cUser.getUser_id(), auth_token, Match.this);
 			return "";
 		}
 

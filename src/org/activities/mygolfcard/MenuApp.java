@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 
 public class MenuApp extends Activity  implements OnClickListener {
 	
@@ -27,7 +28,11 @@ public class MenuApp extends Activity  implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.menu);
+		//setContentView(R.layout.menu);
+		
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        setContentView(R.layout.menu);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_1);
 
 /*		// Set up click listeners for all the buttons
 		View exitButton = findViewById(R.id.exit_button);

@@ -9,7 +9,7 @@
  */
 package org.activities.mygolfcard;
 
-import org.classes.mygolfcard.CurrentUser;
+import org.classes.mygolfcard.User;
 import org.activities.mygolfcard.RestClient.RequestMethod;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,7 +33,7 @@ import android.widget.Toast;
 public class MyGolfCard extends Activity  implements OnClickListener {
 
 	private static String URL;
-	private CurrentUser cUser = new CurrentUser();
+	private User cUser = new User();
 	private String auth_token;
 	//ERL private String auth_user_id;
 	private String auth_error_code;
@@ -46,34 +46,57 @@ public class MyGolfCard extends Activity  implements OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
         
-        ctx = MyGolfCard.this;
-        
-        URL = getString(R.string.URL_APIS) + getString(R.string.ACTION_AUTH);
-        
-        // Chequeo de la conexión a Internet
-        connectionOK = Authentication.checkConnection(MyGolfCard.this);
-
-        // Inicializamos las preferencias que se hayan podido quedar guardadas
-        SharedPreferences.Editor editor = getPreferences(0).edit();
-        editor.remove("course");
-        editor.remove("date");
-        editor.remove("hour");
-        editor.remove("holes");
-        editor.clear();
-        editor.commit();
-        editor.clear();
-        editor.commit();
-        
-        // Set up click listeners for all the buttons
-		View continueButton = findViewById(R.id.continue_button);
-		continueButton.setOnClickListener(this);
-
-		// Set up click listeners for all the buttons
-		View exitButton = findViewById(R.id.exit_button);
-		exitButton.setOnClickListener(this);
+		// Leemos el posibles fichero de conexiones anteriores, para recuperar el token...
+		// ... que nos sirve de validación
+		Authentication.readDataUser(MyGolfCard.this);
+		String auth_token = Authentication.getToken();
 		
+		// Si dicho token existe, damos el login por correcto y continuamos la ejecución...
+		// ... a la siguiente pantalla: el menú de la aplicación
+		if (auth_token.length() > 0) {
+			Intent i = new Intent(this, MenuApp.class);
+    		startActivity(i);
+    		
+    		// Cerramos la Activity del Login para que no se pueda volver mediante pulsaciones...
+    		// ... del botón ATRAS del móvil
+    		finish();
+		}
+		else {
+        
+	        ctx = MyGolfCard.this;
+	        
+	        URL = getString(R.string.URL_APIS) + getString(R.string.ACTION_AUTH);
+	        
+	        // Chequeo de la conexión a Internet
+	        connectionOK = Authentication.checkConnection(MyGolfCard.this);
+	
+	        // Inicializamos las preferencias que se hayan podido quedar guardadas
+	        SharedPreferences.Editor editor = getPreferences(0).edit();
+	        editor.remove("course");
+	        editor.remove("date");
+	        editor.remove("hour");
+	        editor.remove("holes");
+	        editor.clear();
+	        editor.commit();
+	        editor.clear();
+	        editor.commit();
+	        
+	        
+	        setContentView(R.layout.main);
+	        
+	        // Set up click listeners for all the buttons
+			View continueButton = findViewById(R.id.continue_button);
+			continueButton.setOnClickListener(this);
+	
+			// Set up click listeners for all the buttons
+			//View exitButton = findViewById(R.id.exit_button);
+			//exitButton.setOnClickListener(this);
+			
+			// Set up click listeners for all the buttons
+			View signupButton = findViewById(R.id.signup_button);
+			signupButton.setOnClickListener(this);
+		}
     }
       
     // Callback de pulsación sobre los botones
@@ -137,6 +160,11 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	    		
 	    		break;
 
+	    	case R.id.signup_button:
+	    		Intent i = new Intent(this, Signup.class);
+        		startActivity(i);
+	    		break;	    	
+	    		
 	    	case R.id.exit_button:
 	    		finish();
 	    		break;	    		
@@ -173,7 +201,7 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 		try {
 			json = new JSONObject(jsonResponse);
 			
-			cUser.setUser_id(json.get("user_id").toString());
+			cUser.setUser_id(Integer.parseInt(json.get("user_id").toString()));
 			
 			auth_token = json.get("token").toString();
 			auth_error_code = json.get("error_code").toString();
@@ -256,8 +284,8 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 
 			parseJSONResponse(result);
 			this.dialog.cancel();
+			saveDataUser();
     		manageAuthentication();
-    		saveDataUser();
 		}
 	}   
 }

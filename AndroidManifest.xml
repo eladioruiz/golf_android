@@ -23,6 +23,10 @@
 	        android:label="@string/menuapp_title">
         </activity>
         
+        <activity android:name=".Signup"
+	        android:label="@string/signup_title">
+        </activity>
+        
         <activity android:name=".NewMatch"
 	        android:label="@string/newmatch_title">
         </activity>

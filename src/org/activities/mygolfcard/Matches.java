@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.classes.mygolfcard.CurrentUser;
+import org.classes.mygolfcard.User;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -31,7 +31,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 public class Matches extends ListActivity {
@@ -43,7 +42,7 @@ public class Matches extends ListActivity {
 	
 	private org.classes.mygolfcard.Match matchesList[];
 	private String auth_token;
-	private CurrentUser cUser = new CurrentUser();
+	private User cUser = new User();
 	private boolean connectionOK;
 	
 	private CheckBoxifiedTextListAdapter cbla;
@@ -255,7 +254,7 @@ public class Matches extends ListActivity {
 		protected String doInBackground( Context... params ) 
 		{
 			if (iProcess == PROCESS_LOAD_MATCHES) {
-				matchesList = org.classes.mygolfcard.Match.getMatchesFromRemote(auth_token,Integer.parseInt(cUser.getUser_id()),Matches.this);
+				matchesList = org.classes.mygolfcard.Match.getMatchesFromRemote(auth_token,cUser.getUser_id(),Matches.this);
 				return "";
 			}
 			else if (iProcess == PROCESS_DEL_MATCHES) {
@@ -266,7 +265,7 @@ public class Matches extends ListActivity {
 					if (selectedMatches[i] != 0)
 					{
 						Log.i("Info", "DELETING matches : " + selectedMatches[i]);
-						org.classes.mygolfcard.Match.deleteRemoteMatch(selectedMatches[i], Integer.parseInt(cUser.getUser_id()), auth_token);
+						org.classes.mygolfcard.Match.deleteRemoteMatch(selectedMatches[i], cUser.getUser_id(), auth_token);
 						
 						publishProgress(i+1);
 					}

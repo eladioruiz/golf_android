@@ -9,7 +9,7 @@
  */
 package org.activities.mygolfcard;
 
-import org.classes.mygolfcard.CurrentUser;
+import org.classes.mygolfcard.User;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,7 +27,7 @@ import android.widget.TextView;
 public class Course extends Activity {
 	private String auth_token;
 	//private String auth_user_id;
-	private CurrentUser cUser = new CurrentUser();
+	private User cUser = new User();
 	
 	private int localCourseId;
 	private org.classes.mygolfcard.Course currentCourse;
@@ -121,7 +121,7 @@ public class Course extends Activity {
 		@Override
 		protected String doInBackground( Context... params ) 
 		{
-			currentCourse = currentCourse.setDataFromRemote(localCourseId, Integer.parseInt(cUser.getUser_id()), auth_token);
+			currentCourse = currentCourse.setDataFromRemote(localCourseId, cUser.getUser_id(), auth_token);
 			return "";
 		}
 

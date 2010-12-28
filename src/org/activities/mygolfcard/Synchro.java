@@ -61,7 +61,7 @@ public class Synchro extends ListActivity {
 	private String tee_id[][]; // = new String[4];
 	private int holes[][][];
 	
-	private String auth_user_id;
+	private int auth_user_id;
 	
 	private CheckBoxifiedTextListAdapter cbla;
 	
@@ -470,7 +470,7 @@ public class Synchro extends ListActivity {
 		String xmlFile 	= "";
 
 		String m 	= String.format("%04d", Integer.parseInt(match_id));
-		String u 	= String.format("%05d", Integer.parseInt(auth_user_id));
+		String u 	= String.format("%05d", auth_user_id);
 		fileName	= "match_" + m + "_" + u + ".xml";
 		
 		header 		= getXMLHeader(fileName,"");

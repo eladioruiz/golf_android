@@ -63,7 +63,7 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	
 	private boolean connectionOK;
 	private String auth_token;
-	private String auth_user_id;
+	private int auth_user_id;
 	
     // date and time
     private int mYear;
