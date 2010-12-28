@@ -9,8 +9,8 @@
  */
 package org.activities.mygolfcard;
 
-import org.classes.mygolfcard.User;
 import org.activities.mygolfcard.RestClient.RequestMethod;
+import org.classes.mygolfcard.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,8 +20,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;

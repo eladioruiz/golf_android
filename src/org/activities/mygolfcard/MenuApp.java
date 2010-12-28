@@ -23,43 +23,24 @@ public class MenuApp extends Activity  implements OnClickListener {
 	
 	//private String auth_token;
 	//private CurrentUser cUser = new CurrentUser();
+	private View newButton;
+	private View matchesButton;
+	private View coursesButton;
+	private View synchroButton;
+	private View logoutButton;
+
 	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//setContentView(R.layout.menu);
 		
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.menu);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_1);
 
-/*		// Set up click listeners for all the buttons
-		View exitButton = findViewById(R.id.exit_button);
-		exitButton.setOnClickListener(this);
-*/		
-		// Set up click listeners for all the buttons
-		View newButton = findViewById(R.id.new_button);
-		newButton.setOnClickListener(this);
-		
-		// Set up click listeners for all the buttons
-		View matchesButton = findViewById(R.id.matches_button);
-		matchesButton.setOnClickListener(this);
-		
-		// Set up click listeners for all the buttons
-		View coursesButton = findViewById(R.id.courses_button);
-		coursesButton.setOnClickListener(this);
-		
-		// Set up click listeners for all the buttons
-		View synchroButton = findViewById(R.id.synchro_button);
-		synchroButton.setOnClickListener(this);
-
-		//ERL Authentication.readDataUser(MenuApp.this);
-		
-		//ERL auth_token = Authentication.getToken();
-		
-		//ERL cUser.setAuthToken(Authentication.getToken());
-		
+		findViews();
+		setListeners();
 	} 
 	
 	public void onClick(View v) {
@@ -87,6 +68,11 @@ public class MenuApp extends Activity  implements OnClickListener {
 				Intent i_synchro = new Intent(this, Synchro.class);
 				startActivity(i_synchro);
 				break;
+				
+			case R.id.logout:
+				Authentication.deleteAuth(MenuApp.this);
+				finish();
+				break;
 		}
 	}
 
@@ -113,4 +99,22 @@ public class MenuApp extends Activity  implements OnClickListener {
 		}
 		return false;
 	}    
+	
+	private void findViews() {
+		// Set up click listeners for all the buttons
+		newButton = findViewById(R.id.new_button);
+		matchesButton = findViewById(R.id.matches_button);
+		coursesButton = findViewById(R.id.courses_button);
+		synchroButton = findViewById(R.id.synchro_button);
+		logoutButton = findViewById(R.id.logout);
+	}
+	
+	private void setListeners() {
+		// Set up click listeners for all the buttons
+		newButton.setOnClickListener(this);
+		matchesButton.setOnClickListener(this);
+		coursesButton.setOnClickListener(this);
+		synchroButton.setOnClickListener(this);
+		logoutButton.setOnClickListener(this);
+	}
 }

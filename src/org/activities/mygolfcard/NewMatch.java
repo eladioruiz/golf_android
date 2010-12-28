@@ -28,6 +28,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -60,6 +61,7 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	private Button pickTime;
 	private View okButton;
 	private View cancelButton;
+	private View logoutButton;
 	
 	private boolean connectionOK;
 	private String auth_token;
@@ -89,7 +91,9 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.newmatch);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        setContentView(R.layout.newmatch);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_1);
 		
 		findViews();
 		setListeners();
@@ -228,6 +232,8 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 		
 		okButton 			= findViewById(R.id.newmatch_ok);
 		cancelButton 		= findViewById(R.id.newmatch_cancel);
+		
+		logoutButton = findViewById(R.id.logout);
 	}
 	
 	private void setListeners() {
@@ -250,6 +256,7 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 		// Set up click listeners for all the buttons
 		okButton.setOnClickListener(this);
 		cancelButton.setOnClickListener(this);
+		logoutButton.setOnClickListener(this);
         pickDate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 showDialog(DATE_DIALOG_ID);
@@ -301,6 +308,11 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 					finish();
 				}
 				break;
+				
+			case R.id.logout:
+				finish();
+				break;
+
 		}
 	}
 

@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ public class Strokes extends Activity implements OnClickListener {
 	private TextView tx1;
 	private TextView tx2_1;
 	private TextView tx2_2;
+	private View logoutButton;
 	
 	//private boolean connectionOK;
 	private String auth_token;
@@ -50,7 +52,9 @@ public class Strokes extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.strokes);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        setContentView(R.layout.strokes);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_1);
 		
 		DATABASE_NAME = getString(R.string.DB_NAME); 
 		match_id = getIntent().getIntExtra("match_id",0);
@@ -108,6 +112,10 @@ public class Strokes extends Activity implements OnClickListener {
 					bRes = true;
 				}
 				break;
+				
+			case R.id.logout:
+				finish();
+				break;				
 		}
 		
 		if (bRes) {
@@ -257,6 +265,8 @@ public class Strokes extends Activity implements OnClickListener {
 		tx1 = (TextView) findViewById(R.id.card_match);
 		tx2_1 = (TextView) findViewById(R.id.hole_info_1);
 		tx2_2 = (TextView) findViewById(R.id.hole_info_2);
+		
+		logoutButton = findViewById(R.id.logout);
 	}
 	
 	private void setListeners() {
@@ -269,6 +279,8 @@ public class Strokes extends Activity implements OnClickListener {
 		
 		previousButton.setOnClickListener(this);
 		nextButton.setOnClickListener(this);
+		
+		logoutButton.setOnClickListener(this);
 	}
 
 	private void initViews() {

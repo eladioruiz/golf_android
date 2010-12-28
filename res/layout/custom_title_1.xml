@@ -17,26 +17,42 @@
 <!-- Demonstrates how to use a custom title.
      See corresponding Java code com.example.android.apis.app.CustomTitle.java. -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/screen"
-    android:layout_width="fill_parent" android:layout_height="fill_parent"
+<RelativeLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android" 
+	android:id="@+id/screen"
+    android:layout_width="fill_parent" 
+    android:layout_height="fill_parent"    
     android:orientation="vertical">
     <TextView android:id="@+id/left_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:text="@string/app_name" />
-    <TextView android:id="@+id/right_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:textSize="11dip"
-        android:paddingTop="2dip"
+        android:textColor="@color/background"
         android:gravity="center_vertical"
-        android:text="Eladio Ruiz" />
-	<ImageView
-		android:id="@+id/closesesion"
-		android:src="@drawable/exit"
-		android:layout_alignParentRight="true"
-		android:layout_height="wrap_content"
-		android:layout_width="wrap_content"  />
+        android:textSize="15dip"
+        android:text="@string/app_name" />
+    <LinearLayout
+    	android:orientation="horizontal"
+    	android:layout_alignParentRight="true"
+    	android:layout_height="fill_parent"
+    	android:layout_width="wrap_content"
+    	android:gravity="center">
+	    <TextView 
+	    	android:id="@+id/right_text"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight="true"
+	        android:textSize="11dip"
+	        android:paddingTop="2dip"
+	        android:paddingRight="4dip"
+	        android:gravity="center_vertical"
+	        android:text="Eladio Ruiz" />
+		<ImageView
+			android:id="@+id/logout"
+			android:src="@drawable/logout3"
+			android:layout_alignParentRight="true"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:layout_width="wrap_content"  />
+	</LinearLayout>
 </RelativeLayout>

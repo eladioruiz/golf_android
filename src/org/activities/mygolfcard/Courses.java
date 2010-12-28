@@ -23,23 +23,28 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-public class Courses extends ListActivity {
+public class Courses extends ListActivity implements OnClickListener  {
 	private org.classes.mygolfcard.Course coursesList[];
 	private String auth_token;
 	private boolean connectionOK;
-	//ERL private String URL;
+	private View logoutButton;
 	
 	/** Called with the activity is first created. */
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		setContentView(R.layout.courses);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        setContentView(R.layout.courses);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_1);
 		
-		//ERL URL = getString(R.string.URL_APIS) + getString(R.string.ACTION_COURSES);
+        logoutButton = findViewById(R.id.logout);
+        logoutButton.setOnClickListener(this);
 		
 		connectionOK = Authentication.checkConnection(Courses.this);
 		if (connectionOK) {
@@ -78,6 +83,14 @@ public class Courses extends ListActivity {
 				.setMessage(R.string.no_internet_connect)
 				.setPositiveButton(R.string.alert_button_default, null)
 				.show();
+		}
+	}
+
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.logout:
+				finish();
+				break;
 		}
 	}
 

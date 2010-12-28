@@ -23,9 +23,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.TextView;
 
-public class Match extends Activity {
+public class Match extends Activity implements OnClickListener {
 	private String auth_token;
 	private User cUser = new User();
 	
@@ -41,13 +44,16 @@ public class Match extends Activity {
 	private TextView txtPlayers_1P[]	= new TextView[4];
 	private TextView txtPlayers_2P[]	= new TextView[4];
 	private TextView txtPlayers_TO[]	= new TextView[4];
+	private View logoutButton;
 	
 	private IChart[] mCharts = new IChart[] {new ChartMatch()};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.match);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        setContentView(R.layout.match);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_1);
 		
 		currentMatch = new org.classes.mygolfcard.Match(this);
 		
@@ -59,6 +65,7 @@ public class Match extends Activity {
 		cUser.setUser_id(Authentication.getUserId());
 		
 		findViews();
+		setListeners();
 		
 		InitTask task = new InitTask();
 		task.execute();
@@ -97,6 +104,14 @@ public class Match extends Activity {
 		return false;
 	}
 	
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.logout:
+				finish();
+			break;
+		}
+	}
+	
 	private void findViews() {
 		txtCourseName 		= (TextView) findViewById(R.id.match_course_name);
 		txtDateHour			= (TextView) findViewById(R.id.match_date_hour);
@@ -117,6 +132,7 @@ public class Match extends Activity {
 		txtPlayers_TO[1]	= (TextView) findViewById(R.id.match_player_2_TO);
 		txtPlayers_TO[2]	= (TextView) findViewById(R.id.match_player_3_TO);
 		txtPlayers_TO[3]	= (TextView) findViewById(R.id.match_player_4_TO);
+		logoutButton = findViewById(R.id.logout);
 	}
 
 	private void initViews() {
@@ -139,6 +155,11 @@ public class Match extends Activity {
 				txtPlayers_TO[i].setVisibility(4);
 			}	
 		}
+	}
+
+	
+	private void setListeners() {
+		logoutButton.setOnClickListener(this);
 	}
 	
 	/**

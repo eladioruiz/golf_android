@@ -31,9 +31,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ListView;
 
-public class Synchro extends ListActivity {
+public class Synchro extends ListActivity implements OnClickListener {
 	private static final int DIALOG_SYNCHRO_DELETE 		= 1;
     private static final int DIALOG_SYNCHRO_UPLOAD 		= 2;
     private static final int DIALOG_SYNCHRO_PROGRESS	= 3;
@@ -64,6 +66,7 @@ public class Synchro extends ListActivity {
 	private int auth_user_id;
 	
 	private CheckBoxifiedTextListAdapter cbla;
+	private View logoutButton;
 	
 	List<HashMap<String, String>> fillMaps;
 	
@@ -79,7 +82,12 @@ public class Synchro extends ListActivity {
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		setContentView(R.layout.synchro);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        setContentView(R.layout.synchro);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_1);
+        
+        logoutButton = findViewById(R.id.logout);
+        logoutButton.setOnClickListener(this);
 		
 		DATABASE_NAME = getString(R.string.DB_NAME);
 		URL_UPLOAD = getString(R.string.URL_APIS) + getString(R.string.ACTION_UPLOAD);
@@ -195,6 +203,14 @@ public class Synchro extends ListActivity {
         return null;
 	}
 	
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.logout:
+				finish();
+				break;
+		}
+	}
+
 	private void processUploadingMatches()
 	{
 		dismissDialog(DIALOG_SYNCHRO_UPLOAD);

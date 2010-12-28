@@ -22,9 +22,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.TextView;
 
-public class Course extends Activity {
+public class Course extends Activity implements OnClickListener {
 	private String auth_token;
 	//private String auth_user_id;
 	private User cUser = new User();
@@ -36,11 +39,14 @@ public class Course extends Activity {
 	private TextView txtCourseAddress;
 	private TextView txtCourseDescription;
 	private TextView txtCourseConfig;
+	private View logoutButton;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.course);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        setContentView(R.layout.course);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_1);
 		
 		currentCourse = new org.classes.mygolfcard.Course(this);
 		
@@ -53,6 +59,7 @@ public class Course extends Activity {
 		cUser.setUser_id(Authentication.getUserId());
 		
 		findViews();
+		setListeners();
 		
 		InitTask task = new InitTask();
 		task.execute();
@@ -89,14 +96,27 @@ public class Course extends Activity {
 		}
 		return false;
 	}
-	
+
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.logout:
+				finish();
+				break;
+		}
+	}
+
 	private void findViews() {
 		txtCourseName 			= (TextView) findViewById(R.id.course_name);
 		txtCourseAddress		= (TextView) findViewById(R.id.course_address);
 		txtCourseDescription	= (TextView) findViewById(R.id.course_description);
 		txtCourseConfig			= (TextView) findViewById(R.id.course_config);
+		logoutButton 			= findViewById(R.id.logout);
 	}
 
+	private void setListeners() {
+		logoutButton.setOnClickListener(this);	
+	}
+	
 	private void initViews() {
 		txtCourseName.setText(currentCourse.getCourseName());
 		txtCourseAddress.setText(currentCourse.getCourseAddress());

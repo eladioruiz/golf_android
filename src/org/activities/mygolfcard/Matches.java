@@ -30,10 +30,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class Matches extends ListActivity {
+public class Matches extends ListActivity implements OnClickListener {
 	private static final int DIALOG_DELETE_MATCHES 		= 1;
 	private static final int DIALOG_DELETE_ALL_MATCHES	= 2;
 	
@@ -46,6 +48,7 @@ public class Matches extends ListActivity {
 	private boolean connectionOK;
 	
 	private CheckBoxifiedTextListAdapter cbla;
+	private View logoutButton;
 	private int[] selectedMatches;
 	int totalSelected = 0;
 	int dialogUsed = 0;
@@ -54,7 +57,12 @@ public class Matches extends ListActivity {
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		setContentView(R.layout.matches);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        setContentView(R.layout.matches);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_1);
+        
+        logoutButton = findViewById(R.id.logout);
+        logoutButton.setOnClickListener(this);
 		
 		connectionOK = Authentication.checkConnection(Matches.this);
 		if (connectionOK) {
@@ -141,7 +149,15 @@ public class Matches extends ListActivity {
         }
         return null;
 	}
-		
+	
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.logout:
+				finish();
+				break;
+		}
+	}
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 	  // ignore orientation/keyboard change
@@ -258,10 +274,7 @@ public class Matches extends ListActivity {
 				return "";
 			}
 			else if (iProcess == PROCESS_DEL_MATCHES) {
-				int value;
-				
-				for (int i=0; i<selectedMatches.length;i++) {
-					
+				for (int i=0; i<selectedMatches.length;i++) {					
 					if (selectedMatches[i] != 0)
 					{
 						Log.i("Info", "DELETING matches : " + selectedMatches[i]);

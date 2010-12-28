@@ -29,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +37,7 @@ import android.widget.Toast;
 public class Card extends Activity implements OnClickListener {
 	private final View holeButton[] = new View[18];
 	private TextView cardMatch;
+	private View logoutButton;
 	
 	private SQLiteDatabase db = null;
 	private String DATABASE_NAME;
@@ -60,7 +62,9 @@ public class Card extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.card_2);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        setContentView(R.layout.card_2);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_1);
 		
 		DATABASE_NAME = getString(R.string.DB_NAME);
 		
@@ -105,6 +109,10 @@ public class Card extends Activity implements OnClickListener {
 		
 		hole_number="0";
 		switch (v.getId()) {
+			case R.id.logout:
+				finish();
+			break;
+
 			case R.id.card_hole1:
 				hole_number = "1";
 				break;
@@ -251,12 +259,14 @@ public class Card extends Activity implements OnClickListener {
 		holeButton[16] 	= findViewById(R.id.card_hole17);
 		holeButton[17] 	= findViewById(R.id.card_hole18);
 		cardMatch 		= (TextView)findViewById(R.id.card_match);
+		logoutButton = findViewById(R.id.logout);
 	}
 	
 	private void setListeners() {
 		for (int i=0; i<holeButton.length; i++) {
 			holeButton[i].setOnClickListener(this);
 		}
+		logoutButton.setOnClickListener(this);
 	}
 
 	private void initViews() {
