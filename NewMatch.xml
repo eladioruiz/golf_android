@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
-<map>
-<string name="course">Club de Golf Somosaguas</string>
-<string name="hour">17:54</string>
-<string name="sql">INSERT INTO matches 	(course_id, date_hour_match, holes, status, player1_id, tee1, player2_id, tee2, player3_id, tee3, player4_id, tee4) VALUES 	(7,'13-9-2010  23:17',18,0,1,1,2,0,0,1,0,1)</string>
-<string name="date">14-9-2010 </string>
-<string name="holes">18</string>
-</map>
