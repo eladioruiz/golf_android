@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.activities.mygolfcard.RestClient.RequestMethod;
+import org.classes.mygolfcard.Authentication;
+import org.classes.mygolfcard.User;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -34,6 +36,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class Synchro extends ListActivity implements OnClickListener {
 	private static final int DIALOG_SYNCHRO_DELETE 		= 1;
@@ -64,9 +67,13 @@ public class Synchro extends ListActivity implements OnClickListener {
 	private int holes[][][];
 	
 	private int auth_user_id;
+	private String auth_token;
 	
 	private CheckBoxifiedTextListAdapter cbla;
 	private View logoutButton;
+	private TextView titleNameText;
+	
+	private User cUser = new User();
 	
 	List<HashMap<String, String>> fillMaps;
 	
@@ -84,9 +91,11 @@ public class Synchro extends ListActivity implements OnClickListener {
 		super.onCreate(icicle);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.synchro);
-        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_1);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_2);
         
-        logoutButton = findViewById(R.id.logout);
+        findViews();
+        initViews();
+        setListeners();
         logoutButton.setOnClickListener(this);
 		
 		DATABASE_NAME = getString(R.string.DB_NAME);
@@ -570,6 +579,24 @@ public class Synchro extends ListActivity implements OnClickListener {
 	
 	private int getValueProgress(int processed) {
 		return (int)((double)processed/(double)(totalSelected+1)*(double)MAX_PROGRESS);
+	}
+	
+	private void findViews() {
+		logoutButton = findViewById(R.id.logout);
+		titleNameText	= (TextView) findViewById(R.id.titleName); 
+	}
+
+	private void initViews() {
+		Authentication.readDataUser(Synchro.this);
+		auth_token = Authentication.getToken();
+		cUser.setUser_id(Authentication.getUserId());
+		cUser.setUserName(Authentication.getUserName());
+		
+		titleNameText.setText(cUser.getUserName());
+	}
+	
+	private void setListeners() {
+		logoutButton.setOnClickListener(this);
 	}
 	
 	/**

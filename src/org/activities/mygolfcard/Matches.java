@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.classes.mygolfcard.Authentication;
 import org.classes.mygolfcard.User;
 
 import android.app.AlertDialog;
@@ -30,9 +31,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Matches extends ListActivity implements OnClickListener {
@@ -49,6 +51,7 @@ public class Matches extends ListActivity implements OnClickListener {
 	
 	private CheckBoxifiedTextListAdapter cbla;
 	private View logoutButton;
+	private TextView titleNameText;
 	private int[] selectedMatches;
 	int totalSelected = 0;
 	int dialogUsed = 0;
@@ -59,17 +62,14 @@ public class Matches extends ListActivity implements OnClickListener {
 		super.onCreate(icicle);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.matches);
-        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_1);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_2);
         
-        logoutButton = findViewById(R.id.logout);
-        logoutButton.setOnClickListener(this);
-		
+        findViews();
+        initViews();
+        setListeners();
+        
 		connectionOK = Authentication.checkConnection(Matches.this);
 		if (connectionOK) {
-			Authentication.readDataUser(Matches.this);
-			auth_token = Authentication.getToken();
-			cUser.setUser_id(Authentication.getUserId());
-		
 			InitTask task = new InitTask(PROCESS_LOAD_MATCHES);
 			task.execute();
 		}
@@ -247,6 +247,25 @@ public class Matches extends ListActivity implements OnClickListener {
 	private void reloadPage() {
 		InitTask task = new InitTask(PROCESS_LOAD_MATCHES);
 		task.execute();
+	}
+	
+
+	private void findViews() {
+		logoutButton = findViewById(R.id.logout);
+		titleNameText	= (TextView) findViewById(R.id.titleName); 
+	}
+
+	private void initViews() {
+		Authentication.readDataUser(Matches.this);
+		auth_token = Authentication.getToken();
+		cUser.setUser_id(Authentication.getUserId());
+		cUser.setUserName(Authentication.getUserName());
+		
+		titleNameText.setText(cUser.getUserName());
+	}
+	
+	private void setListeners() {
+		logoutButton.setOnClickListener(this);
 	}
 	
 	/**

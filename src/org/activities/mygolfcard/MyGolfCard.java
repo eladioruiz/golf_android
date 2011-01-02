@@ -10,6 +10,7 @@
 package org.activities.mygolfcard;
 
 import org.activities.mygolfcard.RestClient.RequestMethod;
+import org.classes.mygolfcard.Authentication;
 import org.classes.mygolfcard.User;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +34,8 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	private static String URL;
 	private User cUser = new User();
 	private String auth_token;
+	private String user_name;
+	
 	//ERL private String auth_user_id;
 	private String auth_error_code;
 	private boolean connectionOK = true;
@@ -86,10 +89,6 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	        // Set up click listeners for all the buttons
 			View continueButton = findViewById(R.id.continue_button);
 			continueButton.setOnClickListener(this);
-	
-			// Set up click listeners for all the buttons
-			//View exitButton = findViewById(R.id.exit_button);
-			//exitButton.setOnClickListener(this);
 			
 			// Set up click listeners for all the buttons
 			View signupButton = findViewById(R.id.signup_button);
@@ -200,8 +199,9 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 			json = new JSONObject(jsonResponse);
 			
 			cUser.setUser_id(Integer.parseInt(json.get("user_id").toString()));
+			cUser.setUserName(json.get("user_name").toString());
 			
-			auth_token = json.get("token").toString();
+			auth_token 		= json.get("token").toString();
 			auth_error_code = json.get("error_code").toString();
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -227,7 +227,7 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	}
 	
 	private void saveDataUser() {
-		if (!Authentication.saveDataUser(MyGolfCard.this,auth_token,cUser.getUser_id()))
+		if (!Authentication.saveDataUser(MyGolfCard.this,auth_token,cUser.getUser_id(),cUser.getUserName()))
 			finish();
 	}
 	

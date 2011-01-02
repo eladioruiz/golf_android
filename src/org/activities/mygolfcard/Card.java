@@ -10,6 +10,7 @@
 package org.activities.mygolfcard;
 
 import org.activities.mygolfcard.RestClient.RequestMethod;
+import org.classes.mygolfcard.Authentication;
 import org.classes.mygolfcard.Player;
 import org.classes.mygolfcard.User;
 
@@ -29,8 +30,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +58,7 @@ public class Card extends Activity implements OnClickListener {
 	private String URL_HOLES;
 	
 	private User cUser = new User();
+	private TextView titleNameText;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -64,15 +66,11 @@ public class Card extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.card_2);
-        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_1);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_2);
 		
 		DATABASE_NAME = getString(R.string.DB_NAME);
 		
 		match_id = getIntent().getIntExtra("match_id",0);
-		
-		Authentication.readDataUser(Card.this);
-		auth_token 		= Authentication.getToken();
-		cUser.setUser_id(Authentication.getUserId());
 		
 		getMatchinDB();
 		findViews();
@@ -83,7 +81,6 @@ public class Card extends Activity implements OnClickListener {
 		
 		connectionOK = Authentication.checkConnection(Card.this);
 		if (connectionOK) {
-			
 			
 			players = Player.getPlayersFromRemote(auth_token, cUser.getUser_id(), Card.this);
 			
@@ -259,7 +256,8 @@ public class Card extends Activity implements OnClickListener {
 		holeButton[16] 	= findViewById(R.id.card_hole17);
 		holeButton[17] 	= findViewById(R.id.card_hole18);
 		cardMatch 		= (TextView)findViewById(R.id.card_match);
-		logoutButton = findViewById(R.id.logout);
+		logoutButton 	= findViewById(R.id.logout);
+		titleNameText	= (TextView) findViewById(R.id.titleName); 
 	}
 	
 	private void setListeners() {
@@ -276,6 +274,13 @@ public class Card extends Activity implements OnClickListener {
 		for (int i = currentMatch.getHoles(); i < holeButton.length; i++) {
 			holeButton[i].setVisibility(4);
 		}
+		
+		Authentication.readDataUser(Card.this);
+		auth_token 		= Authentication.getToken();
+		cUser.setUser_id(Authentication.getUserId());
+		cUser.setUserName(Authentication.getUserName());
+		
+		titleNameText.setText(cUser.getUserName());
 	}
 
 	private void getMatchinDB() {

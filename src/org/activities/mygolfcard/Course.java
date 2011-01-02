@@ -9,6 +9,7 @@
  */
 package org.activities.mygolfcard;
 
+import org.classes.mygolfcard.Authentication;
 import org.classes.mygolfcard.User;
 
 import android.app.Activity;
@@ -40,25 +41,22 @@ public class Course extends Activity implements OnClickListener {
 	private TextView txtCourseDescription;
 	private TextView txtCourseConfig;
 	private View logoutButton;
+	private TextView titleNameText;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.course);
-        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_1);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_2);
 		
 		currentCourse = new org.classes.mygolfcard.Course(this);
 		
 		localCourseId = getIntent().getIntExtra("course_id", 0);
 		currentCourse.setCourse_id(localCourseId);
 
-		Authentication.readDataUser(Course.this);
-		auth_token = Authentication.getToken();
-		
-		cUser.setUser_id(Authentication.getUserId());
-		
 		findViews();
+		initViews();
 		setListeners();
 		
 		InitTask task = new InitTask();
@@ -111,6 +109,7 @@ public class Course extends Activity implements OnClickListener {
 		txtCourseDescription	= (TextView) findViewById(R.id.course_description);
 		txtCourseConfig			= (TextView) findViewById(R.id.course_config);
 		logoutButton 			= findViewById(R.id.logout);
+		titleNameText	= (TextView) findViewById(R.id.titleName); 
 	}
 
 	private void setListeners() {
@@ -122,6 +121,13 @@ public class Course extends Activity implements OnClickListener {
 		txtCourseAddress.setText(currentCourse.getCourseAddress());
 		txtCourseDescription.setText(currentCourse.getCourseDescription());
 		txtCourseConfig.setText(currentCourse.getCourseConfig());
+		
+		Authentication.readDataUser(Course.this);
+		auth_token = Authentication.getToken();
+		cUser.setUser_id(Authentication.getUserId());
+		cUser.setUserName(Authentication.getUserName());
+		
+		titleNameText.setText(cUser.getUserName());
 	}
 	
 	/**

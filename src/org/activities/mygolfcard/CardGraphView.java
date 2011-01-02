@@ -1,6 +1,9 @@
 package org.activities.mygolfcard;
 
 import org.activities.mygolfcard.RestClient.RequestMethod;
+import org.classes.mygolfcard.Authentication;
+import org.classes.mygolfcard.Player;
+import org.classes.mygolfcard.User;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,9 +30,9 @@ public class CardGraphView extends View {
 	private String auth_token;
 	private int auth_user_id;
 	private boolean connectionOK;
-	private String URL_MATCH;
+	//private String URL_MATCH;
 	private String URL_STROKES;	
-	private String result_getmatch;
+	//private String result_getmatch;
 	private String result_getstrokes;
 	
 	private float width; // width of one tile
@@ -64,19 +67,21 @@ public class CardGraphView extends View {
 
 	private String course_name = "-- CAMPO --";
 	private String date_hour_match = "-- FECHA/HORA --";
-	private int aux_player_id[] = new int[4]; 
-	private int aux_playerweb_id[] = new int[4];
+	//ERL private int aux_player_id[] = new int[4]; 
+	//ERL private int aux_playerweb_id[] = new int[4];
 	private int arrStrokes[][] = new int[4][19];
 
-	private String[] players_field1;
-	private String[] players_field2;
+	//ERL private String[] players_field1;
+	//ERL private String[] players_field2;
+	
+	private org.classes.mygolfcard.Match currentMatch;
+	private Player auxPlayer[] = new Player[4];
+	private User cUser = new User();
 	
 
 	public CardGraphView(Context context, int match_id, int mitad, int type_match) {
 		super(context);
 
-		String result = Authentication.readFriends(context);
-		setInfoPlayers(result);
 		
 		DATABASE_NAME = context.getString(R.string.DB_NAME);
 
@@ -97,7 +102,6 @@ public class CardGraphView extends View {
 		width = w / (float)COLS;
 		height = h / (float)ROWS;
 		getRect(selX, selY, selRect);
-		Log.d(TAG, "onSizeChanged: width " + width + ", height " + height);
 		super.onSizeChanged(w, h, oldw, oldh);
 	}
 	
@@ -105,10 +109,6 @@ public class CardGraphView extends View {
 	protected void onDraw(Canvas canvas) {
 		int i;
 		int j;
-		
-		Log.d(TAG, "onDraw");
-		
-		//getInfoCard();
 		
 		// Draw the background...
 		Paint background = new Paint();
@@ -282,12 +282,17 @@ public class CardGraphView extends View {
 		j = 6;
 		int sum_mitad = 0;
 		int sum_total = 0;
-		for (int iPlayer=0;iPlayer<aux_player_id.length;iPlayer++) {
+		for (int iPlayer=0;iPlayer<auxPlayer.length;iPlayer++) {
 			i = 0;
 			sum_mitad = 0;
 			sum_total = 0;
 			
-			canvas.drawText(getPlayerName(""+ aux_player_id[iPlayer]),  (i * width) + 1, (j * height) + y, players);
+			if (auxPlayer[iPlayer] != null ) {
+				canvas.drawText(getPlayerName(""+ auxPlayer[iPlayer].getPlayer_id()),  (i * width) + 1, (j * height) + y, players);
+			}
+			else {
+				canvas.drawText("---",  (i * width) + 1, (j * height) + y, players);
+			}
 			++i;
 			
 			for (int z=1 + ((mitad-1) * 9);z<10 + ((mitad-1) * 9);z++) {
@@ -316,7 +321,6 @@ public class CardGraphView extends View {
 			return super.onTouchEvent(event);
 		
 		select((int) (event.getX() / width), (int) (event.getY() / height));
-		Log.d(TAG, "onTouchEvent: x " + selX + ", y " + selY);
 		
 		changeMitad(selX,selY);
 		
@@ -348,7 +352,6 @@ public class CardGraphView extends View {
 	}
 	
 	private void getInfoCard() {
-		Log.d(TAG, "getInfoCard:" + typeMatch);
 	
 		for (int j=0;j<4;j++) {
 			for (int i=0;i<19;i++) {
@@ -368,7 +371,53 @@ public class CardGraphView extends View {
 	
 	private void getInfoCardInternal()
 	{
-		String sql = "";
+		String sql;
+
+		currentMatch = org.classes.mygolfcard.Match.getMatchFromDB(ctxCardGraph, match_id);
+		auxPlayer = currentMatch.getPlayers();
+		String result = Authentication.readFriends(ctxCardGraph);
+		setInfoPlayers(result);
+		
+		course_name = currentMatch.getCourseName();
+		date_hour_match = currentMatch.getDateHour();
+		
+		try {
+			db = ctxCardGraph.openOrCreateDatabase(DATABASE_NAME, 0, null);
+		
+			for (int i=0;i<4;i++) {
+	 			if (auxPlayer[i] != null) { 
+		 			sql = "SELECT * FROM strokes WHERE match_id=" + match_id + " AND player_id=" + auxPlayer[i].getUserWeb_id();
+		 			
+		 			Cursor c2 = db.rawQuery(sql, null);
+		 			int colHoleNumber	= c2.getColumnIndex("hole");
+		 			int colStrokes		= c2.getColumnIndex("strokes");
+		 			
+		 			c2.moveToLast();
+				 	c2.moveToFirst();
+				 	if (c2 != null) {
+				 		do {
+				 			int holeNumber 	= c2.getInt(colHoleNumber);
+				 			int strokes		= c2.getInt(colStrokes);
+				 		
+				 			arrStrokes[i][holeNumber] = strokes;
+				 		}
+				 		while (c2.moveToNext());
+				 	}		 			
+		 			c2.close();
+	 			}
+	 		}
+		}
+		catch(Exception e) {
+    		Log.e("Error", "Error reading DB", e);
+    	} 
+    	finally {
+    		if (db != null)
+    			db.close();
+    	}
+    	
+    	
+/*		ERL
+ * 		String sql = "";
 		int i = 0;
 		
 		sql = "SELECT course_name, date_hour_match, holes, player1_id, player2_id, player3_id, player4_id FROM matches where id=" + match_id;
@@ -433,11 +482,12 @@ public class CardGraphView extends View {
     		if (db != null)
     			db.close();
     	}
+*/    	invalidate();
 	}
 	
 	private void getInfoCardRemote()
 	{
-		URL_MATCH 	= ctxCardGraph.getString(R.string.URL_APIS) + ctxCardGraph.getString(R.string.ACTION_MATCH);
+		//ERL URL_MATCH 	= ctxCardGraph.getString(R.string.URL_APIS) + ctxCardGraph.getString(R.string.ACTION_MATCH);
 		URL_STROKES	= ctxCardGraph.getString(R.string.URL_APIS) + ctxCardGraph.getString(R.string.ACTION_STROKES);
 		
 		connectionOK = Authentication.checkConnection(ctxCardGraph);
@@ -445,6 +495,9 @@ public class CardGraphView extends View {
 			Authentication.readDataUser(ctxCardGraph);
 			auth_token = Authentication.getToken();
 			auth_user_id = Authentication.getUserId();
+			
+			cUser.setUser_id(Authentication.getUserId());
+			cUser.setUserName(Authentication.getUserName());
 		
 			InitTask task = new InitTask();
 			task.execute();
@@ -459,12 +512,15 @@ public class CardGraphView extends View {
 		}
 	}
 	
+	
 	private String getPlayerName(String playerId) {
 		String res = "---";
 		
-		for (int i=0; i<players_field1.length; i++) {
-			if (playerId.equals(players_field1[i])) {
-				res = players_field2[i];
+		for (int i=0;i<auxPlayer.length;i++) {
+			if (auxPlayer[i] != null) {
+				if (playerId.equals("" + auxPlayer[i].getPlayer_id())) {
+					res = auxPlayer[i].getPlayerName();
+				}
 			}
 		}
 		
@@ -478,15 +534,13 @@ public class CardGraphView extends View {
 		try {
 			jsonArr = new JSONArray(result);
 			
-			players_field1 = new String[jsonArr.length()];
-			players_field2 = new String[jsonArr.length()];
+			//auxPlayer = new org.classes.mygolfcard.Player[jsonArr.length()];
 			
 			for (int i=0; i<jsonArr.length(); i++) {
 				jsonObj = new JSONObject(jsonArr.get(i).toString());
 				
-				players_field1[i] = jsonObj.getString("id");
-				players_field2[i] = jsonObj.getString("name");
-				Log.i("JSON", "" + i);				
+				auxPlayer[i].setPlayer_id(Integer.parseInt(jsonObj.getString("id")));
+				auxPlayer[i].setPlayerName(jsonObj.getString("name"));
 			}			
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -504,18 +558,15 @@ public class CardGraphView extends View {
 		invalidate();
 	}
 	
-	public String getMatch() {
+/*	ERL
+ * public String getMatch() {
 		String response;
     	
-		Log.i("CALL", "" + URL_MATCH);
-		
 	    RestClient client = new RestClient(URL_MATCH);
 	    client.AddParam("token", auth_token);
 	    client.AddParam("user_id", "" + auth_user_id);
 	    client.AddParam("match_id", "" + match_id);
 	    
-	    Log.i("RESPONSE", "" + auth_user_id);
-	        
 	    response = "";
 	    try {
 	        client.Execute(RequestMethod.POST);
@@ -524,24 +575,18 @@ public class CardGraphView extends View {
 	        e.printStackTrace();
 	    }
 	    
-	    Log.i("RESPONSE", "" + response);
-	    
 	    return response;
 	}
-	
+*/	
 	public String getStrokes(int player_id) {
 		String response;
     	
-		Log.i("CALL", "" + URL_STROKES);
-
 	    RestClient client = new RestClient(URL_STROKES);
 	    client.AddParam("token", auth_token);
 	    client.AddParam("user_id", "" + auth_user_id);
 	    client.AddParam("match_id", "" + match_id);
 	    client.AddParam("player_id", "" + player_id);
 	    
-	    Log.i("RESPONSE", "" + auth_user_id);
-	        
 	    response = "";
 	    try {
 	        client.Execute(RequestMethod.POST);
@@ -550,12 +595,11 @@ public class CardGraphView extends View {
 	        e.printStackTrace();
 	    }
 	    
-	    Log.i("RESPONSE", "" + response);
-	    
 	    return response;
 	}
 	
-	public void setInfoMatch(String result) {
+/*	ERL
+ * public void setInfoMatch(String result) {
 		JSONObject jsonObj;
 		JSONArray  jsonArr;
 		String aux_players;
@@ -574,17 +618,13 @@ public class CardGraphView extends View {
 				
 				aux_player_id[i] = Integer.parseInt(jsonObj.getString("user_id"));
 				aux_playerweb_id[i] = Integer.parseInt(jsonObj.getString("player_id"));
-				
-				Log.i("JSON", "" + aux_player_id[i]);
-				
 			}
-			Log.i("JSON", "" + aux_players);
 					
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
-	
+*/	
 	public void setInfoStrokes(int iPlayer, String result) {
 		JSONObject jsonObj;
 		JSONArray  jsonArr;
@@ -601,9 +641,6 @@ public class CardGraphView extends View {
 				strokes 	= Integer.parseInt(jsonObj.getString("strokes"));
 				
 				arrStrokes[iPlayer][hole_number] = strokes;
-				
-				Log.i("JSON", "" + hole_number + ":" + strokes);
-				
 			}
 					
 		} catch (JSONException e) {
@@ -628,11 +665,19 @@ public class CardGraphView extends View {
 		@Override
 		protected String doInBackground( Context... params ) 
 		{
-			result_getmatch 	= getMatch();
-			setInfoMatch(result_getmatch);
-			for (int i=0;i<aux_playerweb_id.length;i++) {
-				result_getstrokes	= getStrokes(aux_playerweb_id[i]);
-				setInfoStrokes(i,result_getstrokes);
+			//ERL result_getmatch 	= getMatch();
+			//ERL setInfoMatch(result_getmatch);
+			currentMatch = org.classes.mygolfcard.Match.setDataFromRemote(match_id, cUser.getUser_id(), auth_token, ctxCardGraph);
+			auxPlayer = currentMatch.getPlayers();
+			
+			course_name = currentMatch.getCourseName();
+			date_hour_match	= currentMatch.getDateHour();
+			
+			for (int i=0;i<auxPlayer.length;i++) {
+				if (auxPlayer[i] != null) {
+					result_getstrokes	= getStrokes(auxPlayer[i].getUserWeb_id());
+					setInfoStrokes(i,result_getstrokes);
+				}
 			}
 			
 			return "";
@@ -642,7 +687,6 @@ public class CardGraphView extends View {
 		@Override
 		protected void onPreExecute() 
 		{
-			Log.i( "makemachine", "onPreExecute()" );
 			super.onPreExecute();
 			CharSequence title_remote = ctxCardGraph.getString(R.string.title_remote_connection);
 			CharSequence remote = ctxCardGraph.getString(R.string.remote_connection);
@@ -655,9 +699,6 @@ public class CardGraphView extends View {
 		protected void onProgressUpdate(Integer... values) 
 		{
 			super.onProgressUpdate(values);
-			Log.i( "makemachine", "onProgressUpdate(): " +  String.valueOf( values[0] ) );
-			//_percentField.setText( ( values[0] * 2 ) + "%");
-			//_percentField.setTextSize( values[0] );
 		}
 
 		// -- called as soon as doInBackground method completes
@@ -666,10 +707,8 @@ public class CardGraphView extends View {
 		protected void onPostExecute( String result ) 
 		{
 			super.onPostExecute(result);
-			Log.i( "makemachine", "onPostExecute(): " + result );
 			this.dialog.cancel();
 			invalidate();
-			
 		}
 	}   
 		

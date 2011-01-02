@@ -174,7 +174,6 @@ public final class R {
         public static final int newmatch_text_hour=0x7f0a004f;
         public static final int resume=0x7f0a0071;
         public static final int resume_content=0x7f0a005e;
-        public static final int right_text=0x7f0a001b;
         public static final int screen=0x7f0a0019;
         public static final int selection=0x7f0a0018;
         public static final int settings=0x7f0a006f;
@@ -191,6 +190,7 @@ public final class R {
         public static final int synchro_delete=0x7f0a0075;
         public static final int synchro_delete_all=0x7f0a0076;
         public static final int synchro_upload=0x7f0a0077;
+        public static final int titleName=0x7f0a001b;
         public static final int user_email=0x7f0a0060;
         public static final int user_handicap=0x7f0a0064;
         public static final int user_login=0x7f0a0061;
@@ -205,22 +205,23 @@ public final class R {
         public static final int course=0x7f030003;
         public static final int courses=0x7f030004;
         public static final int custom_title_1=0x7f030005;
-        public static final int keypad=0x7f030006;
-        public static final int main=0x7f030007;
-        public static final int main_item_two_line_row=0x7f030008;
-        public static final int main_item_two_line_row_multiple_choice=0x7f030009;
-        public static final int match=0x7f03000a;
-        public static final int matches=0x7f03000b;
-        public static final int matches_pdte=0x7f03000c;
-        public static final int menu=0x7f03000d;
-        public static final int newmatch=0x7f03000e;
-        public static final int resume=0x7f03000f;
-        public static final int signup=0x7f030010;
-        public static final int spinnerview=0x7f030011;
-        public static final int spinnerviewdropdown=0x7f030012;
-        public static final int strokes=0x7f030013;
-        public static final int synchro=0x7f030014;
-        public static final int test=0x7f030015;
+        public static final int custom_title_2=0x7f030006;
+        public static final int keypad=0x7f030007;
+        public static final int main=0x7f030008;
+        public static final int main_item_two_line_row=0x7f030009;
+        public static final int main_item_two_line_row_multiple_choice=0x7f03000a;
+        public static final int match=0x7f03000b;
+        public static final int matches=0x7f03000c;
+        public static final int matches_pdte=0x7f03000d;
+        public static final int menu=0x7f03000e;
+        public static final int newmatch=0x7f03000f;
+        public static final int resume=0x7f030010;
+        public static final int signup=0x7f030011;
+        public static final int spinnerview=0x7f030012;
+        public static final int spinnerviewdropdown=0x7f030013;
+        public static final int strokes=0x7f030014;
+        public static final int synchro=0x7f030015;
+        public static final int test=0x7f030016;
     }
     public static final class menu {
         public static final int menu_app=0x7f090000;

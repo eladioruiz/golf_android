@@ -9,7 +9,6 @@
  */
 package org.classes.mygolfcard;
 
-import org.activities.mygolfcard.Authentication;
 import org.activities.mygolfcard.R;
 import org.activities.mygolfcard.RestClient;
 import org.activities.mygolfcard.RestClient.RequestMethod;
@@ -256,7 +255,7 @@ public class Match {
 
 			return matchesList;
 			
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			
 			return null;
@@ -294,14 +293,17 @@ public class Match {
 				res.addPlayer(aux_player);				
 			}
 			
-			for (int i=jsonArr.length();i<4;i++) {
-				res.setPlayerNull(i);
+			if (jsonArr.length()<4) {
+				for (int i=jsonArr.length();i<4;i++) {
+					res.setPlayerNull(i);
+				}
 			}
 			return res;
 					
 		} catch (JSONException e) {
 			e.printStackTrace();
-			return null;
+			Log.e("MATCH", e.getMessage());
+			return res;
 		}
 	}
 	

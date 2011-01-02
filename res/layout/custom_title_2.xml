@@ -47,12 +47,13 @@
 	        android:paddingRight="4dip"
 	        android:gravity="center_vertical"
 	        android:text="" />
-		<ImageView
+	     <ImageView
 			android:id="@+id/logout"
 			android:src="@drawable/logout3"
 			android:layout_alignParentRight="true"
 			android:layout_height="wrap_content"
 			android:gravity="center_vertical"
+			android:visibility="invisible"
 			android:layout_width="wrap_content"  />
 	</LinearLayout>
 </RelativeLayout>

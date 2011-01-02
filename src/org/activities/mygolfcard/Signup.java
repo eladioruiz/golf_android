@@ -9,6 +9,7 @@
  */
 package org.activities.mygolfcard;
 
+import org.classes.mygolfcard.Authentication;
 import org.classes.mygolfcard.User;
 
 import android.app.Activity;
@@ -161,7 +162,7 @@ public class Signup extends Activity  implements OnClickListener {
 	
 	private void autoLogin() {
 		
-		if (Authentication.saveDataUser(Signup.this,auth_token,cUser.getUser_id())) {
+		if (Authentication.saveDataUser(Signup.this,auth_token,cUser.getUser_id(),cUser.getUserName())) {
 			Intent i = new Intent(this, MenuApp.class);
     		startActivity(i);
     		finish();

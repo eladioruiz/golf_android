@@ -1,6 +1,5 @@
 package org.classes.mygolfcard;
 
-import org.activities.mygolfcard.Authentication;
 import org.activities.mygolfcard.R;
 import org.activities.mygolfcard.RestClient;
 import org.activities.mygolfcard.RestClient.RequestMethod;

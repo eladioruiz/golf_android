@@ -10,6 +10,7 @@
 package org.activities.mygolfcard;
 
 import org.charts.mygolfcard.IChart;
+import org.classes.mygolfcard.Authentication;
 import org.classes.mygolfcard.Player;
 import org.classes.mygolfcard.User;
 
@@ -45,6 +46,7 @@ public class Match extends Activity implements OnClickListener {
 	private TextView txtPlayers_2P[]	= new TextView[4];
 	private TextView txtPlayers_TO[]	= new TextView[4];
 	private View logoutButton;
+	private TextView titleNameText;
 	
 	private IChart[] mCharts = new IChart[] {new ChartMatch()};
 	
@@ -53,18 +55,15 @@ public class Match extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.match);
-        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_1);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_2);
 		
 		currentMatch = new org.classes.mygolfcard.Match(this);
 		
 		localMatchId = getIntent().getIntExtra("match_id",0);
 		currentMatch.setMatch_id(localMatchId);
 
-		Authentication.readDataUser(Match.this);
-		auth_token = Authentication.getToken();
-		cUser.setUser_id(Authentication.getUserId());
-		
 		findViews();
+		//initViews(); // ERL No se pone aqui, sólo depués de cargar los datos
 		setListeners();
 		
 		InitTask task = new InitTask();
@@ -132,7 +131,8 @@ public class Match extends Activity implements OnClickListener {
 		txtPlayers_TO[1]	= (TextView) findViewById(R.id.match_player_2_TO);
 		txtPlayers_TO[2]	= (TextView) findViewById(R.id.match_player_3_TO);
 		txtPlayers_TO[3]	= (TextView) findViewById(R.id.match_player_4_TO);
-		logoutButton = findViewById(R.id.logout);
+		logoutButton 		= findViewById(R.id.logout);
+		titleNameText		= (TextView) findViewById(R.id.titleName); 
 	}
 
 	private void initViews() {
@@ -155,9 +155,14 @@ public class Match extends Activity implements OnClickListener {
 				txtPlayers_TO[i].setVisibility(4);
 			}	
 		}
+		
+		Authentication.readDataUser(Match.this);
+		auth_token = Authentication.getToken();
+		cUser.setUser_id(Authentication.getUserId());
+		cUser.setUserName(Authentication.getUserName());
+		titleNameText.setText(cUser.getUserName());
 	}
 
-	
 	private void setListeners() {
 		logoutButton.setOnClickListener(this);
 	}

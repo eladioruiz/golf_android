@@ -1,5 +1,8 @@
 package org.activities.mygolfcard;
 
+import org.classes.mygolfcard.Authentication;
+import org.classes.mygolfcard.User;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -17,8 +20,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -36,6 +39,9 @@ public class Strokes extends Activity implements OnClickListener {
 	private TextView tx2_1;
 	private TextView tx2_2;
 	private View logoutButton;
+	private TextView titleNameText;
+	
+	private User cUser = new User();
 	
 	//private boolean connectionOK;
 	private String auth_token;
@@ -54,7 +60,7 @@ public class Strokes extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.strokes);
-        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_1);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_2);
 		
 		DATABASE_NAME = getString(R.string.DB_NAME); 
 		match_id = getIntent().getIntExtra("match_id",0);
@@ -83,8 +89,7 @@ public class Strokes extends Activity implements OnClickListener {
                     Toast.LENGTH_SHORT).show();
 		}
 */
-		Authentication.readDataUser(Strokes.this);
-		auth_token    = Authentication.getToken();
+		
 		InitTask task = new InitTask();
 		task.execute();
 	}
@@ -259,14 +264,15 @@ public class Strokes extends Activity implements OnClickListener {
 		playerButton[2] = (Button) findViewById(R.id.strokesButton_3);
 		playerButton[3] = (Button) findViewById(R.id.strokesButton_4);
 		
-		previousButton = (Button) findViewById(R.id.strokes_previous);
-		nextButton = (Button) findViewById(R.id.strokes_next);
+		previousButton 	= (Button) findViewById(R.id.strokes_previous);
+		nextButton 		= (Button) findViewById(R.id.strokes_next);
 		
-		tx1 = (TextView) findViewById(R.id.card_match);
-		tx2_1 = (TextView) findViewById(R.id.hole_info_1);
-		tx2_2 = (TextView) findViewById(R.id.hole_info_2);
+		tx1 			= (TextView) findViewById(R.id.card_match);
+		tx2_1 			= (TextView) findViewById(R.id.hole_info_1);
+		tx2_2 			= (TextView) findViewById(R.id.hole_info_2);
 		
-		logoutButton = findViewById(R.id.logout);
+		logoutButton 	= findViewById(R.id.logout);
+		titleNameText	= (TextView) findViewById(R.id.titleName); 
 	}
 	
 	private void setListeners() {
@@ -312,6 +318,13 @@ public class Strokes extends Activity implements OnClickListener {
 			nextButton.setEnabled(false);
 			nextButton.setText("--");
 		}
+		
+		Authentication.readDataUser(Strokes.this);
+		auth_token    = Authentication.getToken();
+		cUser.setUser_id(Authentication.getUserId());
+		cUser.setUserName(Authentication.getUserName());
+		
+		titleNameText.setText(cUser.getUserName());
 	}
 
 	private void setInfoPlayers(String result) {

@@ -9,6 +9,9 @@
  */
 package org.activities.mygolfcard;
 
+import org.classes.mygolfcard.Authentication;
+import org.classes.mygolfcard.User;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,18 +21,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.TextView;
 
 public class MenuApp extends Activity  implements OnClickListener {
 	
-	//private String auth_token;
-	//private CurrentUser cUser = new CurrentUser();
+	private String auth_token;
+	private User cUser = new User();
 	private View newButton;
 	private View matchesButton;
 	private View coursesButton;
 	private View synchroButton;
 	private View logoutButton;
+	private TextView titleNameText;
 
-	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,15 +44,13 @@ public class MenuApp extends Activity  implements OnClickListener {
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_1);
 
 		findViews();
+		initViews();
 		setListeners();
 	} 
 	
 	public void onClick(View v) {
 		switch (v.getId()) {
-/*			case R.id.exit_button:
-				finish();
-				break;
-*/			
+			
 			case R.id.new_button:
 				Intent i_new = new Intent(this, NewMatch.class);
 				startActivity(i_new);
@@ -102,11 +104,20 @@ public class MenuApp extends Activity  implements OnClickListener {
 	
 	private void findViews() {
 		// Set up click listeners for all the buttons
-		newButton = findViewById(R.id.new_button);
-		matchesButton = findViewById(R.id.matches_button);
-		coursesButton = findViewById(R.id.courses_button);
-		synchroButton = findViewById(R.id.synchro_button);
-		logoutButton = findViewById(R.id.logout);
+		newButton 		= findViewById(R.id.new_button);
+		matchesButton 	= findViewById(R.id.matches_button);
+		coursesButton 	= findViewById(R.id.courses_button);
+		synchroButton 	= findViewById(R.id.synchro_button);
+		logoutButton 	= findViewById(R.id.logout);
+		titleNameText	= (TextView) findViewById(R.id.titleName); 
+	}
+	
+	private void initViews() {
+		Authentication.readDataUser(MenuApp.this);
+		auth_token 		= Authentication.getToken();
+		cUser.setUserName(Authentication.getUserName());
+		
+		titleNameText.setText(cUser.getUserName());
 	}
 	
 	private void setListeners() {

@@ -11,6 +11,9 @@ package org.activities.mygolfcard;
 
 import java.util.Calendar;
 
+import org.classes.mygolfcard.Authentication;
+import org.classes.mygolfcard.User;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -28,8 +31,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -47,6 +50,8 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	private TextView newmatch_hour;
 	private TextView newmatch_n_holes;
 	private Spinner newmatch_tee[] = new Spinner[4];
+	private TextView titleNameText;
+	private User cUser = new User();
 	
 	private int newmatch_id;
 	private String[] tees={"Amarillas", "Rojas", "Blancas"};
@@ -93,16 +98,14 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.newmatch);
-        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_1);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_2);
 		
 		findViews();
+		initViews();
 		setListeners();
 		
 		connectionOK = Authentication.checkConnection(NewMatch.this);
 		if (connectionOK) {
-			Authentication.readDataUser(NewMatch.this);
-			auth_token    = Authentication.getToken();
-			auth_user_id  = Authentication.getUserId();
 			InitTask task = new InitTask();
 			task.execute();
 		}
@@ -234,6 +237,18 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 		cancelButton 		= findViewById(R.id.newmatch_cancel);
 		
 		logoutButton = findViewById(R.id.logout);
+		titleNameText	= (TextView) findViewById(R.id.titleName); 
+	}
+	
+	private void initViews() {
+		Authentication.readDataUser(NewMatch.this);
+		auth_token    = Authentication.getToken();
+		auth_user_id  = Authentication.getUserId();	
+		
+		cUser.setUser_id(Authentication.getUserId());
+		cUser.setUserName(Authentication.getUserName());
+		
+		titleNameText.setText(cUser.getUserName());
 	}
 	
 	private void setListeners() {

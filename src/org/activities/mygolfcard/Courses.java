@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.classes.mygolfcard.Authentication;
+import org.classes.mygolfcard.User;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
@@ -27,6 +30,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Courses extends ListActivity implements OnClickListener  {
@@ -34,6 +38,8 @@ public class Courses extends ListActivity implements OnClickListener  {
 	private String auth_token;
 	private boolean connectionOK;
 	private View logoutButton;
+	private TextView titleNameText;
+	private User cUser = new User();
 	
 	/** Called with the activity is first created. */
 	@Override
@@ -41,16 +47,15 @@ public class Courses extends ListActivity implements OnClickListener  {
 		super.onCreate(icicle);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.courses);
-        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_1);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_2);
 		
         logoutButton = findViewById(R.id.logout);
         logoutButton.setOnClickListener(this);
 		
 		connectionOK = Authentication.checkConnection(Courses.this);
-		if (connectionOK) {
-			Authentication.readDataUser(Courses.this);
-			auth_token = Authentication.getToken();
-			
+		findViews();
+		initViews();
+		if (connectionOK) {			
 			InitTask task = new InitTask();
 			task.execute();
 		}
@@ -113,7 +118,21 @@ public class Courses extends ListActivity implements OnClickListener  {
 		setListAdapter(adapter);
 		getListView().setTextFilterEnabled(true);
 	}
+
+	private void findViews() {
+		titleNameText	= (TextView) findViewById(R.id.titleName); 
+	}
+
+	private void initViews() {
+		Authentication.readDataUser(Courses.this);
+		auth_token = Authentication.getToken();
+		cUser.setUser_id(Authentication.getUserId());
+		cUser.setUserName(Authentication.getUserName());
+		
+		titleNameText.setText(cUser.getUserName());
+	}
 	
+
 	/**
 	 * sub-class of AsyncTask
 	 */
