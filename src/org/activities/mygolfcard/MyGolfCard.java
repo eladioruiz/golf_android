@@ -21,6 +21,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,8 +43,12 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 	private static Context ctx = null;
 	
 	static public String resWebService;
+
+
+	private SQLiteDatabase db = null;
+	private String DATABASE_NAME = "mygolfcard.db";
 	
-    /** Called when the activity is first created. */
+	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +57,8 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 		// ... que nos sirve de validación
 		Authentication.readDataUser(MyGolfCard.this);
 		String auth_token = Authentication.getToken();
+		
+		createDatabase();
 		
 		// Si dicho token existe, damos el login por correcto y continuamos la ejecución...
 		// ... a la siguiente pantalla: el menú de la aplicación
@@ -285,5 +292,42 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 			saveDataUser();
     		manageAuthentication();
 		}
-	}   
+	}
+	
+	private void createDatabase() {
+    	/* Create a Database. */
+    	try {
+    		Log.i("INFO", "CREATING DB");
+    		
+    		db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
+    		
+    		/* Create a Table in the Database. */
+    		db.execSQL(	"CREATE TABLE IF NOT EXISTS "
+    				+	"matches "                     
+    				+ 	" (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+    						"course_id INT(3), date_hour_match VARCHAR, " +
+    						"course_name VARCHAR, " +
+    						"holes INT(2), status INT(1), " +
+    						"player1_id INT(5), tee1 INT(1), " +
+    						"player2_id INT(5), tee2 INT(1), " +
+    						"player3_id INT(5), tee3 INT(1), " +
+    						"player4_id INT(5), tee4 INT(1)); ");
+    		
+    		db.execSQL(	"CREATE TABLE IF NOT EXISTS "
+    				+	"strokes "                     
+    				+ 	" (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+    						"match_id INT(5),  " +
+    						"player_id INT(5), " +
+    						"hole INT(2), " +
+    						"strokes INT(2), putts INT(2), " +
+    						"time NOT NULL DEFAULT CURRENT_TIMESTAMP); ");
+    	}
+    	catch(Exception e) {
+    		Log.e("Error", "Error CREATING DB", e);
+    	} 
+    	finally {
+    		if (db != null)
+    			db.close();
+    	}
+    }
 }

@@ -75,6 +75,9 @@ public class ChartMatch extends AbstractChart {
 		int totalPlayers = currentMatch.getNumPlayers();
 		String[] titles = new String[totalPlayers];
 
+		maxValue = 0.0;
+		minValue = 999.0;
+		
 		org.classes.mygolfcard.Player[] pls = new org.classes.mygolfcard.Player[currentMatch.getPlayers().length];
 
 		pls = currentMatch.getPlayers();

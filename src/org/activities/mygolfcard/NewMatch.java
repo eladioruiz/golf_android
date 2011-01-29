@@ -332,44 +332,10 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 	}
 
 	private void saveMatchinDB() {
-		createDatabase();
 		saveMatchData();
 	}
 	
-	private void createDatabase() {
-    	/* Create a Database. */
-    	try {
-    		db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
-    		
-    		/* Create a Table in the Database. */
-    		db.execSQL(	"CREATE TABLE IF NOT EXISTS "
-    				+	"matches "                     
-    				+ 	" (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-    						"course_id INT(3), date_hour_match VARCHAR, " +
-    						"course_name VARCHAR, " +
-    						"holes INT(2), status INT(1), " +
-    						"player1_id INT(5), tee1 INT(1), " +
-    						"player2_id INT(5), tee2 INT(1), " +
-    						"player3_id INT(5), tee3 INT(1), " +
-    						"player4_id INT(5), tee4 INT(1)); ");
-    		
-    		db.execSQL(	"CREATE TABLE IF NOT EXISTS "
-    				+	"strokes "                     
-    				+ 	" (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-    						"match_id INT(5),  " +
-    						"player_id INT(5), " +
-    						"hole INT(2), " +
-    						"strokes INT(2), putts INT(2), " +
-    						"time NOT NULL DEFAULT CURRENT_TIMESTAMP); ");
-    	}
-    	catch(Exception e) {
-    		Log.e("Error", "Error CREATING DB", e);
-    	} 
-    	finally {
-    		if (db != null)
-    			db.close();
-    	}
-    }
+
 	
 	private void saveMatchData() {
 		String sql = "";
