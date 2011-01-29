@@ -675,7 +675,7 @@ public class CardGraphView extends View {
 			
 			for (int i=0;i<auxPlayer.length;i++) {
 				if (auxPlayer[i] != null) {
-					result_getstrokes	= getStrokes(auxPlayer[i].getUserWeb_id());
+					result_getstrokes	= getStrokes(auxPlayer[i].getPlayer_id());
 					setInfoStrokes(i,result_getstrokes);
 				}
 			}

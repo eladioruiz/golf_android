@@ -34,6 +34,12 @@ import android.graphics.Color;
  */
 public class ChartMatch extends AbstractChart {
 
+	
+	private static int TYPE_STROKES = 1;
+	private static int TYPE_TOTAL 	= 2;
+	private double maxValue = 0.0;
+	private double minValue = 999.0;
+
 	/**
 	 * Returns the chart name.
 	 * @return the chart name
@@ -65,55 +71,109 @@ public class ChartMatch extends AbstractChart {
 	 * @param match_id match identifier
 	 * @return the built intent
 	 */
-	public Intent execute(Context context, org.classes.mygolfcard.Match currentMatch) {
-		String[] titles = new String[currentMatch.getPlayers().length];
+	public Intent execute(Context context, org.classes.mygolfcard.Match currentMatch, int type) {
+		int totalPlayers = currentMatch.getNumPlayers();
+		String[] titles = new String[totalPlayers];
 
 		org.classes.mygolfcard.Player[] pls = new org.classes.mygolfcard.Player[currentMatch.getPlayers().length];
 
-		for (int i=0; i<pls.length; i++) {
-			titles[i] = pls[i].getPlayerName();
+		pls = currentMatch.getPlayers();
+		for (int i=0; i < totalPlayers; i++) {
+			if (pls[i] != null) {
+				titles[i] = pls[i].getPlayerName();
+			}
 		}
-
+		
+		List<double[]> values = new ArrayList<double[]>();
 		List<double[]> x = new ArrayList<double[]>();
-		for (int i = 0; i < titles.length; i++) {
+		
+		// Eje X - Literales por cada columna
+		// En nuestro caso, el número de los hoyos 
+		for (int i = 0; i < totalPlayers; i++) {
 			double aux[] = new double[currentMatch.getHoles()];
-			for (int j=1;j<=currentMatch.getHoles();j++) {
-				aux[j-1] = j;
+			for (int j=0;j<currentMatch.getHoles();j++) {
+				aux[j] = j + 1;
 			}
 			x.add(aux);
 		}
 		
-		List<double[]> values = new ArrayList<double[]>();
-		
-		for (int i=0; i<pls.length; i++) {
+		int strokes = 0;
+		// Eje Y
+		for (int i=0; i < totalPlayers; i++) {
 			double aux[] = new double[currentMatch.getHoles()];
+			
+			org.classes.mygolfcard.Stroke[] auxStroke = new org.classes.mygolfcard.Stroke[18];
+			if (!currentMatch.getLocalStorage()) {
+				auxStroke = pls[i].getStrokes();
+			}
+			
 			for (int j=0; j<currentMatch.getHoles(); j++) {
-				aux[j] = 0.0;
+				if (currentMatch.getLocalStorage()) {
+					strokes = currentMatch.getStrokesPerHole(pls[i].getPlayer_id(),j);
+				}
+				else
+				{
+					//org.classes.mygolfcard.Stroke[] auxStroke = pls[i].getStrokes();
+					strokes = auxStroke[j].getStrokes();
+				}
+				
+				if (type==TYPE_STROKES) {
+					aux[j] = strokes;
+				}
+				else if (type==TYPE_TOTAL) {
+					if (j>=1) {
+						aux[j] = aux[j-1] + strokes;
+					}
+					else {
+						aux[j] = strokes;
+					}
+				}
+				
+				if (aux[j] > maxValue) {
+					maxValue = aux[j];
+				}
+				
+				if (aux[j] < minValue) {
+					minValue = aux[j];
+				}
+				
+				//aux[j] = (double)j+i;
 			}
 			values.add(aux);
 		}
-		values.add(new double[] { 12.3, 12.5, 13.8, 16.8, 20.4, 24.4, 26.4, 26.1, 23.6, 20.3, 17.2,
+
+/*		values.add(new double[] { 12.3, 12.5, 13.8, 16.8, 20.4, 24.4, 26.4, 26.1, 23.6, 20.3, 17.2,
 				13.9 });
 		values.add(new double[] { 10, 10, 12, 15, 20, 24, 26, 26, 23, 18, 14, 11 });
 		values.add(new double[] { 5, 5.3, 8, 12, 17, 22, 24.2, 24, 19, 15, 9, 6 });
 		values.add(new double[] { 9, 10, 11, 15, 19, 23, 26, 25, 22, 18, 13, 10 });
+*/		
+		int[] colorsAux = new int[] { Color.BLUE, Color.GREEN, Color.CYAN, Color.YELLOW };
+		int[] colors = new int[totalPlayers];
+		for (int i=0; i<totalPlayers; i++) {
+			colors[i] = colorsAux[i];
+		}
 		
-		int[] colors = new int[] { Color.BLUE, Color.GREEN, Color.CYAN, Color.YELLOW };
-		PointStyle[] styles = new PointStyle[] { PointStyle.CIRCLE, PointStyle.DIAMOND,
+		PointStyle[] stylesAux = new PointStyle[] { PointStyle.CIRCLE, PointStyle.DIAMOND,
 				PointStyle.TRIANGLE, PointStyle.SQUARE };
+		PointStyle[] styles = new PointStyle[totalPlayers];
+		for (int i=0; i<totalPlayers; i++) {
+			styles[i] = stylesAux[i];
+		}
+		
 		XYMultipleSeriesRenderer renderer = buildRenderer(colors, styles);
 		int length = renderer.getSeriesRendererCount();
-		for (int i = 0; i < length; i++) {
+		for (int i = 0; i < totalPlayers; i++) {
 			((XYSeriesRenderer) renderer.getSeriesRendererAt(i)).setFillPoints(true);
 		}
-		setChartSettings(renderer, "Average temperature", "Month", "Temperature", 0.5, 12.5, 0, 32,
+		setChartSettings(renderer, "Partido", "Hoyos", "Golpes", 0.5, ((double)currentMatch.getHoles()) + 0.5, minValue, maxValue,
 				Color.LTGRAY, Color.GRAY);
 		renderer.setXLabels(12);
 		renderer.setYLabels(10);
 		renderer.setShowGrid(true);
 
 		Intent intent = ChartFactory.getLineChartIntent(context, buildDataset(titles, x, values),
-				renderer, "Average temperature");
+				renderer, "Comparativa Partido");
 		return intent;
 	}
 

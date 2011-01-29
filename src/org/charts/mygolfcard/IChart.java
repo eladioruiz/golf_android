@@ -56,6 +56,6 @@ public interface IChart {
    * @param match_id match identifier
    * @return the built intent
    */
-  Intent execute(Context context,org.classes.mygolfcard.Match match);
+  Intent execute(Context context,org.classes.mygolfcard.Match match,int type);
 
 }

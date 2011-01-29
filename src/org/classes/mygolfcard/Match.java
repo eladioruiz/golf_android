@@ -30,6 +30,7 @@ public class Match {
 	private static Context ctxMatch;
 	private int nHoles;
 	private int indexPlayer = 0;
+	private static boolean localStorage = false;
 
 	private static SQLiteDatabase db = null;
 	private static String DATABASE_NAME;
@@ -87,9 +88,24 @@ public class Match {
 	public void setHoles(int nHoles) {
 		this.nHoles = nHoles;
 	}
+	
+	public boolean getLocalStorage() {
+		return localStorage;
+	}
 
 	public Player[] getPlayers() {
 		return players;
+	}
+	
+	public int getNumPlayers() {
+		int res = 0;
+		for (int i=0;i<4;i++) {
+			if (this.players[i] != null) {
+				res += 1;
+			}
+		}
+		
+		return res;
 	}
 	
 	public void setPlayer(Player[] players) {
@@ -121,6 +137,7 @@ public class Match {
 		String result;
 
 		ctxMatch = ctx;
+		localStorage = false;
 		result = getMatches(auth_token, user_id);
 		return setInfoMatches(result);
 	}
@@ -136,6 +153,8 @@ public class Match {
 	public static Match getMatchFromDB(Context ctx, int match_id) {
 		String sql;
 		org.classes.mygolfcard.Match auxMatch = null;
+		
+		localStorage = true;
 		
 		try {
 			auxMatch = new org.classes.mygolfcard.Match(ctx);
@@ -191,6 +210,49 @@ public class Match {
     	}
     	
     	return auxMatch;
+	}
+
+	public int getStrokesPerHole(int playerId,int holeNumber) {
+		int res = 0;
+		
+		// Si es un partido almacenado en BD (pendiente)...
+		// ... sacamos los datos de BD
+		if (localStorage) {
+			res = Integer.parseInt(getStrokesHole(this.match_id,playerId,holeNumber));
+		}
+		else {
+			// ... en caso contrario, hay que pedirlos por WS
+			res = 0;
+		}
+		return res;
+	}
+	
+	private String getStrokesHole(int match_id, int player_id, int hole){
+		String res = "0";
+		String sql = "";
+		
+		try {
+			db = ctxMatch.openOrCreateDatabase(DATABASE_NAME, ctxMatch.MODE_PRIVATE, null);
+			sql = "select strokes from strokes where match_id=" + match_id + " and player_id=" + player_id + " and hole=" + hole + ";";
+		 	Cursor c = db.rawQuery(sql, null);
+		 	int colStrokes		= c.getColumnIndex("strokes");
+		 	
+		 	c.moveToFirst();
+		 	if (c != null) {
+		 		if (c.getCount() > 0) {
+		 			res = "" + c.getInt(colStrokes);
+		 		}
+		 	}
+		}
+		catch(Exception e) {
+    		Log.e("Error", "Error reading DB", e);
+    	} 
+    	finally {
+    		if (db != null)
+    			db.close();
+    	}
+    	
+		return res;
 	}
 
 	private static String getMatch(int match_id, int user_id, String token) {
@@ -276,6 +338,7 @@ public class Match {
 			//res.setCourse_id(Integer.parseInt(jsonObj.getString("course_id")));
 			res.setDateHour(jsonObj.getString("date_hour_match"));
 			res.setHoles(Integer.parseInt(jsonObj.getString("holes")));
+			res.setMatch_id(Integer.parseInt(jsonObj.getString("match_id")));
 			
 			jsonArr = new JSONArray(aux_players);
 			
@@ -283,8 +346,9 @@ public class Match {
 				jsonObj = new JSONObject(jsonArr.get(i).toString());
 				
 				Player aux_player = new Player(ctxMatch);
-				aux_player.setPlayer_id(Integer.parseInt(jsonObj.getString("user_id")));
-				aux_player.setUserWeb_id(Integer.parseInt(jsonObj.getString("player_id")));
+				aux_player.setMatch_id(res.getMatch_id());
+				aux_player.setPlayer_id(Integer.parseInt(jsonObj.getString("player_id")));
+				aux_player.setUserWeb_id(Integer.parseInt(jsonObj.getString("user_id")));
 				aux_player.setPlayerName(jsonObj.getString("user_name"));
 				aux_player.setHCP(Float.parseFloat(jsonObj.getString("handicap")));
 				aux_player.setStrokesFirst(Integer.parseInt(jsonObj.getString("card_1")));

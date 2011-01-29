@@ -328,7 +328,7 @@ public class Strokes extends Activity implements OnClickListener {
 	}
 
 	private void setInfoPlayers(String result) {
-		pls = org.classes.mygolfcard.Player.getPlayersFromLocal(Strokes.this);
+		pls = org.classes.mygolfcard.Player.getFriendsFromLocal(Strokes.this);
 /*		JSONObject jsonObj;
 		JSONArray  jsonArr;
 

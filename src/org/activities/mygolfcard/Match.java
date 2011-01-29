@@ -50,6 +50,9 @@ public class Match extends Activity implements OnClickListener {
 	
 	private IChart[] mCharts = new IChart[] {new ChartMatch()};
 	
+	private static int TYPE_STROKES = 1;
+	private static int TYPE_TOTAL 	= 2;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -82,11 +85,11 @@ public class Match extends Activity implements OnClickListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.card_graph:
-	    		Intent i = new Intent(this, CardGraph.class);
-	    		i.putExtra("match_id", localMatchId);
-	    		i.putExtra("mitad", 1);
-	    		i.putExtra("type_match", 2);
-	    		startActivity(i);
+	    		Intent i1 = new Intent(this, CardGraph.class);
+	    		i1.putExtra("match_id", localMatchId);
+	    		i1.putExtra("mitad", 1);
+	    		i1.putExtra("type_match", 2);
+	    		startActivity(i1);
 	
 	    		return true;
 			
@@ -95,10 +98,16 @@ public class Match extends Activity implements OnClickListener {
 				startActivity(new Intent(this, MenuApp.class));
 				return true;
 				
-			/*case R.id.stats:
-				Intent intent = mCharts[0].execute(this, currentMatch);
-				startActivity(intent);
-				return true;*/
+			case R.id.stats1:
+				Intent i2 = mCharts[0].execute(this, currentMatch, TYPE_STROKES);
+				startActivity(i2);
+				return true;
+
+			case R.id.stats2:
+				Intent i3 = mCharts[0].execute(this, currentMatch, TYPE_TOTAL);
+				startActivity(i3);
+				return true;
+				
 		}
 		return false;
 	}

@@ -82,13 +82,13 @@ public class Card extends Activity implements OnClickListener {
 		connectionOK = Authentication.checkConnection(Card.this);
 		if (connectionOK) {
 			
-			players = Player.getPlayersFromRemote(auth_token, cUser.getUser_id(), Card.this);
+			players = Player.getFriendsFromRemote(auth_token, cUser.getUser_id(), Card.this);
 			
 			InitTask task = new InitTask();
 			task.execute();
 		}
 		else {
-			players = Player.getPlayersFromLocal(Card.this);
+			players = Player.getFriendsFromLocal(Card.this);
 			
 			Toast.makeText(Card.this, R.string.no_internet,
                     Toast.LENGTH_SHORT).show();

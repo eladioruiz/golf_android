@@ -55,6 +55,14 @@
 	<string name="card_graph_title">My Golf Card - Tarjeta</string>
 	<string name="card_graph_shortcut">g</string>
 	
+	<string name="stats1_graph_label">Comp. Golpes</string>
+	<string name="stats1_graph_title">My Golf Card - Comparativa Golpes</string>
+	<string name="stats1_graph_shortcut">s</string>
+	
+	<string name="stats2_graph_label">Comp. Total</string>
+	<string name="stats2_graph_title">My Golf Card - Comparativa Golpes Totales</string>
+	<string name="stats2_graph_shortcut">t</string>
+	
 	<string name="course_details_label">Detalles del Campo</string>
 	<string name="course_detail_title">My Golf Card - Detalles del Campo</string>
 	<string name="course_details_shortcut">d</string>

@@ -8,10 +8,6 @@
  ! Visit http://www.pragmaticprogrammer.com/titles/eband2 for more book information.
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<!-- <item 
-		android:id="@+id/stats"
-    	android:icon="@drawable/menu"
-      	android:title="Comparativa Partido" />  -->
     <item 
     	android:id="@+id/card_graph"
     	android:icon="@drawable/card"
@@ -22,4 +18,14 @@
     	android:icon="@drawable/menu"
       	android:title="@string/menuapp_label"
       	android:alphabeticShortcut="@string/menuapp_shortcut" />
+	<item 
+		android:id="@+id/stats1"
+    	android:icon="@drawable/stats1"
+      	android:title="@string/stats1_graph_label"
+      	android:alphabeticShortcut="@string/stats1_graph_shortcut" /> 
+	<item 
+		android:id="@+id/stats2"
+    	android:icon="@drawable/stats2"
+      	android:title="@string/stats2_graph_label"
+      	android:alphabeticShortcut="@string/stats2_graph_shortcut" /> 
 </menu>
