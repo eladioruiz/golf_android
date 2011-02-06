@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">My Golf Card</string>
+    <string name="presentation">\
+    ¿Do you already know <b>My Golf Card</b>? ¿Has any mate talked to you about this new golf website?\n\n
+    Sign-up now, it is totally free at http://www.mygolfcard.es\n\n
+    With this movil application you will be able to note your score after each hole during your golf matches, even your partner\' ones. Forget score cards and pencils!\n\n
+    At the end of the match, you will just have to upload your card to My Golf Card by clicking a button and the match will be published in <b>My Golf Card</b>\n\n
+    </string>
+    
+    <string name="continue_label">Login</string>
+    <string name="exit_label">Exit</string>
+    <string name="about_label">About</string>
+    <string name="signup_label">Sign-up</string>
+    
+    <string name="new_match_label">New Match</string>
+    <string name="matches_label">Matches</string>
+    <string name="courses_label">Courses</string>
+    
+    <string name="menuapp_title">My Golf Card - Menu</string>
+    <string name="signup_title">My Golf Card - Sign-up</string>
+    <string name="newmatch_title">My Golf Card - New Match</string>
+    <string name="card_title">My Golf Card - Card</string>
+    
+    <string name="strokes_title">My Golf Card - Strokes</string>
+    <string name="matches_title">My Golf Card - Matches</string>
+    <string name="courses_title">My Golf Card - Courses</string>
+    <string name="keypad_title">My Golf Card - Keypad</string>
+    
+	<string name="about_title">About My Golf Card</string>
+   	<string name="about_text">\
+    ¿Do you already know <b>My Golf Card</b>? ¿Has any mate talked to you about this new golf website?\n\n
+    Sign-up now, it is totally free at http://www.mygolfcard.es\n\n
+    With this movil application you will be able to note your score after each hole during your golf matches, even your partner\' ones. Forget score cards and pencils!\n\n
+    At the end of the match, you will just have to upload your card to My Golf Card by clicking a button and the match will be published in <b>My Golf Card</b>\n\n
+	</string>
+	<string name="about_shortcut">a</string>
+   
+	<string name="settings_label">Settings...</string>
+	<string name="settings_title">My Golf Card settings</string>
+	<string name="settings_shortcut">s</string>
+	
+	<string name="synchro_label">Pending</string>
+	<string name="synchro_title">My Golf Card - Pending</string>
+	<string name="synchro_shortcut">y</string>
+	
+	<string name="menuapp_label">Menu</string>
+	<string name="menuapp_shortcut">m</string>
+	
+	<string name="resume_label">Summary</string>
+	<string name="resume_title">My Golf Card - Summary</string>
+	<string name="resume_shortcut">r</string>
+	
+	<string name="card_graph_label">Card</string>
+	<string name="card_graph_title">My Golf Card - Card</string>
+	<string name="card_graph_shortcut">g</string>
+	
+	<string name="stats1_graph_label">Comp. Strokes</string>
+	<string name="stats1_graph_title">My Golf Card - Compared Strokes</string>
+	<string name="stats1_graph_shortcut">s</string>
+	
+	<string name="stats2_graph_label">Comp. Total</string>
+	<string name="stats2_graph_title">My Golf Card - Compared Total Strokes</string>
+	<string name="stats2_graph_shortcut">t</string>
+	
+	<string name="course_details_label">Course Details</string>
+	<string name="course_detail_title">My Golf Card - Course Details</string>
+	<string name="course_details_shortcut">d</string>
+	
+	<string name="alert_button_default">OK</string>
+	<string name="alert_dialog_confirm">OK</string>
+	<string name="alert_dialog_cancel">Cancel</string>
+	<string name="alert_dialog_title_delete_matches">Delete Matches</string>
+	<string name="alert_dialog_delete_matches">Do you really want to the delete pending matches selected?</string>
+	<string name="alert_dialog_delete_all_matches">Do you really want to delete all pending matches?</string>
+	<string name="alert_dialog_title_upload_matches">Syncing Matches</string>
+	<string name="alert_dialog_upload_matches">Do you really want to sync the pending matches selected?</string>
+	<string name="alert_title_no_save">Error saving data</string>
+	<string name="no_internet">Missed internet connection.\nLast available data will be used.</string>
+	<string name="no_internet_connect">Only available with internet connection. Switch on your Wi-Fi or data connection and reboot My Golf Card.\nSorry for the inconvenience.\n</string>
+	<string name="no_save">Data not saved. Please, try again.\n</string>
+	<string name="no_implemented">Option not available.\Sorry for the inconvenience.</string>
+	<string name="title_remote_connection">Remote Connection.</string>
+	<string name="title_file_connection">Local Connection.</string>
+	<string name="remote_connection">Reading data from remote My Golf Card server.</string>
+	<string name="file_connection">No data found from previous session. Switch on your Wi-Fi or data connection in order to validate your login.\Sorry for the inconvenience.\n</string>
+	<string name="no_holes">No info available for holes in this course.\nSorry for the inconvenience.</string>
+    
+    <string name="URL_APIS">http://www.mygolfcard.es/api/</string>
+    <!-- <string name="URL_APIS">http://127.0.0.1:3000/api/</string> -->
+    <string name="ACTION_AUTH">authentication</string>
+    <string name="ACTION_MATCHES">getmatches</string>
+    <string name="ACTION_DELETEMATCH">deletematch</string>
+    <string name="ACTION_DELETEMATCHES">deletematches</string>
+    <string name="ACTION_COURSES">getcourses</string>
+    <string name="ACTION_FRIENDS">getfriends</string>
+    <string name="ACTION_MATCH">getmatch</string>
+    <string name="ACTION_STROKES">getstrokes</string>
+    <string name="ACTION_COURSE">getcourse</string>
+    <string name="ACTION_INFO_HOLES">getinfoholes</string>
+    <string name="ACTION_UPLOAD">uploadmatch</string>
+    <string name="ACTION_SIGNUP">newuser</string>
+    
+    <string name="DB_NAME">mygolfcard.db</string>
+        
+    <string name="resume_match">Match Summary</string> 
+    <string name="main_no_items">No data to show</string>
+    <string name="title_form_validation">Validate Form</string>
+    <string name="form_validation">Form data are not correct:\n</string>
+    
+    <string name="synchro_delete">Delete</string>
+    <string name="synchro_delete_all">Delete All</string>
+    <string name="synchro_upload">Sync with MyGolfCard</string>
+    
+    <string name="access_error_title">Data access error</string>
+    <string name="access_error">"Data access are incorrect.\nIf yo are registered in www.mygolfcard.es, try again o ask for your password in the website.\nIf you are not registered, you should signg-up before using this application.\n"</string>
+    
+    <string name="disclaim">My Golf Card is a independant movil application and it is not associated with any course or golf club.</string>
+</resources>
+
+
+

@@ -221,8 +221,8 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 			// MOSTRAMOS MENSAJE
 			new AlertDialog.Builder(this)
 				.setIcon(R.drawable.alert_dialog_icon)
-				.setTitle("Error en datos de acceso")
-				.setMessage("Los datos introducidos no son correctos.\nSi es un usuario registrado en www.mygolfcard.es, inténtelo de nuevo o recupere en la web su contraseña.\nSi no es usuario registrado, deberá registrarse antes de utilizar esta aplicación.\n")
+				.setTitle(R.string.access_error_title)
+				.setMessage(R.string.access_error)
 				.setPositiveButton("Aceptar", null)
 				.show();
 		}
@@ -267,7 +267,7 @@ public class MyGolfCard extends Activity  implements OnClickListener {
 		{
 			Log.i( "makemachine", "onPreExecute()" );
 			super.onPreExecute();
-			this.dialog = ProgressDialog.show(MyGolfCard.this, "Autenticación", "Realizando llamada al servidor para comprobar sus datos de acceso.", true);
+			this.dialog = ProgressDialog.show(MyGolfCard.this, "Autenticación", MyGolfCard.this.getString(R.string.remote_call), true);
 		}
 
 		// -- called from the publish progress 

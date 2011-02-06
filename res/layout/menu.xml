@@ -146,5 +146,5 @@
 	    android:gravity="center"
 	    android:textColor="#64c6d4ef"
 	    android:textSize="10dip" 
-	    android:text="My Golf Card es un producto independiente y no asociado a nigún campo de golf o club de socios." />
+	    android:text="@string/disclaim" />
 </LinearLayout>
