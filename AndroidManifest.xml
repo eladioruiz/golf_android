@@ -73,6 +73,11 @@
 			android:configChanges="keyboard|keyboardHidden|orientation">
 		</activity>
 
+		<activity android:name=".Admin"
+			android:label="@string/admin_title"
+			android:configChanges="keyboard|keyboardHidden|orientation">
+		</activity>
+
 		<activity android:name=".Checkbox"
 			android:label="@string/synchro_title" 
 			android:theme="@style/Theme.Green" >

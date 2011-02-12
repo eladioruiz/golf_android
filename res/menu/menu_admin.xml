@@ -8,19 +8,16 @@
  ! Visit http://www.pragmaticprogrammer.com/titles/eband2 for more book information.
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:id="@+id/synchro_upload"
-	   android:title="@string/synchro_upload" 
-	   android:icon="@drawable/synchro" />
-	   
-	<item android:id="@+id/synchro_delete"
-      android:title="@string/synchro_delete"
+    <item android:id="@+id/admin_recover"
+      android:title="@string/admin_recover" 
+      android:icon="@drawable/synchro" />
+
+	<item android:id="@+id/admin_delete"
+      android:title="@string/admin_delete"
       android:icon="@drawable/delete" />
       
-    <item android:id="@+id/synchro_delete_all"
-      android:title="@string/synchro_delete_all" 
+    <item android:id="@+id/admin_delete_all"
+      android:title="@string/admin_delete_all" 
       android:icon="@drawable/delete_all" />
-
-    <item android:id="@+id/synchro_recover"
-      android:title="@string/synchro_recover" 
-      android:icon="@drawable/synchro" />	   
+	   
 </menu>

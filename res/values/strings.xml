@@ -44,6 +44,10 @@
 	<string name="synchro_title">My Golf Card - Pendientes</string>
 	<string name="synchro_shortcut">y</string>
 	
+	<string name="admin_label">Admin</string>
+	<string name="admin_title">My Golf Card - Admin</string>
+	<string name="admin_shortcut">i</string>
+	
 	<string name="menuapp_label">Menú</string>
 	<string name="menuapp_shortcut">m</string>
 	
@@ -72,6 +76,8 @@
 	<string name="alert_dialog_cancel">Cancelar</string>
 	<string name="alert_dialog_title_delete_matches">Borrar Partidos</string>
 	<string name="alert_dialog_delete_matches">¿Desea realmente borrar los partidos pendientes seleccionados?</string>
+	<string name="alert_dialog_title_recover_matches">Recuperar Partidos</string>
+	<string name="alert_dialog_recover_matches">¿Desea realmente recuperar los partidos seleccionados?</string>
 	<string name="alert_dialog_delete_all_matches">¿Desea realmente borrar todos los partidos pendientes seleccionados?</string>
 	<string name="alert_dialog_title_upload_matches">Sincronización Partidos</string>
 	<string name="alert_dialog_upload_matches">¿Desea realmente sincronizar los partidos pendientes seleccionados?</string>
@@ -111,6 +117,12 @@
     <string name="synchro_delete">Borrar</string>
     <string name="synchro_delete_all">Borrar Todos</string>
     <string name="synchro_upload">Sincronizar con MyGolfCard</string>
+    <string name="synchro_recover">Admin</string>
+    
+    <string name="admin_delete">Borrar</string>
+    <string name="admin_delete_all">Borrar Todos</string>
+    <string name="admin_upload">Sincronizar con MyGolfCard</string>
+    <string name="admin_recover">Recuperar Partidos</string>
     
     <string name="access_error_title">Error en los datos de acceso</string>
     <string name="access_error">"Los datos introducidos no son correctos.\nSi es un usuario registrado en www.mygolfcard.es, inténtelo de nuevo o recupere en la web su contraseña.\nSi no es usuario registrado, deberá registrarse antes de utilizar esta aplicación.\n"</string>

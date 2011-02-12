@@ -1,11 +1,11 @@
 /**
  * Package: org.activities.mygolfcard
- * File: Synchro.java
+ * File: ADMIN.java
  * Description:
- * Create At: ---
+ * Create At: 12/02/2011
  * Created By: ERL
  * Last Modifications:
- * 		05/11/2010 - ERL - POO
+ * 		
  */
 package org.activities.mygolfcard;
 
@@ -38,12 +38,12 @@ import android.view.Window;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class Synchro extends ListActivity implements OnClickListener {
-	private static final int DIALOG_SYNCHRO_DELETE 		= 1;
-    private static final int DIALOG_SYNCHRO_UPLOAD 		= 2;
-    private static final int DIALOG_SYNCHRO_PROGRESS	= 3;
-    private static final int DIALOG_SYNCHRO_DELETE_ALL	= 4;
-    private static final int DIALOG_SYNCHRO_RECOVER		= 5;
+public class Admin extends ListActivity implements OnClickListener {
+	private static final int DIALOG_ADMIN_DELETE 		= 1;
+    private static final int DIALOG_ADMIN_UPLOAD 		= 2;
+    private static final int DIALOG_ADMIN_PROGRESS		= 3;
+    private static final int DIALOG_ADMIN_DELETE_ALL	= 4;
+    private static final int DIALOG_ADMIN_RECOVER		= 5;
     
     private static final int MATCH_PENDING_UPLOAD	= 0;
     private static final int MATCH_PROCESSING 		= 1;
@@ -54,6 +54,7 @@ public class Synchro extends ListActivity implements OnClickListener {
 	private String[] matches_field3;
 	private String[] matches_field4;
 	private String[] matches_field5;
+	private String[] matches_field6;
 	private String[] selectedMatches;
 		
 	private SQLiteDatabase db = null;
@@ -63,6 +64,7 @@ public class Synchro extends ListActivity implements OnClickListener {
 	private String course_id;
 	private String date_hour;
 	private String n_holes;
+	private int	   status;
 	private String player_id[][]; // = new String[4];
 	private String tee_id[][]; // = new String[4];
 	private int holes[][][];
@@ -91,7 +93,7 @@ public class Synchro extends ListActivity implements OnClickListener {
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-        setContentView(R.layout.synchro);
+        setContentView(R.layout.admin);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title_2);
         
         findViews();
@@ -102,12 +104,11 @@ public class Synchro extends ListActivity implements OnClickListener {
 		DATABASE_NAME = getString(R.string.DB_NAME);
 		URL_UPLOAD = getString(R.string.URL_APIS) + getString(R.string.ACTION_UPLOAD);
 		
-		Authentication.readDataUser(Synchro.this);
+		Authentication.readDataUser(Admin.this);
 		auth_user_id = Authentication.getUserId();
 
 		getMatches();
-		setInfo();
-		
+		setInfo();		
 	}
 
 	@Override
@@ -128,39 +129,37 @@ public class Synchro extends ListActivity implements OnClickListener {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu_synchro, menu);
+		inflater.inflate(R.menu.menu_admin, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.synchro_delete:
-				showDialog(DIALOG_SYNCHRO_DELETE);
+			case R.id.admin_delete:
+				showDialog(DIALOG_ADMIN_DELETE);
 				return true;
 				
-			case R.id.synchro_delete_all:
-				showDialog(DIALOG_SYNCHRO_DELETE_ALL);
+			case R.id.admin_delete_all:
+				showDialog(DIALOG_ADMIN_DELETE_ALL);
 				return true;
 				
-			case R.id.synchro_upload:
-				showDialog(DIALOG_SYNCHRO_UPLOAD);				
+			case R.id.admin_recover:
+				showDialog(DIALOG_ADMIN_RECOVER);
 				return true;
-				
-			case R.id.synchro_recover:
-				Intent i = new Intent(this, Admin.class);
-				startActivity(i);
-				finish(); 
+
+				/*			case R.id.admin_upload:
+				showDialog(DIALOG_ADMIN_UPLOAD);				
 				return true;
-				
+*/				
 		}
 		return false;
 	}    
 	
 	protected Dialog onCreateDialog(int id) {
         switch (id) {
-	        case DIALOG_SYNCHRO_DELETE:
-				return new AlertDialog.Builder(Synchro.this)
+	        case DIALOG_ADMIN_DELETE:
+				return new AlertDialog.Builder(Admin.this)
 			        .setIcon(R.drawable.alert_dialog_icon)
 			        .setTitle(R.string.alert_dialog_title_delete_matches)
 			        .setMessage(R.string.alert_dialog_delete_matches)
@@ -178,8 +177,8 @@ public class Synchro extends ListActivity implements OnClickListener {
 			        })
 			        .create();
 				
-	        case DIALOG_SYNCHRO_DELETE_ALL:
-				return new AlertDialog.Builder(Synchro.this)
+	        case DIALOG_ADMIN_DELETE_ALL:
+				return new AlertDialog.Builder(Admin.this)
 			        .setIcon(R.drawable.alert_dialog_icon)
 			        .setTitle(R.string.alert_dialog_title_delete_matches)
 			        .setMessage(R.string.alert_dialog_delete_all_matches)
@@ -196,8 +195,8 @@ public class Synchro extends ListActivity implements OnClickListener {
 			        })
 			        .create();
 				
-	        case DIALOG_SYNCHRO_UPLOAD:
-	        	return new AlertDialog.Builder(Synchro.this)
+	        case DIALOG_ADMIN_UPLOAD:
+	        	return new AlertDialog.Builder(Admin.this)
 	                .setIcon(R.drawable.alert_dialog_icon)
 	                .setTitle(R.string.alert_dialog_title_upload_matches)
 	                .setMessage(R.string.alert_dialog_upload_matches)
@@ -213,8 +212,27 @@ public class Synchro extends ListActivity implements OnClickListener {
 	                })
 	                .create();
 	        	
-	        case DIALOG_SYNCHRO_PROGRESS:
-        	
+	        case DIALOG_ADMIN_RECOVER:
+				return new AlertDialog.Builder(Admin.this)
+			        .setIcon(R.drawable.alert_dialog_icon)
+			        .setTitle(R.string.alert_dialog_title_recover_matches)
+			        .setMessage(R.string.alert_dialog_recover_matches)
+			        .setPositiveButton(R.string.alert_dialog_confirm, new DialogInterface.OnClickListener() {
+			            public void onClick(DialogInterface dialog, int whichButton) {
+			            	getItemsChecked();
+							recoverItems();
+							finish();
+			            }
+			        })
+			        .setNegativeButton(R.string.alert_dialog_cancel, new DialogInterface.OnClickListener() {
+			            public void onClick(DialogInterface dialog, int whichButton) {
+			                /* User clicked Cancel so do some stuff */
+			            }
+			        })
+			        .create();
+				
+	        case DIALOG_ADMIN_PROGRESS:
+
         }
         return null;
 	}
@@ -229,7 +247,7 @@ public class Synchro extends ListActivity implements OnClickListener {
 
 	private void processUploadingMatches()
 	{
-		dismissDialog(DIALOG_SYNCHRO_UPLOAD);
+		dismissDialog(DIALOG_ADMIN_UPLOAD);
 
 		//getItemsChecked(); 	//ERL 
 		//uploadItems();		//ERL 
@@ -244,6 +262,7 @@ public class Synchro extends ListActivity implements OnClickListener {
 	
 	private void getMatches() {
 		String sql;
+		String sStatusDesc = "";
 		
 		course_name = "";
 		course_id	= "";
@@ -255,7 +274,7 @@ public class Synchro extends ListActivity implements OnClickListener {
 		
 		try {
 			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
-			sql = "select * from matches where status in (" + MATCH_PENDING_UPLOAD + "," + MATCH_PROCESSING + ") order by ID desc";
+			sql = "select * from matches where status in (" + MATCH_PENDING_UPLOAD + "," + MATCH_PROCESSING + "," + MATCH_UPLOADED + ") order by ID desc";
 			
 		 	Cursor c = db.rawQuery(sql, null);
 		 	int colMatchId		= c.getColumnIndex("ID");
@@ -271,6 +290,7 @@ public class Synchro extends ListActivity implements OnClickListener {
 		    int colTee2			= c.getColumnIndex("tee2");
 		    int colTee3			= c.getColumnIndex("tee3");
 		    int colTee4			= c.getColumnIndex("tee4");
+		    int colStatus		= c.getColumnIndex("status");
 		 	
 		    c.moveToLast();
 		    matches_field1 	= new String[c.getCount()];
@@ -278,9 +298,11 @@ public class Synchro extends ListActivity implements OnClickListener {
 		    matches_field3 	= new String[c.getCount()];
 		    matches_field4 	= new String[c.getCount()];
 		    matches_field5 	= new String[c.getCount()];
+		    matches_field6 	= new String[c.getCount()];
 		    holes			= new int[c.getCount()][4][19];
 		    player_id		= new String[c.getCount()][4];
 		    tee_id			= new String[c.getCount()][4];
+		    
 		 	c.moveToFirst();
 		 	
 		 	if (c != null) {
@@ -292,6 +314,7 @@ public class Synchro extends ListActivity implements OnClickListener {
 			 			match_id 		= c.getString(colMatchId);
 			 			date_hour		= c.getString(colDateHour);
 			 			n_holes			= c.getString(colHoles);
+			 			status			= c.getInt(colStatus);
 			 			player_id[i][0]	= c.getString(colPlayer1);
 			 			player_id[i][1]	= c.getString(colPlayer2);
 			 			player_id[i][2]	= c.getString(colPlayer3);
@@ -306,6 +329,20 @@ public class Synchro extends ListActivity implements OnClickListener {
 			 			matches_field3[i] 	= date_hour;
 			 			matches_field4[i] 	= course_id;
 			 			matches_field5[i] 	= n_holes;
+			 			
+			 			switch (status) {
+			 				case MATCH_PENDING_UPLOAD:
+			 					sStatusDesc = "PENDIENTE";
+			 					break;
+			 				case MATCH_PROCESSING:
+			 					sStatusDesc = "PROCESANDO";
+			 					break;
+			 				case MATCH_UPLOADED:
+			 					sStatusDesc = "EN WEB";
+			 					break;
+			 			}
+			 			matches_field6[i] 	= sStatusDesc;
+			 			matches_field3[i] += " (" + matches_field6[i] + ")"; 
 			 			
 			 			// Saca los golpes para cada jugador del partido 'i'
 			 			for (int j=0;j<player_id[i].length;j++) {
@@ -415,6 +452,37 @@ public class Synchro extends ListActivity implements OnClickListener {
     	}
 	}
 	
+	private void recoverItems() {
+		String sql = "";
+		String where = "";
+		
+		
+		for (int i=0; i<selectedMatches.length;i++) {			
+			if (!selectedMatches[i].equals("0"))
+			{
+				where += selectedMatches[i] + ",";
+			}
+		}
+		where += "0";
+		
+		try {
+			Log.i("Info", "RECOVERING matches : " + sql);
+			db = this.openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
+			
+			sql = "update matches set status=" + MATCH_PENDING_UPLOAD + " where id in (";
+			sql += where + ")";
+		 	db.execSQL(sql);
+		 	
+		}
+		catch(Exception e) {
+    		Log.e("Error", "Error RECOVERING matches", e);
+    	} 
+    	finally {
+    		if (db != null)
+    			db.close();
+    	}
+	}
+	
 	private void deleteAllItems() {
 		String sql = "";
 
@@ -511,7 +579,7 @@ public class Synchro extends ListActivity implements OnClickListener {
 		footer		= getXMLFooter();
 		
 		xmlFile = header + match + players + footer;
-		Authentication.saveFile(Synchro.this,fileName,xmlFile);
+		Authentication.saveFile(Admin.this,fileName,xmlFile);
 		
 		return fileName;
 	}
@@ -520,7 +588,7 @@ public class Synchro extends ListActivity implements OnClickListener {
 		String response = "";
 		String dataFile;
     	
-		dataFile = Authentication.readFile(Synchro.this, fileName);
+		dataFile = Authentication.readFile(Admin.this, fileName);
 
 	    RestClient client = new RestClient(URL_UPLOAD);
 	    client.AddParam("filename", fileName);
@@ -594,7 +662,7 @@ public class Synchro extends ListActivity implements OnClickListener {
 	}
 
 	private void initViews() {
-		Authentication.readDataUser(Synchro.this);
+		Authentication.readDataUser(Admin.this);
 		auth_token = Authentication.getToken();
 		cUser.setUser_id(Authentication.getUserId());
 		cUser.setUserName(Authentication.getUserName());
@@ -651,7 +719,7 @@ public class Synchro extends ListActivity implements OnClickListener {
 			Log.i( "makemachine", "onPreExecute()" );
 			super.onPreExecute();
 			
-			this.dialog = new ProgressDialog(Synchro.this);
+			this.dialog = new ProgressDialog(Admin.this);
 			this.dialog.setIcon(R.drawable.info_dialog_icon_tra);
 			this.dialog.setTitle("Sincronizando partidos pendientes");
 			this.dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
