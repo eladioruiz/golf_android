@@ -134,6 +134,9 @@ public class Course {
 	    //ERL client.AddParam("course_id", course_id);
 	    client.AddParam("course_id", "" + course_id);
 	    
+	    Log.i("RESPONSE", "" + URL_COURSE);
+	    Log.i("RESPONSE", "" + token);
+	    Log.i("RESPONSE", "" + user_id);
 	    Log.i("RESPONSE", "" + course_id);
 	        
 	    response = "";

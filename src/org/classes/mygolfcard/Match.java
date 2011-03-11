@@ -335,7 +335,7 @@ public class Match {
 			
 			aux_players = jsonObj.getString("players");
 			res.setCourseName(jsonObj.getString("course_name"));
-			//res.setCourse_id(Integer.parseInt(jsonObj.getString("course_id")));
+			res.setCourse_id(Integer.parseInt(jsonObj.getString("course_id")));
 			res.setDateHour(jsonObj.getString("date_hour_match"));
 			res.setHoles(Integer.parseInt(jsonObj.getString("holes")));
 			res.setMatch_id(Integer.parseInt(jsonObj.getString("match_id")));

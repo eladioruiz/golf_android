@@ -77,7 +77,9 @@ public class CardGraphView extends View {
 	private org.classes.mygolfcard.Match currentMatch;
 	private Player auxPlayer[] = new Player[4];
 	private User cUser = new User();
-	
+
+	private org.classes.mygolfcard.Course currentCourse;
+	private org.classes.mygolfcard.Hole[] holes;
 
 	public CardGraphView(Context context, int match_id, int mitad, int type_match) {
 		super(context);
@@ -245,20 +247,22 @@ public class CardGraphView extends View {
 		// Centering in Y: measure ascent/descent first
 		y = height / 2 - (fm_h.ascent + fm_h.descent) / 2;
 		
-		// Drawing info holes PAR
-		j = 4;
-		for (i=5;i<=13;i++) {
-			int holeNumber = i - 4 + ((mitad-1) * 9);
-			canvas.drawText("" + holeNumber,  (i * width) + x, (j * height) + y, infoHoles);
-		}
+		if (holes != null) {
+			// Drawing info holes PAR
+			j = 4;
+			for (i=5;i<=13;i++) {
+				int holeNumber = i - 4 + ((mitad-1) * 9);
+				canvas.drawText("" + holes[holeNumber-1].getPar(),  (i * width) + x, (j * height) + y, infoHoles);
+			}
 
-		// Drawing info holes HCP
-		j = 5;
-		for (i=5;i<=13;i++) {
-			int holeNumber = i - 4 + ((mitad-1) * 9);
-			canvas.drawText("" + holeNumber,  (i * width) + x, (j * height) + y, infoHoles);
+			// Drawing info holes HCP
+			j = 5;
+			for (i=5;i<=13;i++) {
+				int holeNumber = i - 4 + ((mitad-1) * 9);
+				canvas.drawText("" + holes[holeNumber-1].getHandicap(),  (i * width) + x, (j * height) + y, infoHoles);
+			}
 		}
-
+		
 		i = 4;
 		j = 4;
 		infoHoles.setTextAlign(Paint.Align.RIGHT);
@@ -415,74 +419,7 @@ public class CardGraphView extends View {
     			db.close();
     	}
     	
-    	
-/*		ERL
- * 		String sql = "";
-		int i = 0;
-		
-		sql = "SELECT course_name, date_hour_match, holes, player1_id, player2_id, player3_id, player4_id FROM matches where id=" + match_id;
-
-		try {
-			db = ctxCardGraph.openOrCreateDatabase(DATABASE_NAME, 0, null);
-		 	
-			Cursor c = db.rawQuery(sql, null);
-		 	colPlayer[0]	= c.getColumnIndex("player1_id");
-		 	colPlayer[1]	= c.getColumnIndex("player2_id");
-		 	colPlayer[2]	= c.getColumnIndex("player3_id");
-		 	colPlayer[3]	= c.getColumnIndex("player4_id");
-		 	
-		 	colCourseName	= c.getColumnIndex("course_name");
-		 	colDateHour		= c.getColumnIndex("date_hour_match");
-		 	colnHoles		= c.getColumnIndex("holes");
-		 	
-		 	c.moveToLast();
-		 	c.moveToFirst();
-		 	if (c != null) {
-		 		i = 0;
-		 		
-		 		// recupera los ids de lo jugadores que participan en el partido
-	 			aux_player_id[0] = c.getInt(colPlayer[0]);
-	 			aux_player_id[1] = c.getInt(colPlayer[1]);
-	 			aux_player_id[2] = c.getInt(colPlayer[2]);
-	 			aux_player_id[3] = c.getInt(colPlayer[3]);
-	 			
-	 			// y los datos del partido
-	 			course_name 	= c.getString(colCourseName);
-	 			date_hour_match = c.getString(colDateHour);
-		 		
-		 		for (i=0;i<4;i++) {
-		 			if (aux_player_id[i]!=0) { 
-			 			sql = "SELECT * FROM strokes WHERE match_id=" + match_id + " AND player_id=" + aux_player_id[i];
-			 			
-			 			Cursor c2 = db.rawQuery(sql, null);
-			 			int colHoleNumber	= c2.getColumnIndex("hole");
-			 			int colStrokes		= c2.getColumnIndex("strokes");
-			 			
-			 			c2.moveToLast();
-					 	c2.moveToFirst();
-					 	if (c2 != null) {
-					 		do {
-					 			int holeNumber 	= c2.getInt(colHoleNumber);
-					 			int strokes		= c2.getInt(colStrokes);
-					 		
-					 			arrStrokes[i][holeNumber] = strokes;
-					 		}
-					 		while (c2.moveToNext());
-					 	}		 			
-			 			c2.close();
-		 			}
-		 		}
-		 	}
-	 		c.close();
-		}
-		catch(Exception e) {
-    		Log.e("Error", "Error reading DB", e);
-    	} 
-    	finally {
-    		if (db != null)
-    			db.close();
-    	}
-*/    	invalidate();
+    	invalidate();
 	}
 	
 	private void getInfoCardRemote()
@@ -598,33 +535,7 @@ public class CardGraphView extends View {
 	    return response;
 	}
 	
-/*	ERL
- * public void setInfoMatch(String result) {
-		JSONObject jsonObj;
-		JSONArray  jsonArr;
-		String aux_players;
-
-		try {
-			jsonObj = new JSONObject(result);
-			
-			aux_players 	= jsonObj.getString("players");
-			course_name 	= jsonObj.getString("course_name");
-			date_hour_match	= jsonObj.getString("date_hour_match");
-			
-			jsonArr = new JSONArray(aux_players);
-			
-			for (int i=0; i<jsonArr.length(); i++) {
-				jsonObj = new JSONObject(jsonArr.get(i).toString());
-				
-				aux_player_id[i] = Integer.parseInt(jsonObj.getString("user_id"));
-				aux_playerweb_id[i] = Integer.parseInt(jsonObj.getString("player_id"));
-			}
-					
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-*/	
+	
 	public void setInfoStrokes(int iPlayer, String result) {
 		JSONObject jsonObj;
 		JSONArray  jsonArr;
@@ -672,6 +583,9 @@ public class CardGraphView extends View {
 			
 			course_name = currentMatch.getCourseName();
 			date_hour_match	= currentMatch.getDateHour();
+			
+			currentCourse = new org.classes.mygolfcard.Course(ctxCardGraph);
+			holes = org.classes.mygolfcard.Hole.getInfoHoles(currentMatch.getCourse_id(),auth_token, ctxCardGraph);
 			
 			for (int i=0;i<auxPlayer.length;i++) {
 				if (auxPlayer[i] != null) {
