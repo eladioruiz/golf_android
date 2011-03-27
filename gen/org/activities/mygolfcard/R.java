@@ -258,7 +258,6 @@ public final class R {
     }
     public static final class string {
         /**  <string name="URL_APIS">http://127.0.0.1:3000/api/</string> 
- <string name="URL_APIS">http://127.0.0.1:3000/api/</string> 
          */
         public static final int ACTION_AUTH=0x7f070043;
         public static final int ACTION_COURSE=0x7f07004b;

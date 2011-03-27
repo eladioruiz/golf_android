@@ -86,8 +86,6 @@
 	<string name="file_connection">No data found from previous session. Switch on your Wi-Fi or data connection in order to validate your login.\Sorry for the inconvenience.\n</string>
 	<string name="no_holes">No info available for holes in this course.\nSorry for the inconvenience.</string>
     
-    <string name="URL_APIS">http://dev.mygolfcard.es/api/</string>
-    <!-- <string name="URL_APIS">http://127.0.0.1:3000/api/</string> -->
     <string name="ACTION_AUTH">authentication</string>
     <string name="ACTION_MATCHES">getmatches</string>
     <string name="ACTION_DELETEMATCH">deletematch</string>

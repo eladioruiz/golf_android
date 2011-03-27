@@ -118,6 +118,7 @@ public class Hole {
 		String result;
 		
 		ctx = ctx2;
+		URL_HOLES = ctx.getString(R.string.URL_APIS) + ctx.getString(R.string.ACTION_INFO_HOLES);
 		
 		result = Authentication.readInfoHoles(ctx2);
 		
@@ -144,13 +145,15 @@ public class Hole {
 		    try {
 		        client.Execute(RequestMethod.POST);
 		        response = client.getResponse();
+		        
+		        Authentication.saveInfoHoles(ctx, response);
+		        
+		        Log.i( "holes", "getting holes " + response.toString());
 		    } catch (Exception e) {
 		        e.printStackTrace();
+		        
+		        Log.w("holes", "getting holes " + response.toString());
 		    }
-		    
-		    Authentication.saveInfoHoles(ctx, response);
-		    
-		    Log.i( "strokes", "getting holes " + response.toString());
 		    
 		    return setInfoHoles(response, ctx);
 		}

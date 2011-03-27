@@ -2,6 +2,7 @@ package org.activities.mygolfcard;
 
 import org.activities.mygolfcard.RestClient.RequestMethod;
 import org.classes.mygolfcard.Authentication;
+import org.classes.mygolfcard.Hole;
 import org.classes.mygolfcard.Player;
 import org.classes.mygolfcard.User;
 import org.json.JSONArray;
@@ -53,8 +54,12 @@ public class CardGraphView extends View {
 	private static final int TYPEMATCH_INTERNAL 	= 1;
 	private static final int TYPEMATCH_REMOTE		= 2;
 	
+	private static final int MEDALPLAY	= 1;
+	private static final int STABLEFORD	= 2;
+	
 	private int match_id;
 	private int mitad;
+	private int puntuacion;
 	private int typeMatch;
 
 	private SQLiteDatabase db = null;
@@ -70,6 +75,7 @@ public class CardGraphView extends View {
 	//ERL private int aux_player_id[] = new int[4]; 
 	//ERL private int aux_playerweb_id[] = new int[4];
 	private int arrStrokes[][] = new int[4][19];
+	private int arrPoints[][] = new int[4][19];
 
 	//ERL private String[] players_field1;
 	//ERL private String[] players_field2;
@@ -89,9 +95,10 @@ public class CardGraphView extends View {
 
 		ctxCardGraph = context;
 
-		this.match_id = match_id;
-		this.mitad = mitad;
-		this.typeMatch = type_match;
+		this.match_id 	= match_id;
+		this.mitad 		= mitad;
+		this.puntuacion	= MEDALPLAY;
+		this.typeMatch 	= type_match;
 		
 		getInfoCard();
 		
@@ -169,21 +176,21 @@ public class CardGraphView extends View {
 		Paint players = new Paint(Paint.ANTI_ALIAS_FLAG);
 		players.setColor(getResources().getColor(R.color.card_players));
 		players.setStyle(Style.FILL);
-		players.setTextSize(height * 0.55f);
+		players.setTextSize(height * 0.45f);
 		players.setTextScaleX(width / height);
 		players.setTextAlign(Paint.Align.LEFT);
 		
 		Paint strokes = new Paint(Paint.ANTI_ALIAS_FLAG);
 		strokes.setColor(getResources().getColor(R.color.card_players));
 		strokes.setStyle(Style.FILL);
-		strokes.setTextSize(height * 0.55f);
+		strokes.setTextSize(height * 0.45f);
 		strokes.setTextScaleX(width / height);
 		strokes.setTextAlign(Paint.Align.CENTER);
 		
 		Paint players_total = new Paint(Paint.ANTI_ALIAS_FLAG);
 		players_total.setColor(getResources().getColor(R.color.card_players));
 		players_total.setStyle(Style.FILL);
-		players_total.setTextSize(height * 0.60f);
+		players_total.setTextSize(height * 0.50f);
 		players_total.setTextScaleX(width / height);
 		players_total.setTextAlign(Paint.Align.RIGHT);
 		
@@ -191,13 +198,21 @@ public class CardGraphView extends View {
 		FontMetrics fm_p = players.getFontMetrics();
 
 		// Centering in X: use alignment (and X at midpoint)
-		float x = width / 2;
+		float x = width / 5;
 		
 		// Centering in Y: measure ascent/descent first
 		float y = height / 2 - (fm_p.ascent + fm_p.descent) / 2;
 		
-		canvas.drawCircle((float)(2.5 * width), (float)(1.5 * height), (float)(1 * width), dark);
+		canvas.drawCircle((float)(1.5 * width), (float)(1.5 * height), (float)(1 * width), dark);
 		canvas.drawText(mitad==1 ? "2P" : "1P", (float)(1.75 * width + x), (float)(1 * height + y), players);
+		
+		
+		// Centering in X: use alignment (and X at midpoint)
+		x = 4 * width / 5;
+		
+		canvas.drawCircle((float)(3.5 * width), (float)(1.5 * height), (float)(1 * width), dark);
+		canvas.drawText(puntuacion == STABLEFORD ? "MP" : "SF", (float)(2.75 * width + x), (float)(1 * height + y), players);
+		
 		
 		canvas.drawText(course_name, (TITLE_COL * width + x), (float)(0.75 * height + y), players);
 		canvas.drawText(date_hour_match, (TITLE_COL * width + x), (float)(1.5 * height + y), players);
@@ -284,12 +299,19 @@ public class CardGraphView extends View {
 		// Drawing Players
 		i = 0;
 		j = 6;
-		int sum_mitad = 0;
-		int sum_total = 0;
+		
+		int sum_mitad 		= 0;
+		int points_mitad 	= 0;
+		int sum_total 		= 0;
+		int points_total	= 0;
+		
 		for (int iPlayer=0;iPlayer<auxPlayer.length;iPlayer++) {
 			i = 0;
 			sum_mitad = 0;
 			sum_total = 0;
+			
+			points_mitad = 0;
+			points_total = 0;
 			
 			if (auxPlayer[iPlayer] != null ) {
 				canvas.drawText(getPlayerName(""+ auxPlayer[iPlayer].getPlayer_id()),  (i * width) + 1, (j * height) + y, players);
@@ -301,15 +323,36 @@ public class CardGraphView extends View {
 			
 			for (int z=1 + ((mitad-1) * 9);z<10 + ((mitad-1) * 9);z++) {
 				sum_mitad += arrStrokes[iPlayer][z];
-				canvas.drawText("" + arrStrokes[iPlayer][z], ((i+4) * width) + x, (j* height) + y, strokes);
+				points_mitad += arrPoints[iPlayer][z];
+				
+				// Preguntar primero si queremos ver medal play o stableford
+				int display = 0;
+				if (puntuacion == MEDALPLAY) {
+					display = arrStrokes[iPlayer][z];
+				}
+				else {
+					display = arrPoints[iPlayer][z];
+				}
+				
+				canvas.drawText("" + display, ((i+4) * width) + x, (j* height) + y, strokes);
+				
 				++i;
 			}
 			
 			for (int z=1;z<19;z++) {
 				sum_total += arrStrokes[iPlayer][z];
+				points_total += arrPoints[iPlayer][z];
 			}
-			canvas.drawText("" + sum_mitad, ((i + PARTIAL_COL) * width) , (j* height) + y, players_total);
-			canvas.drawText("" + sum_total, ((i + TOTAL_COL) * width) , (j* height) + y, players_total);
+			
+			// Preguntar primero si queremos ver medal play o stableford
+			if (puntuacion == MEDALPLAY) {
+				canvas.drawText("" + sum_mitad, ((i + PARTIAL_COL) * width) , (j* height) + y, players_total);
+				canvas.drawText("" + sum_total, ((i + TOTAL_COL) * width) , (j* height) + y, players_total);
+			}
+			else {
+				canvas.drawText("" + points_mitad, ((i + PARTIAL_COL) * width) , (j* height) + y, players_total);
+				canvas.drawText("" + points_total, ((i + TOTAL_COL) * width) , (j* height) + y, players_total);
+			}
 			
 			++j;
 		}
@@ -327,6 +370,7 @@ public class CardGraphView extends View {
 		select((int) (event.getX() / width), (int) (event.getY() / height));
 		
 		changeMitad(selX,selY);
+		changeCount(selX,selY);
 		
 		return true;
 	}
@@ -359,7 +403,8 @@ public class CardGraphView extends View {
 	
 		for (int j=0;j<4;j++) {
 			for (int i=0;i<19;i++) {
-				arrStrokes[j][i] = 0;
+				arrStrokes[j][i]	= 0;
+				arrPoints[j][i]		= 0;
 			}
 		}
 		
@@ -402,8 +447,10 @@ public class CardGraphView extends View {
 				 		do {
 				 			int holeNumber 	= c2.getInt(colHoleNumber);
 				 			int strokes		= c2.getInt(colStrokes);
+				 			int points		= calculatePointsStableford(holeNumber,strokes,holes,auxPlayer[i].getHCP());
 				 		
-				 			arrStrokes[i][holeNumber] = strokes;
+				 			arrStrokes[i][holeNumber] 	= strokes;
+				 			arrPoints[i][holeNumber] 	= points;
 				 		}
 				 		while (c2.moveToNext());
 				 	}		 			
@@ -456,7 +503,7 @@ public class CardGraphView extends View {
 		for (int i=0;i<auxPlayer.length;i++) {
 			if (auxPlayer[i] != null) {
 				if (playerId.equals("" + auxPlayer[i].getPlayer_id())) {
-					res = auxPlayer[i].getPlayerName();
+					res = auxPlayer[i].getPlayerName() + " HCP:" + auxPlayer[i].getHCP();
 				}
 			}
 		}
@@ -485,36 +532,27 @@ public class CardGraphView extends View {
 	}
 
 	private void changeMitad(int x, int y) {
-		if (x>=1 && x<=3 & y>=0 && y<=2)
+		if (x>=1 && x<=2 & y>=0 && y<=2)
 		{
-			if (mitad==1)
+			if (mitad == 1)
 				mitad = 2;
 			else
 				mitad = 1;
 		}
 		invalidate();
 	}
-	
-/*	ERL
- * public String getMatch() {
-		String response;
-    	
-	    RestClient client = new RestClient(URL_MATCH);
-	    client.AddParam("token", auth_token);
-	    client.AddParam("user_id", "" + auth_user_id);
-	    client.AddParam("match_id", "" + match_id);
-	    
-	    response = "";
-	    try {
-	        client.Execute(RequestMethod.POST);
-	        response = client.getResponse();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    
-	    return response;
+		
+	private void changeCount(int x, int y) {
+		if (x>=3 && x<=4 & y>=0 && y<=2)
+		{
+			if (puntuacion == MEDALPLAY)
+				puntuacion = STABLEFORD;
+			else
+				puntuacion = MEDALPLAY;
+		}
+		invalidate();
 	}
-*/	
+		
 	public String getStrokes(int player_id) {
 		String response;
     	
@@ -535,12 +573,12 @@ public class CardGraphView extends View {
 	    return response;
 	}
 	
-	
-	public void setInfoStrokes(int iPlayer, String result) {
+	public void setInfoStrokes(int iPlayer, String result, double playerHandicap) {
 		JSONObject jsonObj;
 		JSONArray  jsonArr;
 		int hole_number;
 		int strokes;
+		int points;
 
 		try {
 			jsonArr = new JSONArray(result);
@@ -550,8 +588,10 @@ public class CardGraphView extends View {
 				
 				hole_number = Integer.parseInt(jsonObj.getString("hole_number"));
 				strokes 	= Integer.parseInt(jsonObj.getString("strokes"));
+				points		= calculatePointsStableford(hole_number,strokes,holes,playerHandicap);
 				
 				arrStrokes[iPlayer][hole_number] = strokes;
+				arrPoints[iPlayer][hole_number] = points;
 			}
 					
 		} catch (JSONException e) {
@@ -559,6 +599,86 @@ public class CardGraphView extends View {
 		}
 	}
 
+	private int calculatePointsStableford(int holeNumber, int strokes, Hole[] holes, double playerHandicap) {
+		int iPoints;
+		
+		iPoints = 0;
+		
+		for (int i=0;i<holes.length;i++) {
+			if (holes[i].getHoleNumber()==holeNumber) {
+				iPoints = pointsStableford(strokes,playerHandicap,holes[i].getHandicap(),holes[i].getPar(),holes.length);
+			}
+		}
+		
+		return iPoints;
+	}
+	
+	private int pointsStableford(int strokes,double playerHandicap, int holeHandicap, int holePar, int nHoles) {
+		int aps           = 0;
+	    int strk          = 0;
+	    int hole_par      = 0;
+	    int strk_allowed  = 0;
+	    int points        = 0;
+
+	    aps           = pointsStablefordPerHole(holeHandicap, playerHandicap, nHoles);
+	    strk          = strokes;
+	    hole_par      = holePar;
+	    strk_allowed  = aps + hole_par;
+	    
+	    if (strk > strk_allowed + 1)
+	    	points = 0;
+	    else if (strk == strk_allowed + 1)
+	      points = 1;
+	    else if (strk == strk_allowed)
+	      points = 2;
+	    else if (strk == strk_allowed - 1)
+	      points = 3;
+	    else if (strk == strk_allowed - 2)
+	      points = 4;
+	    else if (strk == strk_allowed - 3)
+	      points = 5;
+	    else if (strk == strk_allowed - 4)
+	      points = 6;
+	    else
+	      points = 0;
+
+	    return points;
+	}
+	
+	private int pointsStablefordPerHole(int holeHandicap, double playerHandicap, int nHoles) {
+		int iPoints = 0;
+		
+		iPoints = addPointsStableford(playerHandicap, nHoles);
+	    int hole_handicap = holeHandicap; 
+	    if (hole_handicap <= lastHoleStableford())
+	    	iPoints += 1;
+	    	
+		return iPoints;
+	}
+	
+	private int addPointsStableford(double playerHandicap, int nHoles) {
+		int iRes = 0;
+		
+	    double hand = 0;
+	    int n_holes = 0;
+
+	    hand = playerHandicap;
+	    n_holes = nHoles;
+
+	    if (n_holes != 0)
+	      iRes = (int)hand / n_holes;
+	    else
+	      iRes = 0;
+
+		return iRes;
+	}
+	
+	private int lastHoleStableford() {
+		int iRes = 0;
+		
+		return iRes;
+	}
+	
 	/**
 	 * sub-class of AsyncTask
 	 */
@@ -590,7 +710,7 @@ public class CardGraphView extends View {
 			for (int i=0;i<auxPlayer.length;i++) {
 				if (auxPlayer[i] != null) {
 					result_getstrokes	= getStrokes(auxPlayer[i].getPlayer_id());
-					setInfoStrokes(i,result_getstrokes);
+					setInfoStrokes(i,result_getstrokes,auxPlayer[i].getHCP());
 				}
 			}
 			
@@ -627,3 +747,4 @@ public class CardGraphView extends View {
 	}   
 		
 }
+
