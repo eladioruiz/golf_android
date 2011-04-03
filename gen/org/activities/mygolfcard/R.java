@@ -257,8 +257,6 @@ public final class R {
         public static final int menu_synchro=0x7f090007;
     }
     public static final class string {
-        /**  <string name="URL_APIS">http://127.0.0.1:3000/api/</string> 
-         */
         public static final int ACTION_AUTH=0x7f070043;
         public static final int ACTION_COURSE=0x7f07004b;
         public static final int ACTION_COURSES=0x7f070047;
@@ -272,6 +270,8 @@ public final class R {
         public static final int ACTION_STROKES=0x7f07004a;
         public static final int ACTION_UPLOAD=0x7f07004d;
         public static final int DB_NAME=0x7f07004f;
+        /** <string name="URL_APIS">http://www.mygolfcard.es/api/</string>
+         */
         public static final int URL_APIS=0x7f070042;
         public static final int about_label=0x7f070004;
         public static final int about_shortcut=0x7f070013;

@@ -650,7 +650,7 @@ public class CardGraphView extends View {
 		
 		iPoints = addPointsStableford(playerHandicap, nHoles);
 	    int hole_handicap = holeHandicap; 
-	    if (hole_handicap <= lastHoleStableford())
+	    if (hole_handicap <= lastHoleStableford(playerHandicap,nHoles))
 	    	iPoints += 1;
 	    	
 		return iPoints;
@@ -673,8 +673,11 @@ public class CardGraphView extends View {
 		return iRes;
 	}
 	
-	private int lastHoleStableford() {
+	private int lastHoleStableford(double playerHandicap, int nHoles) {
 		int iRes = 0;
+		
+		if (nHoles != 0)
+		 iRes = (int)playerHandicap % nHoles;
 		
 		return iRes;
 	}
