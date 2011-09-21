@@ -17,7 +17,7 @@
 				android:layout_width="fill_parent" android:paddingTop="15dip" />
 			<EditText android:id="@+id/login_user"
 				android:layout_height="wrap_content" android:layout_width="fill_parent"
-				android:layout_gravity="left" android:width="130sp" android:text=""
+				android:layout_gravity="left" android:width="130sp" android:text="eladioruiz"
 				android:singleLine="true" />
 		</TableRow>
 		<TableRow>
@@ -27,7 +27,7 @@
 			<EditText android:id="@+id/login_password"
 				android:layout_height="wrap_content" android:layout_width="fill_parent"
 				android:width="130sp" android:layout_gravity="left"
-				android:password="true" android:text=""
+				android:password="true" android:text="Oidale27"
 				android:singleLine="true" />
 		</TableRow>
 <!-- 	<TableRow
