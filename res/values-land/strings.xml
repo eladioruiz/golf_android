@@ -74,6 +74,7 @@
 	<string name="no_holes">No hay información disponible sobre los hoyos de este campo.\nDisculpe las molestias.</string>
     
     <string name="ACTION_AUTH">authentication</string>
+    <string name="ACTION_CONNECTION">getconnection</string>
     <string name="ACTION_MATCHES">getmatches</string>
     <string name="ACTION_COURSES">getcourses</string>
     <string name="ACTION_FRIENDS">getfriends</string>

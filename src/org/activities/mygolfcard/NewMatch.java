@@ -356,8 +356,8 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 		 	db.execSQL(sql);
 			
 		 	// Recupera el último partido introducido, para pasarlo a la siguiente página como param
-			sql = "select ID from matches order by id desc limit 1;";
-			sql = "select last_insert_rowid() as ID;";
+			sql = "select ID from matches order by ID desc limit 1;";
+			//sql = "select last_insert_rowid() as ID;";
 			Cursor c 		= db.rawQuery(sql, null);
 			int colMatchId	= c.getColumnIndex("ID");
 			
@@ -481,8 +481,8 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 			players[i] = friendsList[i].getPlayerName();
 		}
 			
-		for (int i=0; i<friendsList.length; i++) {
-			newmatch_player[i].setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, players));
+		for (int j=0; j<newmatch_player.length; j++) {
+			newmatch_player[j].setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, players));
 		}
 	}
 

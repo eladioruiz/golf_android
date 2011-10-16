@@ -10,9 +10,13 @@
 package org.classes.mygolfcard;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.activities.mygolfcard.R;
 
@@ -37,7 +41,9 @@ public class Authentication {
 		for(int i=0; i<2; i++){
 			//Si alguna tiene conexión ponemos el boolean a true
 			if (redes[i].getState() == NetworkInfo.State.CONNECTED){
-				bTieneConexion = true;
+				if (pingResponding(ctx)) {
+					bTieneConexion = true;
+				}
 			}
 		}
 
@@ -53,6 +59,60 @@ public class Authentication {
 		return bTieneConexion;
 	}
 
+	public static boolean pingResponding(Context ctx) {
+		boolean bRes = true;
+/*		
+		InetAddress in;
+		in=null;
+		
+		// Definimos la ip de la cual haremos el ping
+		try {
+			in = InetAddress.getByName("192.168.1.5");
+		} 
+		catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    
+		//Definimos un tiempo en el cual ha de responder
+		try {
+			if(in.isReachable(5000)) {
+				bRes= true;
+			}
+			else {
+				bRes = false;
+			}
+		} 
+		catch (IOException e) {
+			bRes = false;
+		}
+*/
+		
+		try {
+		
+			String URL_CONNECTION = ctx.getString(R.string.URL_APIS) + ctx.getString(R.string.ACTION_CONNECTION);
+		    URL url = new URL(URL_CONNECTION);
+		
+			HttpURLConnection urlc = (HttpURLConnection) url.openConnection();
+			urlc.setRequestProperty("User-Agent", "Android Application:2.2");
+			urlc.setRequestProperty("Connection", "close");
+			urlc.setConnectTimeout(1000 * 30); // mTimeout is in seconds
+			urlc.connect();
+			if (urlc.getResponseCode() == 200) {
+			    bRes = false;
+			}
+		} 
+		catch (MalformedURLException e1) {
+		    // TODO Auto-generated catch block
+			bRes = false;
+		} catch (IOException e) {
+		    // TODO Auto-generated catch block
+	        bRes = false;
+		}
+
+		return bRes;
+	}
+	
 	public static boolean saveDataUser(Context ctx, String token, int user_id, String name) {
 		
 		try {

@@ -198,7 +198,7 @@ public class Course {
 	    
 	    response = "";
 	    try {
-	        client.Execute(RequestMethod.GET);
+	        client.Execute(RequestMethod.POST);
 	        response = client.getResponse();
 	    } catch (Exception e) {
 	        e.printStackTrace();
