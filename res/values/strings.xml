@@ -92,10 +92,10 @@
 	<string name="file_connection">La aplicación no ha encontrado datos de acceso previos a esta sesión. Deberá conectar su Wi-Fi o 3G para validar su acceso.\nDisculpe las molestias.\n</string>
 	<string name="no_holes">No hay información disponible sobre los hoyos de este campo.\nDisculpe las molestias.</string>
     
-    <!-- <string name="URL_APIS">http://www.mygolfcard.es/api/</string>  -->
+    <string name="URL_APIS">http://www.mygolfcard.es/api/</string>
     <!-- <string name="URL_APIS">http://localhost:3000/api/</string> -->
     <!-- <string name="URL_APIS">http://192.168.1.5/api/</string> -->
-    <string name="URL_APIS">http://192.168.1.30:3000/api/</string>
+    <!-- <string name="URL_APIS">http://192.168.1.30:3000/api/</string> -->
     <string name="ACTION_AUTH">authentication</string>
     <string name="ACTION_CONNECTION">getconnection</string>
     <string name="ACTION_MATCHES">getmatches</string>

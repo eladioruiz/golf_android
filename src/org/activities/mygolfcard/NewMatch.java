@@ -110,12 +110,14 @@ public class NewMatch extends Activity implements TextWatcher, AdapterView.OnIte
 			task.execute();
 		}
 		else {
-			Toast.makeText(NewMatch.this, R.string.no_internet,
-                    Toast.LENGTH_SHORT).show();
-			
 			coursesList = org.classes.mygolfcard.Course.getCoursesFromLocal(NewMatch.this);
 			friendsList = org.classes.mygolfcard.Player.getFriendsFromLocal(NewMatch.this);
 
+			setInfoCourses();
+			setInfoPlayers();
+			
+			Toast.makeText(NewMatch.this, R.string.no_internet,
+                    Toast.LENGTH_SHORT).show();			
 		}
 		
         final Calendar c = Calendar.getInstance();

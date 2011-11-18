@@ -74,11 +74,11 @@ public class Matches extends ListActivity implements OnClickListener {
 			task.execute();
 		}
 		else {
-			Toast.makeText(Matches.this, R.string.no_internet,
-                    Toast.LENGTH_SHORT).show();
-			
 			matchesList = org.classes.mygolfcard.Match.getMatchesFromLocal(Matches.this);
 			loadList();
+
+			Toast.makeText(Matches.this, R.string.no_internet,
+                    Toast.LENGTH_SHORT).show();
 		}
 		
 	}

@@ -60,11 +60,11 @@ public class Courses extends ListActivity implements OnClickListener  {
 			task.execute();
 		}
 		else {
-			Toast.makeText(Courses.this, R.string.no_internet,
-                    Toast.LENGTH_SHORT).show();
-			
 			coursesList = org.classes.mygolfcard.Course.getCoursesFromLocal(Courses.this);
 			loadList();
+
+			Toast.makeText(Courses.this, R.string.no_internet,
+                    Toast.LENGTH_SHORT).show();
 		}
 	}
 

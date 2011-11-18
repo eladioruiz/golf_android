@@ -98,7 +98,7 @@ public class Authentication {
 			urlc.setRequestProperty("Connection", "close");
 			urlc.setConnectTimeout(1000 * 30); // mTimeout is in seconds
 			urlc.connect();
-			if (urlc.getResponseCode() == 200) {
+			if (urlc.getResponseCode() != 200) { // 200 - OK
 			    bRes = false;
 			}
 		} 
