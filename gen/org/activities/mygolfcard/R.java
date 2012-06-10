@@ -257,9 +257,8 @@ public final class R {
         public static final int menu_synchro=0x7f090007;
     }
     public static final class string {
-        /**  <string name="URL_APIS">http://localhost:3000/api/</string> 
- <string name="URL_APIS">http://192.168.1.5/api/</string> 
- <string name="URL_APIS">http://192.168.1.30:3000/api/</string> 
+        /**  <string name="URL_APIS">http://192.168.1.5/api/</string> 
+ <string name="URL_APIS">http://192.168.1.30:3000/api/</string>
          */
         public static final int ACTION_AUTH=0x7f070043;
         public static final int ACTION_CONNECTION=0x7f070044;

@@ -38,7 +38,7 @@ public class Authentication {
 		//Con esto recogemos todas las redes que tiene el móvil (wifi, gprs...)
 		NetworkInfo[] redes = connec.getAllNetworkInfo();
 
-		for(int i=0; i<2; i++){
+		for(int i=0; i<redes.length; i++) {
 			//Si alguna tiene conexión ponemos el boolean a true
 			if (redes[i].getState() == NetworkInfo.State.CONNECTED){
 				if (pingResponding(ctx)) {
@@ -98,8 +98,8 @@ public class Authentication {
 			urlc.setRequestProperty("Connection", "close");
 			urlc.setConnectTimeout(1000 * 30); // mTimeout is in seconds
 			urlc.connect();
-			if (urlc.getResponseCode() != 200) { // 200 - OK
-			    bRes = false;
+			if (urlc.getResponseCode() == 200) { // 200 - OK
+			    bRes = true;
 			}
 		} 
 		catch (MalformedURLException e1) {

@@ -169,7 +169,6 @@ public class CardGraphView extends View {
 		canvas.drawLine(0, i * height + 1, getWidth(), i * height + 1, hilite);
 		
 		
-		
 		// Draw the numbers...
 		// Define color and style for numbers
 		/////////////////////////////////////////////////////////////////////////
